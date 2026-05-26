@@ -17,7 +17,7 @@ import com.cts.enums.Gender;
 @AllArgsConstructor
 @Builder
 public class Booking {
-
+//check
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long bookingId;
