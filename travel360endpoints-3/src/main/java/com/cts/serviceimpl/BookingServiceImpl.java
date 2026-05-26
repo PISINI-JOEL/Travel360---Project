@@ -58,17 +58,7 @@ public class BookingServiceImpl implements BookingService {
                    .orElseThrow(() -> new UserNotFoundException("User not found"));
 
            Flight flight = flightRepo.findById(dto.getFlightId())
-                   .orElseThrow(() -> new ResourceNotFoundException("Flight not found"));
-           
-           if(flight==null) {
-        	   throw new FlightNotFoundException("Flight not found");
-           }
-
-//           if (flight.getAvailableSeats() < dto.getUnits()) {
-//               throw new InsufficientAvailabilityException("Not enough seats");
-//           }
-
-         //  flight.setAvailableSeats(flight.getAvailableSeats() - dto.getUnits());
+                   .orElseThrow(() -> new FlightNotFoundException("Flight not found"));
            
            int totalSeats = flight.getTotalSeats();
            int bookedSeats = bookingRepo.getBookedSeats(flight.getFlightId(),dto.getFlightDate());
