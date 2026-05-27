@@ -24,7 +24,7 @@ public class Invoice {
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "booking_id", nullable = false)
     private Booking booking;
     

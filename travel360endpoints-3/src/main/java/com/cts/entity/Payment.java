@@ -26,7 +26,7 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "invoice_id", nullable = false, unique = true)
     private Invoice invoice;
 }

@@ -1,5 +1,7 @@
 package com.cts.service;
 
+import com.cts.dto.BookingCancelDTO;
+import com.cts.dto.BookingCancelResponseDTO;
 import com.cts.dto.BookingDTO;
 import com.cts.dto.BookingFlightDTO;
 import com.cts.dto.BookingFlightResponseDTO;
@@ -27,4 +29,6 @@ public interface BookingService {
 	List<BookingResponseDTO> getBookingsByUser(Long userId);
 
 	List<BookingResponseDTO> getAllBookings();
+
+	BookingCancelResponseDTO deleteBooking(BookingCancelDTO dto);
 }

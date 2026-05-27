@@ -1,5 +1,7 @@
 package com.cts.serviceimpl;
 
+import com.cts.dto.BookingCancelDTO;
+import com.cts.dto.BookingCancelResponseDTO;
 import com.cts.dto.BookingDTO;
 import com.cts.dto.BookingFlightDTO;
 import com.cts.dto.BookingFlightResponseDTO;
@@ -42,439 +44,393 @@ import java.util.List;
 @AllArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
-    private final BookingRepository bookingRepo;
-    private final UserRepository userRepo;
-    private final FlightRepository flightRepo;
-    private final HotelRepository hotelrepo;
-    private final InvoiceRepository invoiceRepo;
-    private final TravelPackageRepository packageRepo;
-    private final NotificationService notificationService;
-    private final TransportRepository transportRepo;
-   
-
-    @Override
-    @Transactional
-       public BookingFlightResponseDTO createFlightBooking(BookingFlightDTO dto) {
-
-           User user = userRepo.findById(dto.getUserId())
-                   .orElseThrow(() -> new UserNotFoundException("User not found"));
-
-           Flight flight = flightRepo.findById(dto.getFlightId())
-                   .orElseThrow(() -> new FlightNotFoundException("Flight not found"));
-           
-           int totalSeats = flight.getTotalSeats();
-           int bookedSeats = bookingRepo.getBookedSeats(flight.getFlightId(),dto.getFlightDate());
-           int availableSeats = totalSeats - bookedSeats;
-           if (availableSeats < dto.getUnits()) {
-        	    throw new InsufficientAvailabilityException("Not enough seats available");
-        	}
-           if (dto.getFlightDate() == null ||
-        		    !dto.getFlightDate().equals(flight.getFlightDate())) {
-
-        		    throw new InvalidBookingException("Booking info not valid");
-        		}
-        	
-
-           LocalDate today = LocalDate.now();
-           LocalDate flightDate = flight.getFlightDate();
-
-           
-           if (!flightDate.isAfter(today.plusDays(1))) {
-               throw new InvalidBookingException(
-                   "Booking is not allowed 1 day before or on the same day of the flight"
-               );
-           }
-  
-
-
-
-           Booking booking = Booking.builder()
-                   .user(user)
-                   .flight(flight)
-                   .bookingType(BookingType.FLIGHT)
-                   .bookingName(dto.getBookingName())
-                   .gender(dto.getGender())
-                   .amount(flight.getPrice() * dto.getUnits())
-                   .units(dto.getUnits())
-                   .days(1)
-                   .createdAt(LocalDateTime.now())
-                   .status(BookingStatus.PENDING)
-                   .bookingDate(flight.getFlightDate())
-                   .build();
-
-           bookingRepo.save(booking);
-          // flightRepo.save(flight);
-          
-
-           Invoice invoice = Invoice.builder()
-        	        .booking(booking)                     
-        	        .invoiceDate(LocalDateTime.now())     
-        	        .amount(booking.getAmount())          
-        	        .status(PaymentStatus.PENDING)                    
-        	        .build();
-
-        	invoiceRepo.save(invoice);
-        	notificationService.sendNotification(
-        	        user,
-        	        "Flight booked successfully. Booking ID: " + booking.getBookingId(),
-        	        NotificationCategory.BOOKING
-        	);
-
-
-           return BookingFlightResponseDTO.builder()
-                   .bookingId(booking.getBookingId())
-                   .bookingType(booking.getBookingType())
-                   .amount(booking.getAmount())
-                   .status(booking.getStatus())
-                   .userId(user.getUserId())
-                   .email(user.getEmail())
-                   .units(dto.getUnits())
-                   .createdAt(booking.getCreatedAt())
-                   .bookingDate(booking.getBookingDate())
-                   .arrivalTime(flight.getArrivalTime())
-                   .departureTime(flight.getDepartureTime())
-                   .flightDate(flight.getFlightDate())
-                   .bookingName(booking.getBookingName())
-                   .gender(booking.getGender())
-                   .flightId(flight.getFlightId())
-                   .flightNumber(flight.getFlightNumber())
-                   .source(flight.getSource())
-                   .destination(flight.getDestination())
-                   .build();
-       }
-
-       @Override
-       @Transactional
-       public BookingHotelResponseDTO createHotelBooking(BookingHotelDTO dto) {
-
-           User user = userRepo.findById(dto.getUserId())
-                   .orElseThrow(() -> new UserNotFoundException("User not found"));
-
-           Hotel hotel = hotelrepo.findById(dto.getHotelId())
-                   .orElseThrow(() -> new HotelNotFoundException("Hotel not found"));
-           
-           int totalRooms = hotel.getTotalRooms(); 
-
-           int bookedRooms = bookingRepo.getBookedRooms(hotel.getHotelId());
-
-           int availableRooms = totalRooms - bookedRooms;
-
-           if (availableRooms < dto.getUnits()) {
-               throw new InsufficientAvailabilityException("Not enough rooms available");
-           }
-           long days = java.time.temporal.ChronoUnit.DAYS.between(
-        	        dto.getCheckInDate(),
-        	        dto.getCheckOutDate()
-        	);
-           if (days <= 0) {
-        	    throw new InvalidBookingException("Check-out date must be after check-in date");
-        	}
-           
-           if (hotel.getStatus() != HotelStatus.AVAILABLE) {
-        	    throw new InvalidBookingException("Hotel is not available for booking");
-        	}
-
-           Booking booking = Booking.builder()
-        	        .user(user)
-        	        .hotel(hotel)
-        	        .bookingType(BookingType.HOTEL)
-        	        .bookingName(dto.getBookingName())
-        	        .gender(dto.getGender())
-        	        .units(dto.getUnits())
-        	        .days((int) days)
-        	        .checkInDate(dto.getCheckInDate())
-        	        .checkOutDate(dto.getCheckOutDate())
-        	        .amount(hotel.getPrice() * dto.getUnits() * days)
-        	        .status(BookingStatus.PENDING)
-        	        .bookingDate(LocalDate.now())
-        	        .build();
-
-           
-
-           bookingRepo.save(booking);
-           Invoice invoice = Invoice.builder()
-       	        .booking(booking)                     
-       	        .invoiceDate(LocalDateTime.now())     
-       	        .amount(booking.getAmount())          
-       	        .status(PaymentStatus.PENDING)                    
-       	        .build();
-
-       	invoiceRepo.save(invoice);
-       	notificationService.sendNotification(
-       	        user,
-       	        "Hotel booked successfully. Booking ID: " + booking.getBookingId(),
-       	        NotificationCategory.BOOKING
-       	);
-
-           return BookingHotelResponseDTO.builder()
-                   .bookingId(booking.getBookingId())
-                   .bookingType(booking.getBookingType())
-                   .amount(booking.getAmount())
-                   .status(booking.getStatus())
-                   .userId(user.getUserId())
-                   .email(user.getEmail())
-                   .units(dto.getUnits())
-                   .days(booking.getDays())
-                   .checkInDate(booking.getCheckInDate())
-                   .checkOutDate(booking.getCheckOutDate())
-                   .bookingName(booking.getBookingName())
-                   .gender(booking.getGender())
-                   .hotelId(hotel.getHotelId())
-                   .hotelName(hotel.getHotelName())
-                   .city(hotel.getCity())
-                   .build();
-       }
-
-       @Override
-       @Transactional
-       public BookingPackageResponseDTO createPackageBooking(BookingPackageDTO dto) {
-
-           User user = userRepo.findById(dto.getUserId())
-                   .orElseThrow(() -> new UserNotFoundException("User not found"));
-
-           TravelPackage tpackage = packageRepo.findById(dto.getPackageId())
-                   .orElseThrow(() -> new PackageNotFoundException("Package not found"));
-
-           if (tpackage.getStatus() != PackageStatus.AVAILABLE) {
-               throw new InvalidBookingException("Package is not available for booking");
-           }
-
-           int totalSlots = tpackage.getTotalSlots();
-           int bookedSlots = bookingRepo.getBookedSlots(tpackage.getPackageId());
-           int availableSlots = totalSlots - bookedSlots;
-           if (availableSlots < dto.getUnits()) {
-               throw new InsufficientAvailabilityException("Not enough package slots available");
-           }
-
-           Booking booking = Booking.builder()
-                   .user(user)
-                   .travelPackage(tpackage)
-                   .bookingType(BookingType.PACKAGE)
-                   .bookingName(dto.getBookingName())
-                   .gender(dto.getGender())
-                   .units(dto.getUnits())
-                   .amount(tpackage.getPrice() * dto.getUnits())
-                   .status(BookingStatus.PENDING)
-                   .bookingDate(tpackage.getStartDate() != null ? tpackage.getStartDate() : LocalDate.now())
-                   .build();
-
-           booking = bookingRepo.save(booking);
-
-
-           Invoice invoice = Invoice.builder()
-                   .booking(booking)
-                   .invoiceDate(LocalDateTime.now())
-                   .amount(booking.getAmount())
-                   .status(PaymentStatus.PENDING)
-                   .build();
-
-           invoiceRepo.save(invoice);
-           notificationService.sendNotification(
-        	        user,
-        	        "Package booked successfully. Booking ID: " + booking.getBookingId(),
-        	        NotificationCategory.BOOKING
-        	);
-
-           return BookingPackageResponseDTO.builder()
-                   .bookingId(booking.getBookingId())
-                   .bookingType(booking.getBookingType())
-                   .amount(booking.getAmount())
-                   .status(booking.getStatus())
-                   .bookingDate(LocalDate.now())
-
-                   .userId(user.getUserId())
-                   .email(user.getEmail())
-                   .units(dto.getUnits())
-
-                   .bookingName(booking.getBookingName())
-                   .gender(booking.getGender())
-
-                   .packageId(tpackage.getPackageId())
-                   .packageName(tpackage.getPackageName())
-                   .source(tpackage.getSource())
-                   .destination(tpackage.getDestination())
-                   .durationDays(tpackage.getDurationDays())
-                   .startDate(tpackage.getStartDate())
-                   .endDate(tpackage.getEndDate())
-                   .category(tpackage.getCategory())
-                   .packageStatus(tpackage.getStatus())
-
-                   .build();
-       }
-       
-       
-       @Override
-       @Transactional
-       public BookingTransportResponseDTO createTransportBooking(BookingTransportDTO dto) {
-
-
-           User user = userRepo.findById(dto.getUserId())
-                   .orElseThrow(() -> new UserNotFoundException("User not found"));
-
-
-           Transport transport = transportRepo.findById(dto.getTransportId())
-                   .orElseThrow(() -> new TransportNotFoundException("Transport not found"));
-
-           if (transport.getTransportStatus() != TransportStatus.AVAILABLE) {
-               throw new InvalidBookingException("Transport is not available for booking");
-           }
-
-           int totalSeats = transport.getTransportTotalSeats();
-           int bookedSeats = bookingRepo.getBookedTransportSeats(transport.getTransportId());
-           int availableSeats = totalSeats - bookedSeats;
-           if (availableSeats < dto.getUnits()) {
-               throw new InsufficientAvailabilityException("Not enough seats available");
-           }
-
-
-           Booking booking = Booking.builder()
-                   .user(user)
-                   .transport(transport)
-                   .bookingType(BookingType.TRANSPORT)
-                   .bookingName(dto.getBookingName())
-                   .gender(dto.getGender())
-                   .units(dto.getUnits())
-                   .amount(transport.getPrice() * dto.getUnits())
-                   .status(BookingStatus.PENDING)
-                   .bookingDate(transport.getDepartureTime() != null
-                           ? transport.getDepartureTime().toLocalDate()
-                           : LocalDate.now())
-                   .build();
-
-           booking = bookingRepo.save(booking);
-
-
-           Invoice invoice = Invoice.builder()
-                   .booking(booking)
-                   .invoiceDate(LocalDateTime.now())
-                   .amount(booking.getAmount())
-                   .status(PaymentStatus.PENDING)
-                   .build();
-
-           invoiceRepo.save(invoice);
-
-
-           notificationService.sendNotification(
-                   user,
-                   "Transport booked from " + transport.getSource() +
-                   " to " + transport.getDestination(),
-                   NotificationCategory.BOOKING
-           );
-
-
-           return BookingTransportResponseDTO.builder()
-                   .bookingId(booking.getBookingId())
-                   .bookingType(booking.getBookingType())
-                   .amount(booking.getAmount())
-                   .status(booking.getStatus())
-                   .bookingDate(booking.getBookingDate())
-
-                   .userId(user.getUserId())
-                   .email(user.getEmail())
-                   .units(dto.getUnits())
-
-                   .bookingName(booking.getBookingName())
-                   .gender(booking.getGender())
-
-                   .transportId(transport.getTransportId())
-                   .source(transport.getSource())
-                   .destination(transport.getDestination())
-                   .transportType(transport.getTransportType())
-                   .departureTime(transport.getDepartureTime())
-                   .arrivalTime(transport.getArrivalTime())
-
-                   .build();
-       }
-
-   
-
-   
-    @Override
-    public List<BookingResponseDTO> getBookingsByUser(Long userId) {
-
-        List<Booking> list = bookingRepo.findByUserUserId(userId);
-
-        return list.stream()
-                .map(this::mapToDTO)
-                .toList();
-    }
-
-    
-    @Override
-    public List<BookingResponseDTO> getAllBookings() {
-
-        List<Booking> list = bookingRepo.findAll();
-
-        return list.stream()
-                .map(this::mapToDTO)
-                .toList();
-    }
-
-    
-    private BookingResponseDTO mapToDTO(Booking booking) {
-
-        return BookingResponseDTO.builder()
-                .bookingId(booking.getBookingId())
-                .bookingType(booking.getBookingType())
-                .amount(booking.getAmount())
-                .status(booking.getStatus())
-
-                .userId(booking.getUser().getUserId())
-                .email(booking.getUser().getEmail())
-                .units(booking.getUnits())
-
-               
-                .flightId(booking.getFlight() != null
-                        ? booking.getFlight().getFlightId()
-                        : null)
-
-                .flightNumber(booking.getFlight() != null
-                        ? booking.getFlight().getFlightNumber()
-                        : null)
-
-                
-                .hotelId(booking.getHotel() != null
-                        ? booking.getHotel().getHotelId()
-                        : null)
-
-                .hotelName(booking.getHotel() != null
-                        ? booking.getHotel().getHotelName()
-                        : null)
-
-                
-                .transportId(booking.getTransport() != null
-                        ? booking.getTransport().getTransportId()
-                        : null)
-
-                .transportType(booking.getTransport() != null
-                        ? booking.getTransport().getTransportType()
-                        : null)
-
-               
-
-               
-                .packageId(booking.getTravelPackage() != null
-                        ? booking.getTravelPackage().getPackageId()
-                        : null)
-
-                .packageName(booking.getTravelPackage() != null
-                        ? booking.getTravelPackage().getPackageName()
-                        : null)
-
-                
-                .build();
-    }
-    
-    private void createInvoice(Booking booking) {
-        Invoice invoice = Invoice.builder()
-                .booking(booking)
-                .invoiceDate(LocalDateTime.now())
-                .amount(booking.getAmount())
-                .status(PaymentStatus.PENDING)
-                .build();
-
-        invoiceRepo.save(invoice);
-    }
-    
-    
+	private final BookingRepository bookingRepo;
+	private final UserRepository userRepo;
+	private final FlightRepository flightRepo;
+	private final HotelRepository hotelrepo;
+	private final InvoiceRepository invoiceRepo;
+	private final TravelPackageRepository packageRepo;
+	private final NotificationService notificationService;
+	private final TransportRepository transportRepo;
+	private final PaymentRepository paymentRepo;
+
+	@Override
+	@Transactional
+	public BookingFlightResponseDTO createFlightBooking(BookingFlightDTO dto) {
+
+		User user = userRepo.findById(dto.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
+
+		Flight flight = flightRepo.findById(dto.getFlightId())
+				.orElseThrow(() -> new FlightNotFoundException("Flight not found"));
+
+		int totalSeats = flight.getTotalSeats();
+		int bookedSeats = bookingRepo.getBookedSeats(flight.getFlightId(), dto.getFlightDate());
+		int availableSeats = totalSeats - bookedSeats;
+		if (availableSeats < dto.getUnits()) {
+			throw new InsufficientAvailabilityException("Not enough seats available");
+		}
+		if (dto.getFlightDate() == null || !dto.getFlightDate().equals(flight.getFlightDate())) {
+
+			throw new InvalidBookingException("Booking info not valid");
+		}
+
+		LocalDate today = LocalDate.now();
+		LocalDate flightDate = flight.getFlightDate();
+
+		if (!flightDate.isAfter(today.plusDays(1))) {
+			throw new InvalidBookingException("Booking is not allowed 1 day before or on the same day of the flight");
+		}
+
+		Booking booking = Booking.builder().user(user).flight(flight).bookingType(BookingType.FLIGHT)
+				.bookingName(dto.getBookingName()).gender(dto.getGender()).amount(flight.getPrice() * dto.getUnits())
+				.units(dto.getUnits()).days(1).createdAt(LocalDateTime.now()).status(BookingStatus.PENDING)
+				.bookingDate(flight.getFlightDate()).build();
+
+		bookingRepo.save(booking);
+		// flightRepo.save(flight);
+
+		Invoice invoice = Invoice.builder().booking(booking).invoiceDate(LocalDateTime.now())
+				.amount(booking.getAmount()).status(PaymentStatus.PENDING).build();
+
+		invoiceRepo.save(invoice);
+		notificationService.sendNotification(user, "Flight booked successfully. Booking ID: " + booking.getBookingId(),
+				NotificationCategory.BOOKING);
+
+		return BookingFlightResponseDTO.builder().bookingId(booking.getBookingId())
+				.bookingType(booking.getBookingType()).amount(booking.getAmount()).status(booking.getStatus())
+				.userId(user.getUserId()).email(user.getEmail()).units(dto.getUnits()).createdAt(booking.getCreatedAt())
+				.bookingDate(booking.getBookingDate()).arrivalTime(flight.getArrivalTime())
+				.departureTime(flight.getDepartureTime()).flightDate(flight.getFlightDate())
+				.bookingName(booking.getBookingName()).gender(booking.getGender()).flightId(flight.getFlightId())
+				.flightNumber(flight.getFlightNumber()).source(flight.getSource()).destination(flight.getDestination())
+				.build();
+	}
+
+	@Override
+	@Transactional
+	public BookingHotelResponseDTO createHotelBooking(BookingHotelDTO dto) {
+
+		User user = userRepo.findById(dto.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
+
+		Hotel hotel = hotelrepo.findById(dto.getHotelId())
+				.orElseThrow(() -> new HotelNotFoundException("Hotel not found"));
+
+		int totalRooms = hotel.getTotalRooms();
+
+		int bookedRooms = bookingRepo.getBookedRooms(hotel.getHotelId());
+
+		int availableRooms = totalRooms - bookedRooms;
+
+		if (availableRooms < dto.getUnits()) {
+			throw new InsufficientAvailabilityException("Not enough rooms available");
+		}
+		long days = java.time.temporal.ChronoUnit.DAYS.between(dto.getCheckInDate(), dto.getCheckOutDate());
+		if (days <= 0) {
+			throw new InvalidBookingException("Check-out date must be after check-in date");
+		}
+
+		if (hotel.getStatus() != HotelStatus.AVAILABLE) {
+			throw new InvalidBookingException("Hotel is not available for booking");
+		}
+
+		Booking booking = Booking.builder().user(user).hotel(hotel).bookingType(BookingType.HOTEL)
+				.bookingName(dto.getBookingName()).gender(dto.getGender()).units(dto.getUnits()).days((int) days)
+				.checkInDate(dto.getCheckInDate()).checkOutDate(dto.getCheckOutDate())
+				.amount(hotel.getPrice() * dto.getUnits() * days).status(BookingStatus.PENDING)
+				.bookingDate(LocalDate.now()).build();
+
+		bookingRepo.save(booking);
+		Invoice invoice = Invoice.builder().booking(booking).invoiceDate(LocalDateTime.now())
+				.amount(booking.getAmount()).status(PaymentStatus.PENDING).build();
+
+		invoiceRepo.save(invoice);
+		notificationService.sendNotification(user, "Hotel booked successfully. Booking ID: " + booking.getBookingId(),
+				NotificationCategory.BOOKING);
+
+		return BookingHotelResponseDTO.builder().bookingId(booking.getBookingId()).bookingType(booking.getBookingType())
+				.amount(booking.getAmount()).status(booking.getStatus()).userId(user.getUserId()).email(user.getEmail())
+				.units(dto.getUnits()).days(booking.getDays()).checkInDate(booking.getCheckInDate())
+				.checkOutDate(booking.getCheckOutDate()).bookingName(booking.getBookingName())
+				.gender(booking.getGender()).hotelId(hotel.getHotelId()).hotelName(hotel.getHotelName())
+				.city(hotel.getCity()).build();
+	}
+
+	@Override
+	@Transactional
+	public BookingPackageResponseDTO createPackageBooking(BookingPackageDTO dto) {
+
+		User user = userRepo.findById(dto.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
+
+		TravelPackage tpackage = packageRepo.findById(dto.getPackageId())
+				.orElseThrow(() -> new PackageNotFoundException("Package not found"));
+
+		if (tpackage.getStatus() != PackageStatus.AVAILABLE) {
+			throw new InvalidBookingException("Package is not available for booking");
+		}
+
+		int totalSlots = tpackage.getTotalSlots();
+		int bookedSlots = bookingRepo.getBookedSlots(tpackage.getPackageId());
+		int availableSlots = totalSlots - bookedSlots;
+		if (availableSlots < dto.getUnits()) {
+			throw new InsufficientAvailabilityException("Not enough package slots available");
+		}
+
+		Booking booking = Booking.builder().user(user).travelPackage(tpackage).bookingType(BookingType.PACKAGE)
+				.bookingName(dto.getBookingName()).gender(dto.getGender()).units(dto.getUnits())
+				.amount(tpackage.getPrice() * dto.getUnits()).status(BookingStatus.PENDING)
+				.bookingDate(tpackage.getStartDate() != null ? tpackage.getStartDate() : LocalDate.now()).build();
+
+		booking = bookingRepo.save(booking);
+
+		Invoice invoice = Invoice.builder().booking(booking).invoiceDate(LocalDateTime.now())
+				.amount(booking.getAmount()).status(PaymentStatus.PENDING).build();
+
+		invoiceRepo.save(invoice);
+		notificationService.sendNotification(user, "Package booked successfully. Booking ID: " + booking.getBookingId(),
+				NotificationCategory.BOOKING);
+
+		return BookingPackageResponseDTO.builder().bookingId(booking.getBookingId())
+				.bookingType(booking.getBookingType()).amount(booking.getAmount()).status(booking.getStatus())
+				.bookingDate(LocalDate.now())
+
+				.userId(user.getUserId()).email(user.getEmail()).units(dto.getUnits())
+
+				.bookingName(booking.getBookingName()).gender(booking.getGender())
+
+				.packageId(tpackage.getPackageId()).packageName(tpackage.getPackageName()).source(tpackage.getSource())
+				.destination(tpackage.getDestination()).durationDays(tpackage.getDurationDays())
+				.startDate(tpackage.getStartDate()).endDate(tpackage.getEndDate()).category(tpackage.getCategory())
+				.packageStatus(tpackage.getStatus())
+
+				.build();
+	}
+
+	@Override
+	@Transactional
+	public BookingTransportResponseDTO createTransportBooking(BookingTransportDTO dto) {
+
+		User user = userRepo.findById(dto.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
+
+		Transport transport = transportRepo.findById(dto.getTransportId())
+				.orElseThrow(() -> new TransportNotFoundException("Transport not found"));
+
+		if (transport.getTransportStatus() != TransportStatus.AVAILABLE) {
+			throw new InvalidBookingException("Transport is not available for booking");
+		}
+
+		int totalSeats = transport.getTransportTotalSeats();
+		int bookedSeats = bookingRepo.getBookedTransportSeats(transport.getTransportId());
+		int availableSeats = totalSeats - bookedSeats;
+		if (availableSeats < dto.getUnits()) {
+			throw new InsufficientAvailabilityException("Not enough seats available");
+		}
+
+		Booking booking = Booking.builder().user(user).transport(transport).bookingType(BookingType.TRANSPORT)
+				.bookingName(dto.getBookingName()).gender(dto.getGender()).units(dto.getUnits())
+				.amount(transport.getPrice() * dto.getUnits()).status(BookingStatus.PENDING)
+				.bookingDate(transport.getDepartureTime() != null ? transport.getDepartureTime().toLocalDate()
+						: LocalDate.now())
+				.build();
+
+		booking = bookingRepo.save(booking);
+
+		Invoice invoice = Invoice.builder().booking(booking).invoiceDate(LocalDateTime.now())
+				.amount(booking.getAmount()).status(PaymentStatus.PENDING).build();
+
+		invoiceRepo.save(invoice);
+
+		notificationService.sendNotification(user,
+				"Transport booked from " + transport.getSource() + " to " + transport.getDestination(),
+				NotificationCategory.BOOKING);
+
+		return BookingTransportResponseDTO.builder().bookingId(booking.getBookingId())
+				.bookingType(booking.getBookingType()).amount(booking.getAmount()).status(booking.getStatus())
+				.bookingDate(booking.getBookingDate())
+
+				.userId(user.getUserId()).email(user.getEmail()).units(dto.getUnits())
+
+				.bookingName(booking.getBookingName()).gender(booking.getGender())
+
+				.transportId(transport.getTransportId()).source(transport.getSource())
+				.destination(transport.getDestination()).transportType(transport.getTransportType())
+				.departureTime(transport.getDepartureTime()).arrivalTime(transport.getArrivalTime())
+
+				.build();
+	}
+
+	@Override
+	public List<BookingResponseDTO> getBookingsByUser(Long userId) {
+
+		List<Booking> list = bookingRepo.findByUserUserId(userId);
+
+		return list.stream().map(this::mapToDTO).toList();
+	}
+
+	@Override
+	public List<BookingResponseDTO> getAllBookings() {
+
+		List<Booking> list = bookingRepo.findAll();
+
+		return list.stream().map(this::mapToDTO).toList();
+	}
+
+	private BookingResponseDTO mapToDTO(Booking booking) {
+
+		return BookingResponseDTO.builder().bookingId(booking.getBookingId()).bookingType(booking.getBookingType())
+				.amount(booking.getAmount()).status(booking.getStatus())
+
+				.userId(booking.getUser().getUserId()).email(booking.getUser().getEmail()).units(booking.getUnits())
+
+				.flightId(booking.getFlight() != null ? booking.getFlight().getFlightId() : null)
+
+				.flightNumber(booking.getFlight() != null ? booking.getFlight().getFlightNumber() : null)
+
+				.hotelId(booking.getHotel() != null ? booking.getHotel().getHotelId() : null)
+
+				.hotelName(booking.getHotel() != null ? booking.getHotel().getHotelName() : null)
+
+				.transportId(booking.getTransport() != null ? booking.getTransport().getTransportId() : null)
+
+				.transportType(booking.getTransport() != null ? booking.getTransport().getTransportType() : null)
+
+				.packageId(booking.getTravelPackage() != null ? booking.getTravelPackage().getPackageId() : null)
+
+				.packageName(booking.getTravelPackage() != null ? booking.getTravelPackage().getPackageName() : null)
+
+				.build();
+	}
+
+	@Override
+	@Transactional
+	public BookingCancelResponseDTO deleteBooking(BookingCancelDTO dto) {
+
+	    
+	    Booking booking = bookingRepo.findById(dto.getBookingId())
+	            .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+
+	    
+	    if (!booking.getUser().getUserId().equals(dto.getUserId())) {
+	        throw new InvalidBookingException("Booking does not belong to the given user");
+	    }
+
+	    if (booking.getStatus() == BookingStatus.CANCELLED) {
+	        throw new InvalidBookingException("Booking is already cancelled");
+	    }
+
+	    LocalDateTime now = LocalDateTime.now();
+
+	    double refundAmount = 0.0;
+	    String refundStatus = "NONE";
+
+	    
+	    if (booking.getStatus() == BookingStatus.PENDING) {
+
+	        booking.setStatus(BookingStatus.CANCELLED);
+	        bookingRepo.save(booking);
+
+	        notificationService.sendNotification(
+	                booking.getUser(),
+	                "Booking cancelled (no payment made). Booking ID: " + booking.getBookingId(),
+	                NotificationCategory.BOOKING
+	        );
+
+	        return BookingCancelResponseDTO.builder()
+	                .bookingId(booking.getBookingId())
+	                .userId(booking.getUser().getUserId())
+	                .status(booking.getStatus())
+	                .originalAmount(booking.getAmount())
+	                .refundAmount(0.0)
+	                .deductionAmount(booking.getAmount())
+	                .bookingDate(booking.getBookingDate())
+	                .cancelledAt(now)
+	                .refundStatus("NONE")
+	                .message("Booking cancelled successfully (no payment made)")
+	                .build();
+	    }
+
+	    
+	    if (booking.getStatus() == BookingStatus.CONFIRMED) {
+
+	        LocalDate today = LocalDate.now();
+	        LocalDate bookingDate = booking.getBookingDate();
+
+	        if (bookingDate == null) {
+	            throw new InvalidBookingException("Invalid booking date");
+	        }
+
+	        long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(today, bookingDate);
+
+	        if (daysBetween <= 1) {
+	            throw new InvalidBookingException(
+	                    "Cancellation not allowed less than 1 day before booking date");
+	        }
+
+	        if (daysBetween > 7) {
+	            refundAmount = booking.getAmount();
+	            refundStatus = "FULL";
+	        } else if (daysBetween >= 4) {
+	            refundAmount = booking.getAmount() * 0.80;
+	            refundStatus = "PARTIAL";
+	        } else {
+	            refundAmount = booking.getAmount() * 0.60;
+	            refundStatus = "PARTIAL";
+	        }
+
+	     
+	        booking.setStatus(BookingStatus.CANCELLED);
+	        bookingRepo.save(booking);
+
+	        
+	        Invoice refundInvoice = Invoice.builder()
+	                .booking(booking)
+	                .invoiceDate(now)
+	                .amount(refundAmount)
+	                .status(PaymentStatus.REFUNDED)
+	                .build();
+
+	        invoiceRepo.save(refundInvoice);
+
+	        
+	        Payment refundPayment = Payment.builder()
+	                .invoice(refundInvoice)   
+	                .amount(refundAmount)
+	                .status(PaymentStatus.REFUNDED)
+	                .paymentDate(now)
+	                .paymentMethod("UPI")
+	                .build();
+
+	        paymentRepo.save(refundPayment);
+
+	        
+	        notificationService.sendNotification(
+	                booking.getUser(),
+	                "Booking cancelled. Refund amount: " + refundAmount +
+	                        " | Booking ID: " + booking.getBookingId(),
+	                NotificationCategory.BOOKING
+	        );
+
+	        return BookingCancelResponseDTO.builder()
+	                .bookingId(booking.getBookingId())
+	                .userId(booking.getUser().getUserId())
+	                .status(booking.getStatus())
+	                .originalAmount(booking.getAmount())
+	                .refundAmount(refundAmount)
+	                .deductionAmount(booking.getAmount() - refundAmount)
+	                .bookingDate(booking.getBookingDate())
+	                .cancelledAt(now)
+	                .refundStatus(refundStatus)
+	                .message("Booking cancelled successfully")
+	                .build();
+	    }
+
+	    throw new InvalidBookingException("Invalid booking state");
+	}
+
+	private void createInvoice(Booking booking) {
+		Invoice invoice = Invoice.builder().booking(booking).invoiceDate(LocalDateTime.now())
+				.amount(booking.getAmount()).status(PaymentStatus.PENDING).build();
+
+		invoiceRepo.save(invoice);
+	}
+
 }
