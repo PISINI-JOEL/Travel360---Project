@@ -35,15 +35,15 @@ public class FlightServiceImpl implements FlightService {
 
         return repo.save(flight);
     }
-
+@Override
     public List<Flight> searchFlights(String source, String destination) {
         return repo.findBySourceAndDestination(source, destination);
     }
-
+@Override
     public List<Flight> getAllFlights() {
         return repo.findAll();
     }
-
+@Override
     public Flight getFlightById(Long id) {
         return repo.findById(id).orElse(null);
     }
@@ -59,5 +59,7 @@ public class FlightServiceImpl implements FlightService {
         
         return repo.findBySourceAndDestination(source, destination);
     }
+    
+    
 
 }
