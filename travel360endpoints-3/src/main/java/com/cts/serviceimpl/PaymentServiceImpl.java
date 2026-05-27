@@ -37,6 +37,7 @@ public class PaymentServiceImpl implements PaymentService {
         if(dto.getAmount()!=invoice.getAmount()) {
         	throw new PaymentNotFoundException("Partial payment not allowed");
         }
+        //push check
 
         Payment payment = Payment.builder()
                 .paymentDate(LocalDateTime.now())
