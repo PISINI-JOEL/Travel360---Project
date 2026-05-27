@@ -98,7 +98,7 @@ public class BookingServiceImpl implements BookingService {
                    .units(dto.getUnits())
                    .days(1)
                    .createdAt(LocalDateTime.now())
-                   .status(BookingStatus.CONFIRMED)
+                   .status(BookingStatus.PENDING)
                    .bookingDate(flight.getFlightDate())
                    .build();
 
@@ -185,7 +185,7 @@ public class BookingServiceImpl implements BookingService {
         	        .checkInDate(dto.getCheckInDate())
         	        .checkOutDate(dto.getCheckOutDate())
         	        .amount(hotel.getPrice() * dto.getUnits() * days)
-        	        .status(BookingStatus.CONFIRMED)
+        	        .status(BookingStatus.PENDING)
         	        .bookingDate(LocalDate.now())
         	        .build();
 
@@ -254,7 +254,7 @@ public class BookingServiceImpl implements BookingService {
                    .gender(dto.getGender())
                    .units(dto.getUnits())
                    .amount(tpackage.getPrice() * dto.getUnits())
-                   .status(BookingStatus.CONFIRMED)
+                   .status(BookingStatus.PENDING)
                    .bookingDate(tpackage.getStartDate() != null ? tpackage.getStartDate() : LocalDate.now())
                    .build();
 
@@ -335,7 +335,7 @@ public class BookingServiceImpl implements BookingService {
                    .gender(dto.getGender())
                    .units(dto.getUnits())
                    .amount(transport.getPrice() * dto.getUnits())
-                   .status(BookingStatus.CONFIRMED)
+                   .status(BookingStatus.PENDING)
                    .bookingDate(transport.getDepartureTime() != null
                            ? transport.getDepartureTime().toLocalDate()
                            : LocalDate.now())
