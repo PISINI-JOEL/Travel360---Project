@@ -2,11 +2,14 @@ package com.cts.serviceimpl;
 
 import com.cts.dto.PaymentDTO;
 import com.cts.dto.PaymentResponseDTO;
+import com.cts.entity.Booking;
 import com.cts.entity.Invoice;
 import com.cts.entity.Payment;
+import com.cts.enums.BookingStatus;
 import com.cts.enums.PaymentStatus;
 import com.cts.exception.InvoiceNotFoundException;
 import com.cts.exception.PaymentNotFoundException;
+import com.cts.repository.BookingRepository;
 import com.cts.repository.InvoiceRepository;
 import com.cts.repository.PaymentRepository;
 import com.cts.service.PaymentService;
@@ -24,12 +27,15 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepo;
     private final InvoiceRepository invoiceRepo;
+    private final BookingRepository bookingRepo;
+    
 
    
     @Override
     public PaymentResponseDTO makePayment(PaymentDTO dto) {
 
         Invoice invoice = invoiceRepo.findById(dto.getInvoiceId()).orElse(null);
+        
 
         if (invoice == null) {
             throw new InvoiceNotFoundException("Invoice not found");
@@ -48,7 +54,18 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
 
         payment = paymentRepo.save(payment);
+     // 1. Update Connected Booking Status
+        Booking booking = invoice.getBooking(); 
+        if (booking != null) {
+            booking.setStatus(BookingStatus.CONFIRMED); 
+            bookingRepo.save(booking); 
+        }
+
+        // 2. Update Invoice Status
         invoice.setStatus(PaymentStatus.SUCCESS);
+        invoiceRepo.save(invoice);
+        invoice.setStatus(PaymentStatus.SUCCESS);
+        
         invoiceRepo.save(invoice);
 
         return mapToDTO(payment);
