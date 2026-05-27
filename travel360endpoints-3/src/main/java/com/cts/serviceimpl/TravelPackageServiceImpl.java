@@ -23,10 +23,16 @@ public class TravelPackageServiceImpl implements TravelPackageService {
 
         TravelPackage tpackage = TravelPackage.builder()
                 .packageName(dto.getPackageName())
+                .source(dto.getSource())
                 .destination(dto.getDestination())
                 .price(dto.getPrice())
                 .durationDays(dto.getDurationDays())
+                .startDate(dto.getStartDate())
+                .endDate(dto.getEndDate())
+                .totalSlots(dto.getTotalSlots())
+                .description(dto.getDescription())
                 .category(dto.getCategory())
+                .status(dto.getStatus())
                 .build();
 
         packageRepo.save(tpackage);
@@ -57,10 +63,16 @@ public class TravelPackageServiceImpl implements TravelPackageService {
         return TravelPackageResponseDTO.builder()
                 .packageId(t.getPackageId())
                 .packageName(t.getPackageName())
+                .source(t.getSource())
                 .destination(t.getDestination())
                 .price(t.getPrice())
                 .durationDays(t.getDurationDays())
+                .startDate(t.getStartDate())
+                .endDate(t.getEndDate())
+                .totalSlots(t.getTotalSlots())
+                .description(t.getDescription())
                 .category(t.getCategory())
+                .status(t.getStatus())
                 .build();
     }
 }

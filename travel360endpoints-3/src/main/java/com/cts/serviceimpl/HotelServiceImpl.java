@@ -69,7 +69,6 @@ public class HotelServiceImpl implements HotelService {
                         .hotelId(h.getHotelId())
                         .ratings(h.getRatings())
                         .price(h.getPrice())
-                        .status(h.getStatus())
                         .contactNo(h.getContactNo())
                         .emailId(h.getEmailId())
                         .city(h.getCity())

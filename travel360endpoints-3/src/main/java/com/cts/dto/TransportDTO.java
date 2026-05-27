@@ -25,8 +25,7 @@ public class TransportDTO {
     private String destination;
 
     @NotBlank(message = "Transport type is required")
-   
-    
+    @Pattern(regexp = "^BUS$", message = "Transport type must be BUS")
     private String transportType;
 
     @NotNull(message = "Departure time is required")

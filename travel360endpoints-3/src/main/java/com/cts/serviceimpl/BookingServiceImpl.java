@@ -15,7 +15,9 @@ import com.cts.enums.BookingStatus;
 import com.cts.enums.BookingType;
 import com.cts.enums.HotelStatus;
 import com.cts.enums.NotificationCategory;
+import com.cts.enums.PackageStatus;
 import com.cts.enums.PaymentStatus;
+import com.cts.enums.TransportStatus;
 import com.cts.exception.FlightNotFoundException;
 import com.cts.exception.HotelNotFoundException;
 import com.cts.exception.InsufficientAvailabilityException;
@@ -233,6 +235,17 @@ public class BookingServiceImpl implements BookingService {
            TravelPackage tpackage = packageRepo.findById(dto.getPackageId())
                    .orElseThrow(() -> new PackageNotFoundException("Package not found"));
 
+           if (tpackage.getStatus() != PackageStatus.AVAILABLE) {
+               throw new InvalidBookingException("Package is not available for booking");
+           }
+
+           int totalSlots = tpackage.getTotalSlots();
+           int bookedSlots = bookingRepo.getBookedSlots(tpackage.getPackageId());
+           int availableSlots = totalSlots - bookedSlots;
+           if (availableSlots < dto.getUnits()) {
+               throw new InsufficientAvailabilityException("Not enough package slots available");
+           }
+
            Booking booking = Booking.builder()
                    .user(user)
                    .travelPackage(tpackage)
@@ -240,15 +253,14 @@ public class BookingServiceImpl implements BookingService {
                    .bookingName(dto.getBookingName())
                    .gender(dto.getGender())
                    .units(dto.getUnits())
-                   .days(tpackage.getDurationDays())
                    .amount(tpackage.getPrice() * dto.getUnits())
                    .status(BookingStatus.CONFIRMED)
-                   .bookingDate(LocalDate.now())
+                   .bookingDate(tpackage.getStartDate() != null ? tpackage.getStartDate() : LocalDate.now())
                    .build();
 
            booking = bookingRepo.save(booking);
 
-          
+
            Invoice invoice = Invoice.builder()
                    .booking(booking)
                    .invoiceDate(LocalDateTime.now())
@@ -268,6 +280,7 @@ public class BookingServiceImpl implements BookingService {
                    .bookingType(booking.getBookingType())
                    .amount(booking.getAmount())
                    .status(booking.getStatus())
+                   .bookingDate(LocalDate.now())
 
                    .userId(user.getUserId())
                    .email(user.getEmail())
@@ -278,7 +291,13 @@ public class BookingServiceImpl implements BookingService {
 
                    .packageId(tpackage.getPackageId())
                    .packageName(tpackage.getPackageName())
+                   .source(tpackage.getSource())
                    .destination(tpackage.getDestination())
+                   .durationDays(tpackage.getDurationDays())
+                   .startDate(tpackage.getStartDate())
+                   .endDate(tpackage.getEndDate())
+                   .category(tpackage.getCategory())
+                   .packageStatus(tpackage.getStatus())
 
                    .build();
        }
@@ -288,25 +307,26 @@ public class BookingServiceImpl implements BookingService {
        @Transactional
        public BookingTransportResponseDTO createTransportBooking(BookingTransportDTO dto) {
 
-          
+
            User user = userRepo.findById(dto.getUserId())
                    .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-           
+
            Transport transport = transportRepo.findById(dto.getTransportId())
                    .orElseThrow(() -> new TransportNotFoundException("Transport not found"));
 
-           
-           if (transport.getTransportAvailableSeats() < dto.getUnits()) {
+           if (transport.getTransportStatus() != TransportStatus.AVAILABLE) {
+               throw new InvalidBookingException("Transport is not available for booking");
+           }
+
+           int totalSeats = transport.getTransportTotalSeats();
+           int bookedSeats = bookingRepo.getBookedTransportSeats(transport.getTransportId());
+           int availableSeats = totalSeats - bookedSeats;
+           if (availableSeats < dto.getUnits()) {
                throw new InsufficientAvailabilityException("Not enough seats available");
            }
 
-          
-           transport.setTransportAvailableSeats(
-                   transport.getTransportAvailableSeats() - dto.getUnits()
-           );
 
-           
            Booking booking = Booking.builder()
                    .user(user)
                    .transport(transport)
@@ -316,12 +336,14 @@ public class BookingServiceImpl implements BookingService {
                    .units(dto.getUnits())
                    .amount(transport.getPrice() * dto.getUnits())
                    .status(BookingStatus.CONFIRMED)
-                   .bookingDate(LocalDate.now())
+                   .bookingDate(transport.getDepartureTime() != null
+                           ? transport.getDepartureTime().toLocalDate()
+                           : LocalDate.now())
                    .build();
 
            booking = bookingRepo.save(booking);
 
-           
+
            Invoice invoice = Invoice.builder()
                    .booking(booking)
                    .invoiceDate(LocalDateTime.now())
@@ -331,7 +353,7 @@ public class BookingServiceImpl implements BookingService {
 
            invoiceRepo.save(invoice);
 
-           
+
            notificationService.sendNotification(
                    user,
                    "Transport booked from " + transport.getSource() +
@@ -339,12 +361,13 @@ public class BookingServiceImpl implements BookingService {
                    NotificationCategory.BOOKING
            );
 
-          
+
            return BookingTransportResponseDTO.builder()
                    .bookingId(booking.getBookingId())
                    .bookingType(booking.getBookingType())
                    .amount(booking.getAmount())
                    .status(booking.getStatus())
+                   .bookingDate(booking.getBookingDate())
 
                    .userId(user.getUserId())
                    .email(user.getEmail())
@@ -357,9 +380,13 @@ public class BookingServiceImpl implements BookingService {
                    .source(transport.getSource())
                    .destination(transport.getDestination())
                    .transportType(transport.getTransportType())
+                   .departureTime(transport.getDepartureTime())
+                   .arrivalTime(transport.getArrivalTime())
 
                    .build();
        }
+
+   
 
    
     @Override

@@ -1,5 +1,8 @@
 package com.cts.entity;
 
+import java.time.LocalDate;
+
+import com.cts.enums.PackageStatus;
 import com.cts.enums.TravelPackageCategory;
 
 import jakarta.persistence.*;
@@ -18,13 +21,25 @@ public class TravelPackage {
 
     private String packageName;
 
+    private String source;
+
     private String destination;
 
     private double price;
 
     private int durationDays;
 
+    private LocalDate startDate;
+
+    private LocalDate endDate;
+
+    private int totalSlots;
+
+    private String description;
+
     @Enumerated(EnumType.STRING)
     private TravelPackageCategory category;
-}
 
+    @Enumerated(EnumType.STRING)
+    private PackageStatus status;
+}

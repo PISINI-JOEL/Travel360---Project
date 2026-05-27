@@ -34,6 +34,9 @@ public class PaymentServiceImpl implements PaymentService {
         if (invoice == null) {
             throw new InvoiceNotFoundException("Invoice not found");
         }
+        if(dto.getAmount()!=invoice.getAmount()) {
+        	throw new PaymentNotFoundException("Partial payment not allowed");
+        }
 
         Payment payment = Payment.builder()
                 .paymentDate(LocalDateTime.now())
@@ -44,6 +47,8 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
 
         payment = paymentRepo.save(payment);
+        invoice.setStatus(PaymentStatus.SUCCESS);
+        invoiceRepo.save(invoice);
 
         return mapToDTO(payment);
     }
