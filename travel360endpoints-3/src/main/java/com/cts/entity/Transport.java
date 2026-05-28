@@ -43,7 +43,7 @@ public class Transport {
 ;
 	private LocalDateTime departureTime;
 	private LocalDateTime arrivalTime;
-	private int transportAvailableSeats;
+	
 	private int transportTotalSeats;
 	private double price;
 	@Enumerated(EnumType.STRING)

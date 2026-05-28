@@ -6,6 +6,10 @@ import com.cts.repository.FlightRepository;
 import com.cts.service.FlightService;
 
 import lombok.AllArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,42 +18,70 @@ import java.util.List;
 @AllArgsConstructor
 public class FlightServiceImpl implements FlightService {
 
-	private final FlightRepository repo;
+    private final FlightRepository repo;
 
-	public Flight addFlight(FlightDTO dto) {
+    @Override
+    public Flight addFlight(FlightDTO dto) {
 
-		Flight flight = Flight.builder().flightNumber(dto.getFlightNumber()).airlineName(dto.getAirlineName())
-				.source(dto.getSource()).destination(dto.getDestination()).arrivalTime(dto.getArrivalTime())
-				.flightDate(dto.getFlightDate()).departureTime(dto.getDepartureTime()).arrivalTime(dto.getArrivalTime())
+        Flight flight = Flight.builder()
+                .flightNumber(dto.getFlightNumber())
+                .airlineName(dto.getAirlineName())
+                .source(dto.getSource())
+                .destination(dto.getDestination())
+                .arrivalTime(dto.getArrivalTime())
+                .departureTime(dto.getDepartureTime())
+                .flightDate(dto.getFlightDate())
+                .totalSeats(dto.getTotalSeats())
+                .price(dto.getPrice())
+                .status(dto.getStatus())
+                .build();
 
-				.totalSeats(dto.getTotalSeats()).price(dto.getPrice()).status(dto.getStatus()).build();
+        return repo.save(flight);
+    }
 
-		return repo.save(flight);
-	}
+    @Override
+    public List<Flight> searchFlights(String source, String destination, int page, int size) {
 
-	@Override
-	public List<Flight> searchFlights(String source, String destination) {
-		return repo.findBySourceAndDestination(source, destination);
-	}
+        Pageable pageable = PageRequest.of(page, size);
 
-	@Override
-	public List<Flight> getAllFlights() {
-		return repo.findAll();
-	}
+        Page<Flight> flightPage =
+                repo.findBySourceAndDestination(source, destination, pageable);
 
-	@Override
-	public Flight getFlightById(Long id) {
-		return repo.findById(id).orElse(null);
-	}
+        return flightPage.getContent();
+    }
 
-	@Override
-	public List<Flight> filterFlights(String source, String destination, Double min, Double max) {
+    @Override
+    public List<Flight> getAllFlights(int page, int size) {
 
-		if (min != null && max != null) {
-			return repo.findBySourceAndDestinationAndPriceBetween(source, destination, min, max);
-		}
+        Pageable pageable = PageRequest.of(page, size);
 
-		return repo.findBySourceAndDestination(source, destination);
-	}
+        Page<Flight> flightPage = repo.findAll(pageable);
 
+        return flightPage.getContent(); 
+    }
+
+    @Override
+    public List<Flight> filterFlights(String source, String destination,
+                                      Double min, Double max,
+                                      int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Flight> flightPage;
+
+        if (min != null && max != null) {
+            flightPage = repo.findBySourceAndDestinationAndPriceBetween(
+                    source, destination, min, max, pageable);
+        } else {
+            flightPage = repo.findBySourceAndDestination(source, destination, pageable);
+        }
+
+        return flightPage.getContent(); 
+    }
+
+    @Override
+    public Flight getFlightById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Flight not found"));
+    }
 }

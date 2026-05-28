@@ -1,20 +1,19 @@
 package com.cts.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import com.cts.entity.Flight;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-@Repository
 public interface FlightRepository extends JpaRepository<Flight, Long> {
 
-	List<Flight> findBySourceAndDestination(String source, String destination);
+    Page<Flight> findBySourceAndDestination(String source, String destination, Pageable pageable);
 
-	List<Flight> findBySourceAndDestinationAndPriceBetween(
-	        String source,
-	        String destination,
-	        double min,
-	        double max
-	);
+    Page<Flight> findBySourceAndDestinationAndPriceBetween(
+            String source,
+            String destination,
+            Double min,
+            Double max,
+            Pageable pageable
+    );
 }

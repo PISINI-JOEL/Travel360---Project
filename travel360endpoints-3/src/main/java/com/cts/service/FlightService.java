@@ -9,10 +9,13 @@ public interface FlightService {
 
     Flight addFlight(FlightDTO dto);
 
-    List<Flight> searchFlights(String source, String destination);
+    List<Flight> searchFlights(String source, String destination, int page, int size);
 
-    List<Flight> getAllFlights();
+    List<Flight> getAllFlights(int page, int size);
+
+    List<Flight> filterFlights(String source, String destination,
+                               Double min, Double max,
+                               int page, int size);
 
     Flight getFlightById(Long id);
-    List<Flight> filterFlights(String source, String destination, Double min, Double max);
 }

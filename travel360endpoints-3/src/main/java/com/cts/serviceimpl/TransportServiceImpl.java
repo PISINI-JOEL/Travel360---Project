@@ -30,7 +30,7 @@ public class TransportServiceImpl implements TransportService {
                 .departureTime(dto.getDepartureTime())
                 .arrivalTime(dto.getArrivalTime())
                 .transportTotalSeats(dto.getTransportTotalSeats())
-                .transportAvailableSeats(dto.getTransportTotalSeats()) 
+                
                 .price(dto.getPrice())
                 .transportStatus(dto.getTransportStatus())
                 .build();
@@ -78,7 +78,7 @@ public class TransportServiceImpl implements TransportService {
                 .transportType(t.getTransportType())
                 .departureTime(t.getDepartureTime())
                 .arrivalTime(t.getArrivalTime())
-                .transportAvailableSeats(t.getTransportAvailableSeats())
+                
                 .transportTotalSeats(t.getTransportTotalSeats())
                 .price(t.getPrice())
                 .transportStatus(t.getTransportStatus())

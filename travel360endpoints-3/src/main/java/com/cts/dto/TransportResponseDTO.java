@@ -18,7 +18,7 @@ public class TransportResponseDTO {
     private String transportType;
     private LocalDateTime departureTime;
     private LocalDateTime arrivalTime;
-    private int transportAvailableSeats;
+    
     private int transportTotalSeats;
     private double price;
     private TransportStatus transportStatus;

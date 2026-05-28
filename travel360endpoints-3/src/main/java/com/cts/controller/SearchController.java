@@ -2,15 +2,8 @@ package com.cts.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.cts.repository.TransportRepository;
-import com.cts.repository.TravelPackageRepository;
-import com.cts.service.FlightService;
-import com.cts.service.HotelService;
 import com.cts.service.SearchService;
 
 import lombok.AllArgsConstructor;
@@ -30,11 +23,14 @@ public class SearchController {
             @RequestParam(required = false) String city,
             @RequestParam(required = false) Double min,
             @RequestParam(required = false) Double max,
-            @RequestParam(required = false) Integer ratings) {
+            @RequestParam(required = false) Integer ratings,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
 
-        return ResponseEntity.ok(
-                searchService.search(type, source, destination, city, min, max, ratings)
+        Object result = searchService.search(
+                type, source, destination, city, min, max, ratings, page, size
         );
+
+        return new ResponseEntity<>(result, HttpStatus.OK); 
     }
 }
-

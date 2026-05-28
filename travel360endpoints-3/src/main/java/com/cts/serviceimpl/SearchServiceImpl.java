@@ -9,7 +9,6 @@ import com.cts.service.HotelService;
 import com.cts.service.SearchService;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 
 @Service
 @AllArgsConstructor
@@ -27,39 +26,44 @@ public class SearchServiceImpl implements SearchService {
                          String city,
                          Double min,
                          Double max,
-                         Integer ratings) {
+                         Integer ratings,
+                         int page,
+                         int size) {
 
         switch (type.toLowerCase()) {
 
             case "flight":
                 validateFlight(source, destination);
-                return flightService.filterFlights(source, destination, min, max);
+                return flightService.filterFlights(source, destination, min, max, page, size);
+                // ✅ returns List<Flight>
 
             case "hotel":
                 validateHotel(city);
                 return hotelService.getFilteredHotels(city, ratings, min, max);
+                // ✅ returns List<Hotel>
 
             case "package":
                 return packageRepo.findAll();
+                // ✅ List
 
             case "transport":
                 return transportRepo.findAll();
+                // ✅ List
 
             default:
                 throw new IllegalArgumentException("Invalid search type");
         }
     }
 
-    
     private void validateFlight(String source, String destination) {
         if (source == null || destination == null) {
-            throw new IllegalArgumentException("Source and Destination are required for flight search");
+            throw new IllegalArgumentException("Source and Destination are required");
         }
     }
 
     private void validateHotel(String city) {
         if (city == null) {
-            throw new IllegalArgumentException("City is required for hotel search");
+            throw new IllegalArgumentException("City is required");
         }
     }
 }
