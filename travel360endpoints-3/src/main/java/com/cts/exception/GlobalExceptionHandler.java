@@ -82,5 +82,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleGeneric(Exception ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    @ExceptionHandler(PackageItineraryNotFound.class)
+	public ResponseEntity<?> handleItineraryNotFoundException(PackageItineraryNotFound ex) {
+		return new ResponseEntity<>(ex.getMessage(),HttpStatus.CONFLICT);
+	}
 }
 
