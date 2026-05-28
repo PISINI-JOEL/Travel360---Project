@@ -2,6 +2,7 @@ package com.cts.dto;
 
 import com.cts.enums.BookingStatus;
 import com.cts.enums.BookingType;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.*;
 
@@ -9,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BookingResponseDTO {
 
     private Long bookingId;
@@ -32,7 +34,10 @@ public class BookingResponseDTO {
     private Long transportId;
     private String transportType;
 
-    
+
     private Long packageId;
     private String packageName;
+
+
+    private Long itineraryId;
 }

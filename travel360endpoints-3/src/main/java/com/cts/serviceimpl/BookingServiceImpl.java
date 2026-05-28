@@ -297,6 +297,8 @@ public class BookingServiceImpl implements BookingService {
 
 				.packageName(booking.getTravelPackage() != null ? booking.getTravelPackage().getPackageName() : null)
 
+				.itineraryId(booking.getItinerary() != null ? booking.getItinerary().getItineraryId() : null)
+
 				.build();
 	}
 

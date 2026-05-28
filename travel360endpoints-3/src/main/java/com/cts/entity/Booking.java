@@ -59,6 +59,11 @@ public class Booking {
 	@ManyToOne
 	@JoinColumn(name = "transport_id")
 	private Transport transport;
+
+	@ManyToOne
+	@JoinColumn(name = "itinerary_id")
+	private Itinerary itinerary;
+
 	private LocalDate checkInDate;
 	private LocalDate checkOutDate;
 	

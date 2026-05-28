@@ -13,6 +13,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findByUserUserId(Long userId);
 
+    List<Booking> findByItineraryItineraryId(Long itineraryId);
+
 	@Query("SELECT COALESCE(SUM(b.units), 0) FROM Booking b WHERE b.flight.flightId = :flightId AND b.flight.flightDate = :bookingDate")
    public int getBookedSeats(@Param("flightId") long flightId,
                        @Param("bookingDate") LocalDate bookingDate);
