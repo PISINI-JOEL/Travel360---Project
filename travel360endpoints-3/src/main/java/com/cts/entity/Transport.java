@@ -40,7 +40,7 @@ public class Transport {
 	private String source;
 	private String destination;
 	private String transportType;
-;
+
 	private LocalDateTime departureTime;
 	private LocalDateTime arrivalTime;
 	
