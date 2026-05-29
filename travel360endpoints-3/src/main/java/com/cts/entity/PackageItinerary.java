@@ -25,12 +25,12 @@ public class PackageItinerary {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long package_itinerary_id;
-	private LocalDate start_date;
-	private LocalDate end_date;
+	private Long packageItineraryId;
+	private LocalDate startDate;
+	private LocalDate endDate;
 	private String status;
 	private String notes;
-	private LocalDateTime created_at;
+	private LocalDateTime createdAt;
 	private String detailedDescription;
 	private String keyHighlights;
 	private String guideName;

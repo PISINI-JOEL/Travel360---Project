@@ -35,6 +35,8 @@ public class FlightServiceImpl implements FlightService {
                 .price(dto.getPrice())
                 .status(dto.getStatus())
                 .build();
+        
+        
 
         return repo.save(flight);
     }

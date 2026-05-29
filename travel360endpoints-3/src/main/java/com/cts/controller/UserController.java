@@ -1,7 +1,6 @@
 package com.cts.controller;
 
 import com.cts.dto.*;
-import com.cts.entity.User;
 import com.cts.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,7 +37,7 @@ public class UserController {
 	}
 	@Operation(summary = "Get all Users")
 	@GetMapping
-	public ResponseEntity<List<User>> getAll() {
+	public ResponseEntity<List<UserResponseDTO>> getAll() {
 
 		return new ResponseEntity<>(service.getAllUsers(), HttpStatus.OK);
 	}

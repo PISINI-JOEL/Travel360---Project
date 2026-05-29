@@ -30,8 +30,7 @@ public class UserServiceImpl implements UserService {
 				.build();
 
 		user = repo.save(user);
-		return UserResponseDTO.builder().userId(user.getUserId()).email(user.getEmail()).role(user.getRole())
-				.status(user.getStatus()).build();
+		return mapToResponseDTO(user);
 	}
 
 	@Override
@@ -43,11 +42,16 @@ public class UserServiceImpl implements UserService {
 			throw new UserNotFoundException("Invalid login");
 		}
 
-		return UserResponseDTO.builder().userId(user.getUserId()).email(user.getEmail()).role(user.getRole())
-				.status(user.getStatus()).build();
+		return mapToResponseDTO(user);
 	}
 
-	public List<User> getAllUsers() {
-		return repo.findAll();
+	@Override
+	public List<UserResponseDTO> getAllUsers() {
+		return repo.findAll().stream().map(this::mapToResponseDTO).toList();
+	}
+
+	private UserResponseDTO mapToResponseDTO(User user) {
+		return UserResponseDTO.builder().userId(user.getUserId()).email(user.getEmail()).role(user.getRole())
+				.status(user.getStatus()).build();
 	}
 }

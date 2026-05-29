@@ -12,6 +12,7 @@ import com.cts.dto.BookingPackageResponseDTO;
 import com.cts.dto.BookingResponseDTO;
 import com.cts.dto.BookingTransportDTO;
 import com.cts.dto.BookingTransportResponseDTO;
+import com.cts.dto.PassengerCancelResponseDTO;
 import com.cts.entity.Booking;
 
 import java.util.List;
@@ -31,4 +32,6 @@ public interface BookingService {
 	List<BookingResponseDTO> getAllBookings();
 
 	BookingCancelResponseDTO deleteBooking(BookingCancelDTO dto);
+
+	PassengerCancelResponseDTO cancelPassenger(Long bookingId, Long passengerId, Long userId);
 }

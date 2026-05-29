@@ -42,7 +42,7 @@ public class Hotel {
     
     @ManyToOne
     @JoinColumn(name = "partner_id")
-    private Partner partnerId;
+    private Partner partner;
     
 
     

@@ -12,12 +12,16 @@ import com.cts.dto.BookingPackageResponseDTO;
 import com.cts.dto.BookingResponseDTO;
 import com.cts.dto.BookingTransportDTO;
 import com.cts.dto.BookingTransportResponseDTO;
+import com.cts.dto.PassengerCancelResponseDTO;
+import com.cts.dto.PassengerDTO;
+import com.cts.dto.PassengerResponseDTO;
 import com.cts.entity.*;
 import com.cts.enums.BookingStatus;
 import com.cts.enums.BookingType;
 import com.cts.enums.HotelStatus;
 import com.cts.enums.NotificationCategory;
 import com.cts.enums.PackageStatus;
+import com.cts.enums.PassengerStatus;
 import com.cts.enums.PaymentStatus;
 import com.cts.enums.TransportStatus;
 import com.cts.exception.FlightNotFoundException;
@@ -38,8 +42,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
-//pull check
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class BookingServiceImpl implements BookingService {
@@ -53,6 +60,7 @@ public class BookingServiceImpl implements BookingService {
 	private final NotificationService notificationService;
 	private final TransportRepository transportRepo;
 	private final PaymentRepository paymentRepo;
+	private final PassengerRepository passengerRepo;
 
 	@Override
 	@Transactional
@@ -70,7 +78,6 @@ public class BookingServiceImpl implements BookingService {
 			throw new InsufficientAvailabilityException("Not enough seats available");
 		}
 		if (dto.getFlightDate() == null || !dto.getFlightDate().equals(flight.getFlightDate())) {
-
 			throw new InvalidBookingException("Booking info not valid");
 		}
 
@@ -81,13 +88,15 @@ public class BookingServiceImpl implements BookingService {
 			throw new InvalidBookingException("Booking is not allowed 1 day before or on the same day of the flight");
 		}
 
+		validatePassengerCount(dto.getPassengers(), dto.getUnits());
+
 		Booking booking = Booking.builder().user(user).flight(flight).bookingType(BookingType.FLIGHT)
 				.bookingName(dto.getBookingName()).gender(dto.getGender()).amount(flight.getPrice() * dto.getUnits())
 				.units(dto.getUnits()).days(1).createdAt(LocalDateTime.now()).status(BookingStatus.PENDING)
 				.bookingDate(flight.getFlightDate()).build();
 
+		booking.setPassengers(buildPassengers(dto.getPassengers(), booking));
 		bookingRepo.save(booking);
-		// flightRepo.save(flight);
 
 		Invoice invoice = Invoice.builder().booking(booking).invoiceDate(LocalDateTime.now())
 				.amount(booking.getAmount()).status(PaymentStatus.PENDING).build();
@@ -103,7 +112,7 @@ public class BookingServiceImpl implements BookingService {
 				.departureTime(flight.getDepartureTime()).flightDate(flight.getFlightDate())
 				.bookingName(booking.getBookingName()).gender(booking.getGender()).flightId(flight.getFlightId())
 				.flightNumber(flight.getFlightNumber()).source(flight.getSource()).destination(flight.getDestination())
-				.build();
+				.passengers(mapPassengers(booking.getPassengers())).build();
 	}
 
 	@Override
@@ -116,15 +125,13 @@ public class BookingServiceImpl implements BookingService {
 				.orElseThrow(() -> new HotelNotFoundException("Hotel not found"));
 
 		int totalRooms = hotel.getTotalRooms();
-
 		int bookedRooms = bookingRepo.getBookedRooms(hotel.getHotelId());
-
 		int availableRooms = totalRooms - bookedRooms;
 
 		if (availableRooms < dto.getUnits()) {
 			throw new InsufficientAvailabilityException("Not enough rooms available");
 		}
-		long days = java.time.temporal.ChronoUnit.DAYS.between(dto.getCheckInDate(), dto.getCheckOutDate());
+		long days = ChronoUnit.DAYS.between(dto.getCheckInDate(), dto.getCheckOutDate());
 		if (days <= 0) {
 			throw new InvalidBookingException("Check-out date must be after check-in date");
 		}
@@ -191,18 +198,12 @@ public class BookingServiceImpl implements BookingService {
 
 		return BookingPackageResponseDTO.builder().bookingId(booking.getBookingId())
 				.bookingType(booking.getBookingType()).amount(booking.getAmount()).status(booking.getStatus())
-				.bookingDate(LocalDate.now())
-
-				.userId(user.getUserId()).email(user.getEmail()).units(dto.getUnits())
-
-				.bookingName(booking.getBookingName()).gender(booking.getGender())
-
-				.packageId(tpackage.getPackageId()).packageName(tpackage.getPackageName()).source(tpackage.getSource())
+				.bookingDate(LocalDate.now()).userId(user.getUserId()).email(user.getEmail()).units(dto.getUnits())
+				.bookingName(booking.getBookingName()).gender(booking.getGender()).packageId(tpackage.getPackageId())
+				.packageName(tpackage.getPackageName()).source(tpackage.getSource())
 				.destination(tpackage.getDestination()).durationDays(tpackage.getDurationDays())
 				.startDate(tpackage.getStartDate()).endDate(tpackage.getEndDate()).category(tpackage.getCategory())
-				.packageStatus(tpackage.getStatus())
-
-				.build();
+				.packageStatus(tpackage.getStatus()).build();
 	}
 
 	@Override
@@ -225,6 +226,8 @@ public class BookingServiceImpl implements BookingService {
 			throw new InsufficientAvailabilityException("Not enough seats available");
 		}
 
+		validatePassengerCount(dto.getPassengers(), dto.getUnits());
+
 		Booking booking = Booking.builder().user(user).transport(transport).bookingType(BookingType.TRANSPORT)
 				.bookingName(dto.getBookingName()).gender(dto.getGender()).units(dto.getUnits())
 				.amount(transport.getPrice() * dto.getUnits()).status(BookingStatus.PENDING)
@@ -232,6 +235,7 @@ public class BookingServiceImpl implements BookingService {
 						: LocalDate.now())
 				.build();
 
+		booking.setPassengers(buildPassengers(dto.getPassengers(), booking));
 		booking = bookingRepo.save(booking);
 
 		Invoice invoice = Invoice.builder().booking(booking).invoiceDate(LocalDateTime.now())
@@ -245,60 +249,42 @@ public class BookingServiceImpl implements BookingService {
 
 		return BookingTransportResponseDTO.builder().bookingId(booking.getBookingId())
 				.bookingType(booking.getBookingType()).amount(booking.getAmount()).status(booking.getStatus())
-				.bookingDate(booking.getBookingDate())
-
-				.userId(user.getUserId()).email(user.getEmail()).units(dto.getUnits())
-
-				.bookingName(booking.getBookingName()).gender(booking.getGender())
-
+				.bookingDate(booking.getBookingDate()).userId(user.getUserId()).email(user.getEmail())
+				.units(dto.getUnits()).bookingName(booking.getBookingName()).gender(booking.getGender())
 				.transportId(transport.getTransportId()).source(transport.getSource())
 				.destination(transport.getDestination()).transportType(transport.getTransportType())
 				.departureTime(transport.getDepartureTime()).arrivalTime(transport.getArrivalTime())
-
-				.build();
+				.passengers(mapPassengers(booking.getPassengers())).build();
 	}
 
 	@Override
 	public List<BookingResponseDTO> getBookingsByUser(Long userId) {
-
 		List<Booking> list = bookingRepo.findByUserUserId(userId);
-
-		return list.stream().map(this::mapToDTO).toList();
+		return list.stream().map(this::mapToDTO).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<BookingResponseDTO> getAllBookings() {
-
 		List<Booking> list = bookingRepo.findAll();
-
-		return list.stream().map(this::mapToDTO).toList();
+		return list.stream().map(this::mapToDTO).collect(Collectors.toList());
 	}
 
 	private BookingResponseDTO mapToDTO(Booking booking) {
-
 		return BookingResponseDTO.builder().bookingId(booking.getBookingId()).bookingType(booking.getBookingType())
-				.amount(booking.getAmount()).status(booking.getStatus())
-
-				.userId(booking.getUser().getUserId()).email(booking.getUser().getEmail()).units(booking.getUnits())
-
+				.amount(booking.getAmount()).status(booking.getStatus()).userId(booking.getUser().getUserId())
+				.email(booking.getUser().getEmail()).units(booking.getUnits())
 				.flightId(booking.getFlight() != null ? booking.getFlight().getFlightId() : null)
-
 				.flightNumber(booking.getFlight() != null ? booking.getFlight().getFlightNumber() : null)
-
 				.hotelId(booking.getHotel() != null ? booking.getHotel().getHotelId() : null)
-
 				.hotelName(booking.getHotel() != null ? booking.getHotel().getHotelName() : null)
-
 				.transportId(booking.getTransport() != null ? booking.getTransport().getTransportId() : null)
-
 				.transportType(booking.getTransport() != null ? booking.getTransport().getTransportType() : null)
-
 				.packageId(booking.getTravelPackage() != null ? booking.getTravelPackage().getPackageId() : null)
-
 				.packageName(booking.getTravelPackage() != null ? booking.getTravelPackage().getPackageName() : null)
-
 				.itineraryId(booking.getItinerary() != null ? booking.getItinerary().getItineraryId() : null)
-
+				.passengers(booking.getPassengers() != null && !booking.getPassengers().isEmpty() 
+				? mapPassengers(booking.getPassengers()) 
+				: null)
 				.build();
 	}
 
@@ -306,133 +292,221 @@ public class BookingServiceImpl implements BookingService {
 	@Transactional
 	public BookingCancelResponseDTO deleteBooking(BookingCancelDTO dto) {
 
-	    
-	    Booking booking = bookingRepo.findById(dto.getBookingId())
-	            .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+		Booking booking = bookingRepo.findById(dto.getBookingId())
+				.orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
-	    
-	    if (!booking.getUser().getUserId().equals(dto.getUserId())) {
-	        throw new InvalidBookingException("Booking does not belong to the given user");
-	    }
+		if (!booking.getUser().getUserId().equals(dto.getUserId())) {
+			throw new InvalidBookingException("Booking does not belong to the given user");
+		}
 
-	    if (booking.getStatus() == BookingStatus.CANCELLED) {
-	        throw new InvalidBookingException("Booking is already cancelled");
-	    }
+		if (booking.getStatus() == BookingStatus.CANCELLED) {
+			throw new InvalidBookingException("Booking is already cancelled");
+		}
 
-	    LocalDateTime now = LocalDateTime.now();
+		LocalDateTime now = LocalDateTime.now();
+		double refundAmount = 0.0;
+		String refundStatus = "NONE";
 
-	    double refundAmount = 0.0;
-	    String refundStatus = "NONE";
+		if (booking.getStatus() == BookingStatus.PENDING) {
+			booking.setStatus(BookingStatus.CANCELLED);
+			bookingRepo.save(booking);
 
-	    
-	    if (booking.getStatus() == BookingStatus.PENDING) {
+			notificationService.sendNotification(booking.getUser(),
+					"Booking cancelled (no payment made). Booking ID: " + booking.getBookingId(),
+					NotificationCategory.BOOKING);
 
-	        booking.setStatus(BookingStatus.CANCELLED);
-	        bookingRepo.save(booking);
+			return BookingCancelResponseDTO.builder().bookingId(booking.getBookingId())
+					.userId(booking.getUser().getUserId()).status(booking.getStatus())
+					.originalAmount(booking.getAmount()).refundAmount(0.0).deductionAmount(booking.getAmount())
+					.bookingDate(booking.getBookingDate()).cancelledAt(now).refundStatus("NONE")
+					.message("Booking cancelled successfully (no payment made)").build();
+		}
 
-	        notificationService.sendNotification(
-	                booking.getUser(),
-	                "Booking cancelled (no payment made). Booking ID: " + booking.getBookingId(),
-	                NotificationCategory.BOOKING
-	        );
+		if (booking.getStatus() == BookingStatus.CONFIRMED) {
+			refundAmount = calculateRefundAmount(booking.getAmount(), booking.getBookingDate());
 
-	        return BookingCancelResponseDTO.builder()
-	                .bookingId(booking.getBookingId())
-	                .userId(booking.getUser().getUserId())
-	                .status(booking.getStatus())
-	                .originalAmount(booking.getAmount())
-	                .refundAmount(0.0)
-	                .deductionAmount(booking.getAmount())
-	                .bookingDate(booking.getBookingDate())
-	                .cancelledAt(now)
-	                .refundStatus("NONE")
-	                .message("Booking cancelled successfully (no payment made)")
-	                .build();
-	    }
+			if (refundAmount == booking.getAmount()) {
+				refundStatus = "FULL";
+			} else if (refundAmount > 0) {
+				refundStatus = "PARTIAL";
+			} else {
+				refundStatus = "NONE";
+			}
 
-	    
-	    if (booking.getStatus() == BookingStatus.CONFIRMED) {
+			booking.setStatus(BookingStatus.CANCELLED);
+			bookingRepo.save(booking);
 
-	        LocalDate today = LocalDate.now();
-	        LocalDate bookingDate = booking.getBookingDate();
+			Invoice refundInvoice = Invoice.builder().booking(booking).invoiceDate(now).amount(refundAmount)
+					.status(PaymentStatus.REFUNDED).build();
 
-	        if (bookingDate == null) {
-	            throw new InvalidBookingException("Invalid booking date");
-	        }
+			invoiceRepo.save(refundInvoice);
 
-	        long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(today, bookingDate);
+			Payment refundPayment = Payment.builder().invoice(refundInvoice).amount(refundAmount)
+					.status(PaymentStatus.REFUNDED).paymentDate(now).paymentMethod("UPI").build();
 
-	        if (daysBetween <= 1) {
-	            throw new InvalidBookingException(
-	                    "Cancellation not allowed less than 1 day before booking date");
-	        }
+			paymentRepo.save(refundPayment);
 
-	        if (daysBetween > 7) {
-	            refundAmount = booking.getAmount();
-	            refundStatus = "FULL";
-	        } else if (daysBetween >= 4) {
-	            refundAmount = booking.getAmount() * 0.80;
-	            refundStatus = "PARTIAL";
-	        } else {
-	            refundAmount = booking.getAmount() * 0.60;
-	            refundStatus = "PARTIAL";
-	        }
+			notificationService.sendNotification(booking.getUser(),
+					"Booking cancelled. Refund amount: " + refundAmount + " | Booking ID: " + booking.getBookingId(),
+					NotificationCategory.BOOKING);
 
-	     
-	        booking.setStatus(BookingStatus.CANCELLED);
-	        bookingRepo.save(booking);
+			return BookingCancelResponseDTO.builder().bookingId(booking.getBookingId())
+					.userId(booking.getUser().getUserId()).status(booking.getStatus())
+					.originalAmount(booking.getAmount()).refundAmount(refundAmount)
+					.deductionAmount(booking.getAmount() - refundAmount).bookingDate(booking.getBookingDate())
+					.cancelledAt(now).refundStatus(refundStatus).message("Booking cancelled successfully").build();
+		}
 
-	        
-	        Invoice refundInvoice = Invoice.builder()
-	                .booking(booking)
-	                .invoiceDate(now)
-	                .amount(refundAmount)
-	                .status(PaymentStatus.REFUNDED)
-	                .build();
-
-	        invoiceRepo.save(refundInvoice);
-
-	        
-	        Payment refundPayment = Payment.builder()
-	                .invoice(refundInvoice)   
-	                .amount(refundAmount)
-	                .status(PaymentStatus.REFUNDED)
-	                .paymentDate(now)
-	                .paymentMethod("UPI")
-	                .build();
-
-	        paymentRepo.save(refundPayment);
-
-	        
-	        notificationService.sendNotification(
-	                booking.getUser(),
-	                "Booking cancelled. Refund amount: " + refundAmount +
-	                        " | Booking ID: " + booking.getBookingId(),
-	                NotificationCategory.BOOKING
-	        );
-//check
-	        return BookingCancelResponseDTO.builder()
-	                .bookingId(booking.getBookingId())
-	                .userId(booking.getUser().getUserId())
-	                .status(booking.getStatus())
-	                .originalAmount(booking.getAmount())
-	                .refundAmount(refundAmount)
-	                .deductionAmount(booking.getAmount() - refundAmount)
-	                .bookingDate(booking.getBookingDate())
-	                .cancelledAt(now)
-	                .refundStatus(refundStatus)
-	                .message("Booking cancelled successfully")
-	                .build();
-	    }
-
-	    throw new InvalidBookingException("Invalid booking state");
+		throw new InvalidBookingException("Invalid booking state");
 	}
 
 	private void createInvoice(Booking booking) {
 		Invoice invoice = Invoice.builder().booking(booking).invoiceDate(LocalDateTime.now())
 				.amount(booking.getAmount()).status(PaymentStatus.PENDING).build();
-
 		invoiceRepo.save(invoice);
 	}
 
+	@Override
+	@Transactional
+	public PassengerCancelResponseDTO cancelPassenger(Long bookingId, Long passengerId, Long userId) {
+
+		Booking booking = bookingRepo.findById(bookingId)
+				.orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+
+		if (!booking.getUser().getUserId().equals(userId)) {
+			throw new InvalidBookingException("Booking does not belong to the given user");
+		}
+
+		if (booking.getStatus() == BookingStatus.CANCELLED) {
+			throw new InvalidBookingException("Booking is already cancelled");
+		}
+
+		if (booking.getBookingType() != BookingType.FLIGHT && booking.getBookingType() != BookingType.TRANSPORT) {
+			throw new InvalidBookingException(
+					"Passenger cancellation is only allowed for flight and transport bookings");
+		}
+
+		Passenger passenger = passengerRepo.findById(passengerId)
+				.orElseThrow(() -> new ResourceNotFoundException("Passenger not found"));
+
+		if (passenger.getBooking() == null || !passenger.getBooking().getBookingId().equals(bookingId)) {
+			throw new InvalidBookingException("Passenger does not belong to the given booking");
+		}
+
+		if (passenger.getStatus() == PassengerStatus.CANCELLED) {
+			throw new InvalidBookingException("Passenger is already cancelled");
+		}
+
+		LocalDateTime now = LocalDateTime.now();
+		long activePassengers = passengerRepo.countByBookingBookingIdAndStatus(bookingId, PassengerStatus.ACTIVE);
+
+		if (activePassengers <= 1) {
+			BookingCancelDTO cancelDto = new BookingCancelDTO();
+			cancelDto.setBookingId(bookingId);
+			cancelDto.setUserId(userId);
+			BookingCancelResponseDTO full = deleteBooking(cancelDto);
+
+			passenger.setStatus(PassengerStatus.CANCELLED);
+			passengerRepo.save(passenger);
+
+			return PassengerCancelResponseDTO.builder().bookingId(bookingId).passengerId(passengerId)
+					.passengerName(passenger.getPassengerName()).bookingStatus(BookingStatus.CANCELLED)
+					.remainingUnits(0).refundAmount(full.getRefundAmount()).deductionAmount(full.getDeductionAmount())
+					.refundStatus(full.getRefundStatus()).cancelledAt(now)
+					.message("Last passenger removed; entire booking cancelled").build();
+		}
+
+		double perSeat = booking.getAmount() / booking.getUnits();
+		double refundAmount = 0.0;
+		String refundStatus = "NONE";
+
+		if (booking.getStatus() == BookingStatus.CONFIRMED) {
+			refundAmount = calculateRefundAmount(perSeat, booking.getBookingDate());
+
+			if (refundAmount == perSeat) {
+				refundStatus = "FULL";
+			} else if (refundAmount > 0) {
+				refundStatus = "PARTIAL";
+			} else {
+				refundStatus = "NONE";
+			}
+		}
+
+		booking.setUnits(booking.getUnits() - 1);
+		booking.setAmount(booking.getAmount() - perSeat);
+		bookingRepo.save(booking);
+
+		passenger.setStatus(PassengerStatus.CANCELLED);
+		passengerRepo.save(passenger);
+
+		if (refundAmount > 0) {
+			Invoice refundInvoice = Invoice.builder().booking(booking).invoiceDate(now).amount(refundAmount)
+					.status(PaymentStatus.REFUNDED).build();
+			invoiceRepo.save(refundInvoice);
+
+			Payment refundPayment = Payment.builder().invoice(refundInvoice).amount(refundAmount)
+					.status(PaymentStatus.REFUNDED).paymentDate(now).paymentMethod("UPI").build();
+			paymentRepo.save(refundPayment);
+		}
+
+		notificationService.sendNotification(booking.getUser(), "Passenger " + passenger.getPassengerName()
+				+ " removed from booking " + bookingId + ". Refund: " + refundAmount, NotificationCategory.BOOKING);
+
+		return PassengerCancelResponseDTO.builder().bookingId(bookingId).passengerId(passengerId)
+				.passengerName(passenger.getPassengerName()).bookingStatus(booking.getStatus())
+				.remainingUnits(booking.getUnits()).refundAmount(refundAmount).deductionAmount(perSeat - refundAmount)
+				.refundStatus(refundStatus).cancelledAt(now).message("Passenger removed from booking").build();
+	}
+
+	private void validatePassengerCount(List<PassengerDTO> passengers, int units) {
+		int count = passengers == null ? 0 : passengers.size();
+		if (count != units) {
+			throw new InvalidBookingException(
+					"Passenger count (" + count + ") must match the number of units (" + units + ")");
+		}
+	}
+
+	private List<Passenger> buildPassengers(List<PassengerDTO> passengers, Booking booking) {
+		return passengers.stream()
+				.map(p -> Passenger.builder().passengerName(p.getPassengerName()).dateOfBirth(p.getDateOfBirth())
+						.gender(p.getGender()).contactNo(p.getContactNo()).emailAddress(p.getEmailAddress())
+						.nationality(p.getNationality()).identificationNumber(p.getIdentificationNumber())
+						.status(PassengerStatus.ACTIVE).booking(booking).build())
+				.collect(Collectors.toList());
+	}
+
+	private List<PassengerResponseDTO> mapPassengers(List<Passenger> passengers) {
+		return passengers.stream().map(this::toPassengerResponse).collect(Collectors.toList());
+	}
+
+	private PassengerResponseDTO toPassengerResponse(Passenger p) {
+		return PassengerResponseDTO.builder().passengerId(p.getPassengerId()).passengerName(p.getPassengerName())
+				.dateOfBirth(p.getDateOfBirth()).gender(p.getGender()).contactNo(p.getContactNo())
+				.emailAddress(p.getEmailAddress()).nationality(p.getNationality())
+				.identificationNumber(p.getIdentificationNumber()).status(p.getStatus()).build();
+	}
+
+	private double calculateRefundAmount(double amount, LocalDate bookingDate) {
+		if (bookingDate == null) {
+			throw new InvalidBookingException("Invalid booking date");
+		}
+
+		long daysBetween = ChronoUnit.DAYS.between(LocalDate.now(), bookingDate);
+
+		if (daysBetween <= 0) {
+			return 0.0;
+		}
+
+		if (daysBetween == 1) {
+			throw new InvalidBookingException("Cancellation not allowed less than 1 day before booking date");
+		}
+
+		if (daysBetween > 7) {
+			return amount;
+		} else if (daysBetween >= 4) {
+			return amount * 0.80;
+		} else {
+			return amount * 0.60;
+		}
+	}
 }

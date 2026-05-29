@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -35,8 +35,7 @@ public class ItineraryServiceImpl implements ItineraryService {
 	@Transactional
 	public ItineraryResponseDTO createItinerary(CreateItineraryDTO dto) {
 
-		User user = userRepo.findById(dto.getUserId())
-				.orElseThrow(() -> new UserNotFoundException("User not found"));
+		User user = userRepo.findById(dto.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
 
 		if (!dto.getEndDate().isAfter(dto.getStartDate())) {
 			throw new InvalidBookingException("End date must be after start date");
@@ -44,6 +43,7 @@ public class ItineraryServiceImpl implements ItineraryService {
 
 		Itinerary itinerary = Itinerary.builder().tripName(dto.getTripName()).description(dto.getDescription())
 				.startDate(dto.getStartDate()).endDate(dto.getEndDate()).createdAt(LocalDateTime.now()).user(user)
+				.bookings(new ArrayList<>()) // Initialize list to prevent NullPointerExceptions
 				.build();
 
 		itinerary = itineraryRepo.save(itinerary);
@@ -69,7 +69,13 @@ public class ItineraryServiceImpl implements ItineraryService {
 			throw new InvalidBookingException("Booking already belongs to an itinerary");
 		}
 
+		// Synchronize the bidirectional relationship in-memory
 		booking.setItinerary(itinerary);
+		if (itinerary.getBookings() == null) {
+			itinerary.setBookings(new ArrayList<>());
+		}
+		itinerary.getBookings().add(booking);
+
 		bookingRepo.save(booking);
 
 		return mapToDTO(itinerary);
@@ -90,7 +96,12 @@ public class ItineraryServiceImpl implements ItineraryService {
 			throw new InvalidBookingException("Booking does not belong to this itinerary");
 		}
 
+		// Synchronize the bidirectional relationship in-memory during removal
 		booking.setItinerary(null);
+		if (itinerary.getBookings() != null) {
+			itinerary.getBookings().remove(booking);
+		}
+
 		bookingRepo.save(booking);
 
 		return mapToDTO(itinerary);
@@ -162,12 +173,17 @@ public class ItineraryServiceImpl implements ItineraryService {
 
 	private ItineraryResponseDTO mapToDTO(Itinerary itinerary) {
 
-		List<Booking> bookings = bookingRepo.findByItineraryItineraryId(itinerary.getItineraryId());
+		// Optimized to read straight from the object list, avoiding extra DB queries
+		List<Booking> bookings = itinerary.getBookings() != null ? itinerary.getBookings() : new ArrayList<>();
 
-		List<BookingResponseDTO> bookingDTOs = bookings.stream()
-				.sorted(Comparator.comparing(Booking::getBookingDate,
-						Comparator.nullsLast(Comparator.naturalOrder())))
-				.map(this::mapBookingToDTO).toList();
+		// Cleaned up with simpler arrow lambda syntax for sorting
+		List<BookingResponseDTO> bookingDTOs = bookings.stream().sorted((b1, b2) -> {
+			if (b1.getBookingDate() == null)
+				return 1;
+			if (b2.getBookingDate() == null)
+				return -1;
+			return b1.getBookingDate().compareTo(b2.getBookingDate());
+		}).map(this::mapBookingToDTO).toList();
 
 		double totalTripAmount = bookings.stream().mapToDouble(Booking::getAmount).sum();
 
@@ -181,29 +197,16 @@ public class ItineraryServiceImpl implements ItineraryService {
 	private BookingResponseDTO mapBookingToDTO(Booking booking) {
 
 		return BookingResponseDTO.builder().bookingId(booking.getBookingId()).bookingType(booking.getBookingType())
-				.amount(booking.getAmount()).status(booking.getStatus())
-
-				.userId(booking.getUser().getUserId()).email(booking.getUser().getEmail()).units(booking.getUnits())
-
+				.amount(booking.getAmount()).status(booking.getStatus()).userId(booking.getUser().getUserId())
+				.email(booking.getUser().getEmail()).units(booking.getUnits())
 				.flightId(booking.getFlight() != null ? booking.getFlight().getFlightId() : null)
-
 				.flightNumber(booking.getFlight() != null ? booking.getFlight().getFlightNumber() : null)
-
 				.hotelId(booking.getHotel() != null ? booking.getHotel().getHotelId() : null)
-
 				.hotelName(booking.getHotel() != null ? booking.getHotel().getHotelName() : null)
-
 				.transportId(booking.getTransport() != null ? booking.getTransport().getTransportId() : null)
-
 				.transportType(booking.getTransport() != null ? booking.getTransport().getTransportType() : null)
-
 				.packageId(booking.getTravelPackage() != null ? booking.getTravelPackage().getPackageId() : null)
-
 				.packageName(booking.getTravelPackage() != null ? booking.getTravelPackage().getPackageName() : null)
-
-				.itineraryId(booking.getItinerary() != null ? booking.getItinerary().getItineraryId() : null)
-
-				.build();
+				.itineraryId(booking.getItinerary() != null ? booking.getItinerary().getItineraryId() : null).build();
 	}
-
 }

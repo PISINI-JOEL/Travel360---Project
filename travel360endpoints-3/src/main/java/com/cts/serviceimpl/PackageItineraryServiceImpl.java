@@ -28,11 +28,11 @@ public class PackageItineraryServiceImpl implements PackageItineraryService {
                 .orElseThrow(() -> new PackageNotFoundException("Package not found with id: " + dto.getPackageId()));
 
         PackageItinerary itinerary = PackageItinerary.builder()
-                .start_date(dto.getStart_date())
-                .end_date(dto.getEnd_date())
+                .startDate(dto.getStart_date())
+                .endDate(dto.getEnd_date())
                 .status(dto.getStatus())
                 .notes(dto.getNotes())
-                .created_at(java.time.LocalDateTime.now())
+                .createdAt(java.time.LocalDateTime.now())
                 .travelPackage(pkg)
                 .build();
 
@@ -59,12 +59,12 @@ public class PackageItineraryServiceImpl implements PackageItineraryService {
                 pkg.getPrice(),
                 pkg.getStatus(),
                 pkg.getDestination(),
-                itinerary.getPackage_itinerary_id(),
-                itinerary.getStart_date(),
-                itinerary.getEnd_date(),
+                itinerary.getPackageItineraryId(),
+                itinerary.getStartDate(),
+                itinerary.getEndDate(),
                 itinerary.getStatus(),
                 itinerary.getNotes(),
-                itinerary.getCreated_at(),
+                itinerary.getCreatedAt(),
                 itinerary.getDetailedDescription(),
                 itinerary.getKeyHighlights(),
                 itinerary.getGuideName(),

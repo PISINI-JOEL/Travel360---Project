@@ -3,6 +3,7 @@ package com.cts.dto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 import com.cts.enums.BookingStatus;
 import com.cts.enums.BookingType;
@@ -41,4 +42,6 @@ public class BookingFlightResponseDTO {
     private String flightNumber;
     private String source;
     private String destination;
+
+    private List<PassengerResponseDTO> passengers;
 }

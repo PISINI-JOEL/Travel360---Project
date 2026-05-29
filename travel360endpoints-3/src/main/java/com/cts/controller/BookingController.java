@@ -12,6 +12,7 @@ import com.cts.dto.BookingPackageResponseDTO;
 import com.cts.dto.BookingResponseDTO;
 import com.cts.dto.BookingTransportDTO;
 import com.cts.dto.BookingTransportResponseDTO;
+import com.cts.dto.PassengerCancelResponseDTO;
 import com.cts.service.BookingService;
 
 import jakarta.validation.Valid;
@@ -69,9 +70,18 @@ public class BookingController {
 	@PostMapping("/cancel")
 	public ResponseEntity<BookingCancelResponseDTO> cancelBooking(
 	        @RequestBody BookingCancelDTO dto) {
-	 
+
 	    BookingCancelResponseDTO response = service.deleteBooking(dto);
 	    return ResponseEntity.ok(response);
+	}
+
+	@DeleteMapping("/{bookingId}/passengers/{passengerId}")
+	public ResponseEntity<PassengerCancelResponseDTO> cancelPassenger(
+	        @PathVariable Long bookingId,
+	        @PathVariable Long passengerId,
+	        @RequestParam Long userId) {
+
+	    return ResponseEntity.ok(service.cancelPassenger(bookingId, passengerId, userId));
 	}
 
 }

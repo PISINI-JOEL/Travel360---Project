@@ -1,9 +1,13 @@
 package com.cts.dto;
 
+import java.util.List;
+
 import com.cts.enums.Gender;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -27,5 +31,10 @@ public class BookingTransportDTO {
     private String bookingName;  
 
     @NotNull(message = "Gender is required")
-    private Gender gender;       
+    private Gender gender;
+
+    @NotEmpty(message = "At least one passenger is required")
+    @Size(max = 15, message = "You cannot add more than 15 passengers at once")
+    @Valid
+    private List<PassengerDTO> passengers;
 }

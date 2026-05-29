@@ -3,8 +3,11 @@ package com.cts.entity;
 import java.time.LocalDate;
 
 import com.cts.enums.Gender;
+import com.cts.enums.PassengerStatus;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,7 +24,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-@Table(name="person")
+@Table(name="passenger")
 public class Passenger {
 
 	@Id
@@ -29,11 +32,15 @@ public class Passenger {
 	private Long passengerId;
 	private String passengerName;
 	private LocalDate dateOfBirth;
+	@Enumerated(EnumType.STRING)
 	private Gender gender;
 	private String contactNo;
 	private String emailAddress;
 	private String nationality;
 	private String identificationNumber;
+
+	@Enumerated(EnumType.STRING)
+	private PassengerStatus status;
 
     @ManyToOne
     @JoinColumn(name = "booking_id", nullable = false)

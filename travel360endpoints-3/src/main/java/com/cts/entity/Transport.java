@@ -51,7 +51,7 @@ public class Transport {
 	private TransportStatus transportStatus;
 	@ManyToOne
 	@JoinColumn(name = "partner_id")
-	private Partner partnerId;
+	private Partner partner;
 	
 		
 	

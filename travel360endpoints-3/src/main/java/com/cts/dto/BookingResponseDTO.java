@@ -1,5 +1,7 @@
 package com.cts.dto;
 
+import java.util.List;
+
 import com.cts.enums.BookingStatus;
 import com.cts.enums.BookingType;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,7 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL) // Attributes with Null values will not be shown in output
 public class BookingResponseDTO {
 
     private Long bookingId;
@@ -40,4 +42,7 @@ public class BookingResponseDTO {
 
 
     private Long itineraryId;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<PassengerResponseDTO> passengers;
 }

@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.cts.enums.BookingStatus;
 import com.cts.enums.BookingType;
@@ -63,6 +65,10 @@ public class Booking {
 	@ManyToOne
 	@JoinColumn(name = "itinerary_id")
 	private Itinerary itinerary;
+
+	@OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+	@Builder.Default
+	private List<Passenger> passengers = new ArrayList<>();
 
 	private LocalDate checkInDate;
 	private LocalDate checkOutDate;
