@@ -44,6 +44,8 @@ public class ItineraryController {
 
 		return new ResponseEntity<>(service.getUserItineraries(userId), HttpStatus.OK);
 	}
+	
+	//check
 
 	@GetMapping("/{itineraryId}")
 	public ResponseEntity<ItineraryResponseDTO> getItineraryById(@PathVariable Long itineraryId,
