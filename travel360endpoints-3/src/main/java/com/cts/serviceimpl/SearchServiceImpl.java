@@ -18,6 +18,7 @@ public class SearchServiceImpl implements SearchService {
     private final HotelService hotelService;
     private final TravelPackageRepository packageRepo;
     private final TransportRepository transportRepo;
+    private final TransportServiceImpl transportServiceImpl;
 
     @Override
     public Object search(String type,
@@ -39,7 +40,7 @@ public class SearchServiceImpl implements SearchService {
 
             case "hotel":
                 validateHotel(city);
-                return hotelService.getFilteredHotels(city, ratings, min, max);
+                return hotelService.getFilteredHotels(city, ratings, min, max,page,size);
                 // ✅ returns List<Hotel>
 
             case "package":
@@ -47,7 +48,7 @@ public class SearchServiceImpl implements SearchService {
                 // ✅ List
 
             case "transport":
-                return transportRepo.findAll();
+                return transportServiceImpl.findByRoute(source, destination, page, size);
                 // ✅ List
 
             default:

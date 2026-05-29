@@ -2,6 +2,9 @@ package com.cts.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,10 +33,10 @@ public class HotelController {
 
     
     @GetMapping("/city/{location}")
-    public ResponseEntity<List<Hotel>> getHotelsByLocation(@PathVariable String location) {
-
-        List<Hotel> hotels = hotelService.findByLocation(location);
-        return new ResponseEntity<>(hotels, HttpStatus.OK);
+    public ResponseEntity<List<Hotel>> getHotelsByLocation(@PathVariable String location,@RequestParam(defaultValue = "0")int page, @RequestParam(defaultValue = "5") int size) {
+    	
+       List<Hotel> hotels = hotelService.findByLocation(location,page,size);
+        return new ResponseEntity<>(hotels,HttpStatus.OK);
     }
 
     
@@ -42,10 +45,10 @@ public class HotelController {
             @RequestParam(required = false) String city,
             @RequestParam(required = false) Integer ratings,
             @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice) {
+            @RequestParam(required = false) Double maxPrice,int page,int size) {
 
         return new ResponseEntity<>(
-                hotelService.getFilteredHotels(city, ratings, minPrice, maxPrice),
+                hotelService.getFilteredHotels(city, ratings, minPrice, maxPrice,page,size),
                 HttpStatus.OK
         );
     }

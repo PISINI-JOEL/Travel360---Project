@@ -3,6 +3,9 @@ package com.cts.serviceimpl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.cts.dto.HotelDTO;
@@ -11,6 +14,7 @@ import com.cts.enums.HotelStatus;
 import com.cts.repository.HotelRepository;
 import com.cts.service.HotelService;
 
+import jakarta.validation.ReportAsSingleViolation;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -38,15 +42,6 @@ public class HotelServiceImpl implements HotelService {
         return hotelrepo.save(hotel);
     }
 
-   
-    @Override
-    public List<Hotel> findByLocation(String location) {
-
-        return hotelrepo.findByCity(location);
-    }
-
-    
-    
 
 
     @Override
@@ -54,16 +49,17 @@ public class HotelServiceImpl implements HotelService {
             String location,
             Integer ratings,
             Double minPrice,
-            Double maxPrice) {
+            Double maxPrice,int page,int size) {
 
-        List<Hotel> hotels = hotelrepo.filterHotels(
+    	Pageable pageable = PageRequest.of(page, size);
+        Page<Hotel> hotelPage = hotelrepo.filterHotels(
                 location,
                 ratings,
                 minPrice,
-                maxPrice
+                maxPrice,pageable
         );
 
-        return hotels.stream()
+        return hotelPage.stream()
                 .map(h -> Hotel.builder()
                         .hotelName(h.getHotelName())   
                         .hotelId(h.getHotelId())
@@ -75,4 +71,13 @@ public class HotelServiceImpl implements HotelService {
                         .build())
                 .toList();
     }
+
+
+	@Override
+	public List<Hotel> findByLocation(String location, int page, int size) {
+		// TODO Auto-generated method stub
+		 Pageable pageable = PageRequest.of(page, size);
+		 Page<Hotel> hotelPage= hotelrepo.findByCity(location,pageable);
+		return hotelPage.getContent();
+	}
 }

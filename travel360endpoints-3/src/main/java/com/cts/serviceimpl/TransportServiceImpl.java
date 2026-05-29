@@ -2,6 +2,9 @@ package com.cts.serviceimpl;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.cts.dto.TransportDTO;
@@ -41,27 +44,33 @@ public class TransportServiceImpl implements TransportService {
     }
 
     @Override
-    public List<TransportResponseDTO> getAllTransports() {
+    public List<TransportResponseDTO> getAllTransports(int page,int size) {
 
-        return transportRepo.findAll()
+    	Pageable pageable=PageRequest.of(page, size);
+    	return transportRepo.findAll(pageable)
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    	
+    	
+    }
+
+    @Override
+    public List<TransportResponseDTO> findByRoute(String source, String destination,int page,int size) {
+
+    	Pageable pageable=PageRequest.of(page, size);
+    	
+        return transportRepo.findBySourceAndDestination(source, destination,pageable)
                 .stream()
                 .map(this::mapToDTO)
                 .toList();
     }
 
     @Override
-    public List<TransportResponseDTO> findByRoute(String source, String destination) {
+    public List<TransportResponseDTO> findByStatus(TransportStatus status,int page,int size) {
 
-        return transportRepo.findBySourceAndDestination(source, destination)
-                .stream()
-                .map(this::mapToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<TransportResponseDTO> findByStatus(TransportStatus status) {
-
-        return transportRepo.findByTransportStatus(status)
+    	Pageable pageable=PageRequest.of(page, size);
+        return transportRepo.findByTransportStatus(status,pageable)
                 .stream()
                 .map(this::mapToDTO)
                 .toList();

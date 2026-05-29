@@ -28,19 +28,19 @@ public class TransportController {
 	}
 
 	@GetMapping
-	public List<TransportResponseDTO> getAll() {
-		return service.getAllTransports();
+	public List<TransportResponseDTO> getAll(int page,int size) {
+		return service.getAllTransports(page,size);
 	}
 
 	@GetMapping("/search")
-	public List<TransportResponseDTO> findByRoute(@RequestParam String source, @RequestParam String destination) {
+	public List<TransportResponseDTO> findByRoute(@RequestParam String source, @RequestParam String destination,int page,int size) {
 
-		return service.findByRoute(source, destination);
+		return service.findByRoute(source, destination,page,size);
 	}
 
 	@GetMapping("/status/{status}")
-	public List<TransportResponseDTO> findByStatus(@PathVariable TransportStatus status) {
+	public List<TransportResponseDTO> findByStatus(@PathVariable TransportStatus status,int page,int size) {
 
-		return service.findByStatus(status);
+		return service.findByStatus(status,page,size);
 	}
 }
