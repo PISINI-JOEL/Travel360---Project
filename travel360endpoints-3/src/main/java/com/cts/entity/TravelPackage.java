@@ -42,4 +42,10 @@ public class TravelPackage {
 
     @Enumerated(EnumType.STRING)
     private PackageStatus status;
+    
+
+    @ManyToOne
+    @JoinColumn(name = "partner_id")
+    private Partner partner;
+
 }

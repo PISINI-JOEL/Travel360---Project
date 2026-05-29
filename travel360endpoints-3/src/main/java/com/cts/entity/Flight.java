@@ -37,4 +37,8 @@ public class Flight {
 	private double price;
 	@Enumerated(EnumType.STRING)
 	private FlightStatus status;
+	
+	@ManyToOne
+	@JoinColumn(name = "partner_id")
+	private Partner partnerId;
 }
