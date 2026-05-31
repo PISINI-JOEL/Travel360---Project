@@ -18,6 +18,7 @@ import com.cts.dto.PassengerResponseDTO;
 import com.cts.entity.*;
 import com.cts.enums.BookingStatus;
 import com.cts.enums.BookingType;
+import com.cts.enums.FlightStatus;
 import com.cts.enums.HotelStatus;
 import com.cts.enums.NotificationCategory;
 import com.cts.enums.PackageStatus;
@@ -70,6 +71,10 @@ public class BookingServiceImpl implements BookingService {
 
 		Flight flight = flightRepo.findById(dto.getFlightId())
 				.orElseThrow(() -> new FlightNotFoundException("Flight not found"));
+
+		if (flight.getStatus() != FlightStatus.SCHEDULED) {
+			throw new InvalidBookingException("Flight is not available for booking");
+		}
 
 		int totalSeats = flight.getTotalSeats();
 		int bookedSeats = bookingRepo.getBookedSeats(flight.getFlightId(), dto.getFlightDate());
@@ -311,6 +316,15 @@ public class BookingServiceImpl implements BookingService {
 			booking.setStatus(BookingStatus.CANCELLED);
 			bookingRepo.save(booking);
 
+			// No payment was made: void the still-unpaid invoice(s) so they are not
+			// left dangling as an outstanding (PENDING) bill on a cancelled booking.
+			invoiceRepo.findByBookingBookingId(booking.getBookingId()).stream()
+					.filter(inv -> inv.getStatus() == PaymentStatus.PENDING)
+					.forEach(inv -> {
+						inv.setStatus(PaymentStatus.CANCELLED);
+						invoiceRepo.save(inv);
+					});
+
 			notificationService.sendNotification(booking.getUser(),
 					"Booking cancelled (no payment made). Booking ID: " + booking.getBookingId(),
 					NotificationCategory.BOOKING);
@@ -435,6 +449,17 @@ public class BookingServiceImpl implements BookingService {
 		booking.setUnits(booking.getUnits() - 1);
 		booking.setAmount(booking.getAmount() - perSeat);
 		bookingRepo.save(booking);
+
+		// Keep the original (still unpaid) invoice in sync with the reduced booking
+		// amount. A paid SUCCESS invoice is left intact as an audit record of money
+		// already collected; that giveback is captured by the REFUNDED invoice below.
+		invoiceRepo.findByBookingBookingId(bookingId).stream()
+				.filter(inv -> inv.getStatus() == PaymentStatus.PENDING)
+				.findFirst()
+				.ifPresent(inv -> {
+					inv.setAmount(booking.getAmount());
+					invoiceRepo.save(inv);
+				});
 
 		passenger.setStatus(PassengerStatus.CANCELLED);
 		passengerRepo.save(passenger);

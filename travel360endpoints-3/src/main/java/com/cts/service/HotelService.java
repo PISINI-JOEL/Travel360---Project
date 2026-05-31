@@ -13,6 +13,8 @@ public interface HotelService {
 
 	    Hotel addHotel(HotelDTO dto);
 
+	    Hotel updateHotel(Long id, HotelDTO dto);
+
 	    List<Hotel> findByLocation(String location, int page, int size);
 	    
 	    

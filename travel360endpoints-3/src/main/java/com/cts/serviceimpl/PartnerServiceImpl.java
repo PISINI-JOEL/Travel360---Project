@@ -2,16 +2,29 @@ package com.cts.serviceimpl;
 
 import com.cts.dto.PartnerDTO;
 import com.cts.dto.PartnerResponseDTO;
+import com.cts.entity.Flight;
+import com.cts.entity.Hotel;
 import com.cts.entity.Partner;
+import com.cts.entity.Transport;
+import com.cts.entity.TravelPackage;
+import com.cts.enums.FlightStatus;
+import com.cts.enums.HotelStatus;
+import com.cts.enums.PackageStatus;
 import com.cts.enums.PartnerStatus;
 import com.cts.enums.PartnerType;
+import com.cts.enums.TransportStatus;
 import com.cts.exception.PartnerNotFoundException;
+import com.cts.repository.FlightRepository;
+import com.cts.repository.HotelRepository;
 import com.cts.repository.PartnerRepository;
+import com.cts.repository.TransportRepository;
+import com.cts.repository.TravelPackageRepository;
 import com.cts.service.PartnerService;
 
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +33,10 @@ import java.util.List;
 public class PartnerServiceImpl implements PartnerService {
 
     private final PartnerRepository partnerRepo;
+    private final FlightRepository flightRepo;
+    private final HotelRepository hotelRepo;
+    private final TransportRepository transportRepo;
+    private final TravelPackageRepository packageRepo;
 
     // ✅ GET BY ID
     @Override
@@ -36,6 +53,7 @@ public class PartnerServiceImpl implements PartnerService {
 
     // ✅ UPDATE
     @Override
+    @Transactional
     public PartnerResponseDTO updatePartner(Long id, PartnerDTO dto) {
 
         Partner partner = partnerRepo.findById(id).orElse(null);
@@ -50,11 +68,16 @@ public class PartnerServiceImpl implements PartnerService {
 
         partner = partnerRepo.save(partner);
 
+        if (isDisabled(partner.getStatus())) {
+            deactivateInventory(partner);
+        }
+
         return mapToDTO(partner);
     }
 
     // ✅ DELETE
     @Override
+    @Transactional
     public void deletePartner(Long id) {
 
         Partner partner = partnerRepo.findById(id).orElse(null);
@@ -65,6 +88,41 @@ public class PartnerServiceImpl implements PartnerService {
 
         partner.setStatus(PartnerStatus.INACTIVE);
         partnerRepo.save(partner);
+
+        deactivateInventory(partner);
+    }
+
+    // A partner that is not ACTIVE can no longer sell inventory.
+    private boolean isDisabled(PartnerStatus status) {
+        return status != PartnerStatus.ACTIVE;
+    }
+
+    // Cascade: take all of this partner's inventory out of sale.
+    private void deactivateInventory(Partner partner) {
+
+        switch (partner.getType()) {
+
+            case FLIGHT -> {
+                List<Flight> flights = flightRepo.findByPartner(partner);
+                flights.forEach(f -> f.setStatus(FlightStatus.CANCELLED));
+                flightRepo.saveAll(flights);
+            }
+            case HOTEL -> {
+                List<Hotel> hotels = hotelRepo.findByPartner(partner);
+                hotels.forEach(h -> h.setStatus(HotelStatus.INACTIVE));
+                hotelRepo.saveAll(hotels);
+            }
+            case BUS -> {
+                List<Transport> transports = transportRepo.findByPartner(partner);
+                transports.forEach(t -> t.setTransportStatus(TransportStatus.OUT_OF_SERVICE));
+                transportRepo.saveAll(transports);
+            }
+            case PACKAGE -> {
+                List<TravelPackage> packages = packageRepo.findByPartner(partner);
+                packages.forEach(p -> p.setStatus(PackageStatus.INACTIVE));
+                packageRepo.saveAll(packages);
+            }
+        }
     }
 
     // ✅ GET BY CATEGORY
@@ -85,7 +143,7 @@ public class PartnerServiceImpl implements PartnerService {
                 .partnerId(partner.getPartnerId())
                 .name(partner.getName())
                 .type(partner.getType())
-                .status(PartnerStatus.ACTIVE)
+                .status(partner.getStatus())
                 .build();
     }
 

@@ -13,6 +13,8 @@ public interface TransportService {
 
     TransportResponseDTO addTransport(TransportDTO dto);
 
+    TransportResponseDTO updateTransport(Long id, TransportDTO dto);
+
     List<TransportResponseDTO> getAllTransports(int page,int size);
 
     List<TransportResponseDTO> findByRoute(String source, String destination,int page,int size);

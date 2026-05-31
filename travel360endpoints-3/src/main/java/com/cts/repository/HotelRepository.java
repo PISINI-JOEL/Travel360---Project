@@ -9,9 +9,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.cts.entity.Hotel;
+import com.cts.entity.Partner;
 
 @Repository
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
+
+	List<Hotel> findByPartner(Partner partner);
+
 	Page<Hotel> findByCity(String city,Pageable pageable);
 
 	List<Hotel> findByCityAndPriceBetween(String city, double minPrice, double maxPrice);

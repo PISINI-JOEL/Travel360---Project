@@ -14,7 +14,7 @@ public class PaymentDTO {
 
     @NotNull(message = "Payment amount cannot be empty")
     @DecimalMin(value = "0.0", inclusive = false, message = "Payment amount must be greater than 0")
-    private Double amount; 
+    private Double amount;
 
     @NotBlank(message = "Payment method is required")
     

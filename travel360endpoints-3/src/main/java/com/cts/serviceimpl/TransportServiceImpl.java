@@ -9,21 +9,43 @@ import org.springframework.stereotype.Service;
 
 import com.cts.dto.TransportDTO;
 import com.cts.dto.TransportResponseDTO;
+import com.cts.entity.Partner;
 import com.cts.entity.Transport;
+import com.cts.enums.PartnerStatus;
+import com.cts.enums.PartnerType;
 import com.cts.enums.TransportStatus;
+import com.cts.exception.InvalidPartnerException;
+import com.cts.exception.PartnerNotFoundException;
+import com.cts.exception.TransportNotFoundException;
+import com.cts.repository.PartnerRepository;
 import com.cts.repository.TransportRepository;
 import com.cts.service.TransportService;
 
 import lombok.AllArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
 public class TransportServiceImpl implements TransportService {
 
     private final TransportRepository transportRepo;
+    private final PartnerRepository partnerRepo;
 
     @Override
     public TransportResponseDTO addTransport(TransportDTO dto) {
+
+        Partner partner = partnerRepo.findById(dto.getPartnerId())
+                .orElseThrow(() -> new PartnerNotFoundException(
+                        "Partner not found with id " + dto.getPartnerId()));
+
+        if (partner.getType() != PartnerType.BUS) {
+            throw new InvalidPartnerException(
+                    "Partner " + partner.getPartnerId() + " is not a BUS partner");
+        }
+        if (partner.getStatus() != PartnerStatus.ACTIVE) {
+            throw new InvalidPartnerException(
+                    "Partner " + partner.getPartnerId() + " is not active");
+        }
 
         Transport transport = Transport.builder()
                 .transportNumber(dto.getTransportNumber())
@@ -33,10 +55,47 @@ public class TransportServiceImpl implements TransportService {
                 .departureTime(dto.getDepartureTime())
                 .arrivalTime(dto.getArrivalTime())
                 .transportTotalSeats(dto.getTransportTotalSeats())
-                
+
                 .price(dto.getPrice())
                 .transportStatus(dto.getTransportStatus())
+                .partner(partner)
                 .build();
+
+        transport = transportRepo.save(transport);
+
+        return mapToDTO(transport);
+    }
+
+    @Override
+    @Transactional
+    public TransportResponseDTO updateTransport(Long id, TransportDTO dto) {
+
+        Transport transport = transportRepo.findById(id)
+                .orElseThrow(() -> new TransportNotFoundException("Transport not found"));
+
+        Partner partner = partnerRepo.findById(dto.getPartnerId())
+                .orElseThrow(() -> new PartnerNotFoundException(
+                        "Partner not found with id " + dto.getPartnerId()));
+
+        if (partner.getType() != PartnerType.BUS) {
+            throw new InvalidPartnerException(
+                    "Partner " + partner.getPartnerId() + " is not a BUS partner");
+        }
+        if (partner.getStatus() != PartnerStatus.ACTIVE) {
+            throw new InvalidPartnerException(
+                    "Partner " + partner.getPartnerId() + " is not active");
+        }
+
+        transport.setTransportNumber(dto.getTransportNumber());
+        transport.setSource(dto.getSource());
+        transport.setDestination(dto.getDestination());
+        transport.setTransportType(dto.getTransportType());
+        transport.setDepartureTime(dto.getDepartureTime());
+        transport.setArrivalTime(dto.getArrivalTime());
+        transport.setTransportTotalSeats(dto.getTransportTotalSeats());
+        transport.setPrice(dto.getPrice());
+        transport.setTransportStatus(dto.getTransportStatus());
+        transport.setPartner(partner);
 
         transport = transportRepo.save(transport);
 

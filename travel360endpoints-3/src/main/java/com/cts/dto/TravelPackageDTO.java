@@ -53,4 +53,7 @@ public class TravelPackageDTO {
 
     @NotNull(message = "Package status is required")
     private PackageStatus status;
+
+    @NotNull(message = "Partner id is required")
+    private Long partnerId;
 }

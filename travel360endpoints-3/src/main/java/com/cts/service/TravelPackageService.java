@@ -10,8 +10,10 @@ public interface TravelPackageService {
 
     TravelPackageResponseDTO addPackage(TravelPackageDTO dto);
 
-    List<TravelPackageResponseDTO> getAllPackages();
+    TravelPackageResponseDTO updatePackage(Long id, TravelPackageDTO dto);
 
-    List<TravelPackageResponseDTO> searchByCategory(TravelPackageCategory category);
+    List<TravelPackageResponseDTO> getAllPackages(int page, int size);
+
+    List<TravelPackageResponseDTO> searchByCategory(TravelPackageCategory category, int page, int size);
 }
 

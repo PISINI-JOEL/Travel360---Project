@@ -1,5 +1,7 @@
 package com.cts.service;
 
+import com.cts.enums.TravelPackageCategory;
+
 public interface SearchService {
 
     Object search(String type,
@@ -9,6 +11,7 @@ public interface SearchService {
                   Double min,
                   Double max,
                   Integer ratings,
+                  TravelPackageCategory category,
                   int page,
                   int size);
 }

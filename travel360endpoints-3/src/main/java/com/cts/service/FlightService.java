@@ -9,6 +9,8 @@ public interface FlightService {
 
     Flight addFlight(FlightDTO dto);
 
+    Flight updateFlight(Long id, FlightDTO dto);
+
     List<Flight> searchFlights(String source, String destination, int page, int size);
 
     List<Flight> getAllFlights(int page, int size);

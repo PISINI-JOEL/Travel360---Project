@@ -2,11 +2,12 @@ package com.cts.serviceimpl;
 
 import org.springframework.stereotype.Service;
 
-import com.cts.repository.TransportRepository;
-import com.cts.repository.TravelPackageRepository;
+import com.cts.enums.TravelPackageCategory;
 import com.cts.service.FlightService;
 import com.cts.service.HotelService;
 import com.cts.service.SearchService;
+import com.cts.service.TransportService;
+import com.cts.service.TravelPackageService;
 
 import lombok.AllArgsConstructor;
 
@@ -16,9 +17,8 @@ public class SearchServiceImpl implements SearchService {
 
     private final FlightService flightService;
     private final HotelService hotelService;
-    private final TravelPackageRepository packageRepo;
-    private final TransportRepository transportRepo;
-    private final TransportServiceImpl transportServiceImpl;
+    private final TravelPackageService packageService;
+    private final TransportService transportService;
 
     @Override
     public Object search(String type,
@@ -28,6 +28,7 @@ public class SearchServiceImpl implements SearchService {
                          Double min,
                          Double max,
                          Integer ratings,
+                         TravelPackageCategory category,
                          int page,
                          int size) {
 
@@ -44,11 +45,16 @@ public class SearchServiceImpl implements SearchService {
                 // ✅ returns List<Hotel>
 
             case "package":
-                return packageRepo.findAll();
+                // category is optional: filter by it when supplied, otherwise return all
+                if (category != null) {
+                    return packageService.searchByCategory(category, page, size);
+                }
+                return packageService.getAllPackages(page, size);
                 // ✅ List
 
             case "transport":
-                return transportServiceImpl.findByRoute(source, destination, page, size);
+                validateTransport(source, destination);
+                return transportService.findByRoute(source, destination, page, size);
                 // ✅ List
 
             default:
@@ -65,6 +71,12 @@ public class SearchServiceImpl implements SearchService {
     private void validateHotel(String city) {
         if (city == null) {
             throw new IllegalArgumentException("City is required");
+        }
+    }
+
+    private void validateTransport(String source, String destination) {
+        if (source == null || destination == null) {
+            throw new IllegalArgumentException("Source and Destination are required");
         }
     }
 }

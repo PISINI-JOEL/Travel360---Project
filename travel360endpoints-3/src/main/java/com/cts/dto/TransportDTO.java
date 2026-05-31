@@ -46,4 +46,7 @@ public class TransportDTO {
 
     @NotNull(message = "Transport status is required")
     private TransportStatus transportStatus;
+
+    @NotNull(message = "Partner id is required")
+    private Long partnerId;
 }

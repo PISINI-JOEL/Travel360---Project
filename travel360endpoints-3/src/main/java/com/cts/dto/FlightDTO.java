@@ -22,8 +22,8 @@ public class FlightDTO {
     @Pattern(regexp = "^[A-Z]{2}-\\d{3}$", message = "Flight number must match standard airline format (e.g., AA-123 or DL-1234)")
     private String flightNumber;
 
-    @NotBlank(message = "Airline name is required")
-    private String airlineName;
+    @NotNull(message = "Partner (airline) id is required")
+    private Long partnerId;
 
     @NotBlank(message = "Source location is required")
     private String source;

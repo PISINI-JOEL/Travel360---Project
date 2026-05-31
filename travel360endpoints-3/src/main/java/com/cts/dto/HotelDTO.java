@@ -44,4 +44,7 @@ public class HotelDTO {
 
     @NotNull(message = "Hotel status is required")
     private HotelStatus status;
+
+    @NotNull(message = "Partner id is required")
+    private Long partnerId;
 }
