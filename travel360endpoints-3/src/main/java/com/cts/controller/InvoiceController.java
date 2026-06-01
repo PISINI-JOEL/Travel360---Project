@@ -6,6 +6,7 @@ import com.cts.service.InvoiceService;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,34 +17,56 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/invoices")
 @AllArgsConstructor
+@Slf4j
 public class InvoiceController {
 
-	private final InvoiceService service;
+    private final InvoiceService service;
 
-	@PostMapping
-	public ResponseEntity<InvoiceResponseDTO> create(@RequestBody @Valid InvoiceDTO dto) {
+    @PostMapping
+    public ResponseEntity<InvoiceResponseDTO> create(@RequestBody @Valid InvoiceDTO dto) {
 
-		return new ResponseEntity<>(service.createInvoice(dto), HttpStatus.CREATED);
-	}
+        log.info("Received request to create invoice for bookingId: {}", dto.getBookingId());
 
-	@GetMapping
-	public ResponseEntity<List<InvoiceResponseDTO>> getAll() {
+        InvoiceResponseDTO response = service.createInvoice(dto);
 
-		return new ResponseEntity<>(service.getAllInvoices(), HttpStatus.OK);
-	}
+        log.info("Invoice created successfully with ID: {}", response.getInvoiceId());
 
-	@GetMapping("/booking/{bookingId}")
-	public ResponseEntity<List<InvoiceResponseDTO>> getByBooking(@PathVariable Long bookingId) {
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
 
-	    return new ResponseEntity<>(
-	            service.getInvoicesByBooking(bookingId),
-	            HttpStatus.OK
-	    );
-	}
+    @GetMapping
+    public ResponseEntity<List<InvoiceResponseDTO>> getAll() {
 
-	@GetMapping("/{id}")
-	public ResponseEntity<InvoiceResponseDTO> getById(@PathVariable Long id) {
+        log.info("Fetching all invoices");
 
-		return new ResponseEntity<>(service.getInvoiceById(id), HttpStatus.OK);
-	}
+        List<InvoiceResponseDTO> invoices = service.getAllInvoices();
+
+        log.info("Total invoices fetched: {}", invoices.size());
+
+        return new ResponseEntity<>(invoices, HttpStatus.OK);
+    }
+
+    @GetMapping("/booking/{bookingId}")
+    public ResponseEntity<List<InvoiceResponseDTO>> getByBooking(@PathVariable Long bookingId) {
+
+        log.info("Fetching invoices for bookingId: {}", bookingId);
+
+        List<InvoiceResponseDTO> invoices = service.getInvoicesByBooking(bookingId);
+
+        log.info("Found {} invoices for bookingId: {}", invoices.size(), bookingId);
+
+        return new ResponseEntity<>(invoices, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<InvoiceResponseDTO> getById(@PathVariable Long id) {
+
+        log.info("Fetching invoice with ID: {}", id);
+
+        InvoiceResponseDTO invoice = service.getInvoiceById(id);
+
+        log.info("Invoice fetched successfully with ID: {}", id);
+
+        return new ResponseEntity<>(invoice, HttpStatus.OK);
+    }
 }

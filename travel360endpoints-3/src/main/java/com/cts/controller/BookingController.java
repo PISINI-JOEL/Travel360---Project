@@ -1,22 +1,11 @@
 package com.cts.controller;
 
-import com.cts.dto.BookingCancelDTO;
-import com.cts.dto.BookingCancelResponseDTO;
-import com.cts.dto.BookingDTO;
-import com.cts.dto.BookingFlightDTO;
-import com.cts.dto.BookingFlightResponseDTO;
-import com.cts.dto.BookingHotelDTO;
-import com.cts.dto.BookingHotelResponseDTO;
-import com.cts.dto.BookingPackageDTO;
-import com.cts.dto.BookingPackageResponseDTO;
-import com.cts.dto.BookingResponseDTO;
-import com.cts.dto.BookingTransportDTO;
-import com.cts.dto.BookingTransportResponseDTO;
-import com.cts.dto.PassengerCancelResponseDTO;
+import com.cts.dto.*;
 import com.cts.service.BookingService;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,61 +16,115 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/bookings")
 @AllArgsConstructor
+@Slf4j
 public class BookingController {
 
-	private final BookingService service;
+    private final BookingService service;
 
-	@PostMapping("/flight")
-	public ResponseEntity<BookingFlightResponseDTO> createFlightBooking(@RequestBody @Valid BookingFlightDTO dto) {
+    @PostMapping("/flight")
+    public ResponseEntity<BookingFlightResponseDTO> createFlightBooking(
+            @RequestBody @Valid BookingFlightDTO dto) {
 
-		return new ResponseEntity<>(service.createFlightBooking(dto), HttpStatus.CREATED);
-	}
+        log.info("Received request to create FLIGHT booking for userId: {}", dto.getUserId());
 
-	@PostMapping("/hotel")
-	public ResponseEntity<BookingHotelResponseDTO> createHotelBooking(@RequestBody @Valid BookingHotelDTO dto) {
+        BookingFlightResponseDTO response = service.createFlightBooking(dto);
 
-		return new ResponseEntity<>(service.createHotelBooking(dto), HttpStatus.CREATED);
-	}
+        log.info("Flight booking created successfully with bookingId: {}", response.getBookingId());
 
-	@PostMapping("/package")
-	public ResponseEntity<BookingPackageResponseDTO> createPackageBooking(@RequestBody @Valid BookingPackageDTO dto) {
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
 
-		return new ResponseEntity<>(service.createPackageBooking(dto), HttpStatus.CREATED);
-	}
+    @PostMapping("/hotel")
+    public ResponseEntity<BookingHotelResponseDTO> createHotelBooking(
+            @RequestBody @Valid BookingHotelDTO dto) {
 
-	@PostMapping("/transport")
-	public ResponseEntity<BookingTransportResponseDTO> createTransportBooking(@RequestBody @Valid BookingTransportDTO dto) {
+        log.info("Received request to create HOTEL booking for userId: {}", dto.getUserId());
 
-		return new ResponseEntity<>(service.createTransportBooking(dto), HttpStatus.CREATED);
-	}
+        BookingHotelResponseDTO response = service.createHotelBooking(dto);
 
-	@GetMapping
-	public ResponseEntity<List<BookingResponseDTO>> getAll() {
+        log.info("Hotel booking created successfully with bookingId: {}", response.getBookingId());
 
-		return new ResponseEntity<>(service.getAllBookings(), HttpStatus.OK);
-	}
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
 
-	@GetMapping("/user/{userId}")
-	public ResponseEntity<List<BookingResponseDTO>> getByUser(@PathVariable Long userId) {
+    @PostMapping("/package")
+    public ResponseEntity<BookingPackageResponseDTO> createPackageBooking(
+            @RequestBody @Valid BookingPackageDTO dto) {
 
-		return new ResponseEntity<>(service.getBookingsByUser(userId), HttpStatus.OK);
-	}
-	
-	@PostMapping("/cancel")
-	public ResponseEntity<BookingCancelResponseDTO> cancelBooking(
-	        @RequestBody BookingCancelDTO dto) {
+        log.info("Received request to create PACKAGE booking for userId: {}", dto.getUserId());
 
-	    BookingCancelResponseDTO response = service.deleteBooking(dto);
-	    return ResponseEntity.ok(response);
-	}
+        BookingPackageResponseDTO response = service.createPackageBooking(dto);
 
-	@DeleteMapping("/{bookingId}/passengers/{passengerId}")
-	public ResponseEntity<PassengerCancelResponseDTO> cancelPassenger(
-	        @PathVariable Long bookingId,
-	        @PathVariable Long passengerId,
-	        @RequestParam Long userId) {
+        log.info("Package booking created successfully with bookingId: {}", response.getBookingId());
 
-	    return ResponseEntity.ok(service.cancelPassenger(bookingId, passengerId, userId));
-	}
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
 
+    @PostMapping("/transport")
+    public ResponseEntity<BookingTransportResponseDTO> createTransportBooking(
+            @RequestBody @Valid BookingTransportDTO dto) {
+
+        log.info("Received request to create TRANSPORT booking for userId: {}", dto.getUserId());
+
+        BookingTransportResponseDTO response = service.createTransportBooking(dto);
+
+        log.info("Transport booking created successfully with bookingId: {}", response.getBookingId());
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<BookingResponseDTO>> getAll() {
+
+        log.info("Fetching all bookings");
+
+        List<BookingResponseDTO> bookings = service.getAllBookings();
+
+        log.info("Total bookings fetched: {}", bookings.size());
+
+        return new ResponseEntity<>(bookings, HttpStatus.OK);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<BookingResponseDTO>> getByUser(@PathVariable Long userId) {
+
+        log.info("Fetching bookings for userId: {}", userId);
+
+        List<BookingResponseDTO> bookings = service.getBookingsByUser(userId);
+
+        log.info("Found {} bookings for userId: {}", bookings.size(), userId);
+
+        return new ResponseEntity<>(bookings, HttpStatus.OK);
+    }
+
+    @PostMapping("/cancel")
+    public ResponseEntity<BookingCancelResponseDTO> cancelBooking(
+            @RequestBody BookingCancelDTO dto) {
+
+        log.info("Received request to cancel booking for bookingId: {}", dto.getBookingId());
+
+        BookingCancelResponseDTO response = service.deleteBooking(dto);
+
+        log.info("Booking cancelled successfully for bookingId: {}", dto.getBookingId());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{bookingId}/passengers/{passengerId}")
+    public ResponseEntity<PassengerCancelResponseDTO> cancelPassenger(
+            @PathVariable Long bookingId,
+            @PathVariable Long passengerId,
+            @RequestParam Long userId) {
+
+        log.info("Cancelling passengerId: {} from bookingId: {} for userId: {}",
+                passengerId, bookingId, userId);
+
+        PassengerCancelResponseDTO response =
+                service.cancelPassenger(bookingId, passengerId, userId);
+
+        log.info("Passenger cancelled successfully: passengerId={}, bookingId={}",
+                passengerId, bookingId);
+
+        return ResponseEntity.ok(response);
+    }
 }
