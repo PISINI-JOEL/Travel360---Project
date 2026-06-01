@@ -13,6 +13,7 @@ import com.cts.repository.PartnerRepository;
 import com.cts.service.FlightService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class FlightServiceImpl implements FlightService {
 
     private final FlightRepository repo;
@@ -32,15 +34,23 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public Flight addFlight(FlightDTO dto) {
 
+        log.info("Adding new flight with partnerId: {}", dto.getPartnerId());
+
         Partner partner = partnerRepo.findById(dto.getPartnerId())
-                .orElseThrow(() -> new PartnerNotFoundException(
-                        "Partner not found with id " + dto.getPartnerId()));
+                .orElseThrow(() -> {
+                    log.error("Partner not found with id {}", dto.getPartnerId());
+                    return new PartnerNotFoundException(
+                            "Partner not found with id " + dto.getPartnerId());
+                });
 
         if (partner.getType() != PartnerType.FLIGHT) {
+            log.error("Invalid partner type for partnerId: {}", partner.getPartnerId());
             throw new InvalidPartnerException(
                     "Partner " + partner.getPartnerId() + " is not a FLIGHT partner");
         }
+
         if (partner.getStatus() != PartnerStatus.ACTIVE) {
+            log.error("Inactive partner: {}", partner.getPartnerId());
             throw new InvalidPartnerException(
                     "Partner " + partner.getPartnerId() + " is not active");
         }
@@ -59,28 +69,45 @@ public class FlightServiceImpl implements FlightService {
                 .partner(partner)
                 .build();
 
-        return repo.save(flight);
+        Flight savedFlight = repo.save(flight);
+
+        log.info("Flight created successfully with ID: {}", savedFlight.getFlightId());
+
+        return savedFlight;
     }
 
     @Override
     @Transactional
     public Flight updateFlight(Long id, FlightDTO dto) {
 
+        log.info("Updating flight with ID: {}", id);
+
         Flight flight = repo.findById(id)
-                .orElseThrow(() -> new FlightNotFoundException("Flight not found"));
+                .orElseThrow(() -> {
+                    log.error("Flight not found with id {}", id);
+                    return new FlightNotFoundException("Flight not found");
+                });
 
         Partner partner = partnerRepo.findById(dto.getPartnerId())
-                .orElseThrow(() -> new PartnerNotFoundException(
-                        "Partner not found with id " + dto.getPartnerId()));
+                .orElseThrow(() -> {
+                    log.error("Partner not found with id {}", dto.getPartnerId());
+                    return new PartnerNotFoundException(
+                            "Partner not found with id " + dto.getPartnerId());
+                });
 
         if (partner.getType() != PartnerType.FLIGHT) {
+            log.error("Invalid partner type for partnerId: {}", partner.getPartnerId());
             throw new InvalidPartnerException(
                     "Partner " + partner.getPartnerId() + " is not a FLIGHT partner");
         }
+
         if (partner.getStatus() != PartnerStatus.ACTIVE) {
+            log.error("Inactive partner: {}", partner.getPartnerId());
             throw new InvalidPartnerException(
                     "Partner " + partner.getPartnerId() + " is not active");
         }
+
+        log.debug("Updating flight details for ID: {}", id);
 
         flight.setFlightNumber(dto.getFlightNumber());
         flight.setAirlineName(partner.getName());
@@ -94,16 +121,25 @@ public class FlightServiceImpl implements FlightService {
         flight.setStatus(dto.getStatus());
         flight.setPartner(partner);
 
-        return repo.save(flight);
+        Flight updatedFlight = repo.save(flight);
+
+        log.info("Flight updated successfully with ID: {}", id);
+
+        return updatedFlight;
     }
 
     @Override
     public List<Flight> searchFlights(String source, String destination, int page, int size) {
 
+        log.info("Searching flights from '{}' to '{}' (page={}, size={})",
+                source, destination, page, size);
+
         Pageable pageable = PageRequest.of(page, size);
 
         Page<Flight> flightPage =
                 repo.findBySourceAndDestination(source, destination, pageable);
+
+        log.info("Search returned {} flights", flightPage.getContent().size());
 
         return flightPage.getContent();
     }
@@ -111,11 +147,15 @@ public class FlightServiceImpl implements FlightService {
     @Override
     public List<Flight> getAllFlights(int page, int size) {
 
+        log.info("Fetching all flights (page={}, size={})", page, size);
+
         Pageable pageable = PageRequest.of(page, size);
 
         Page<Flight> flightPage = repo.findAll(pageable);
 
-        return flightPage.getContent(); 
+        log.info("Total flights fetched: {}", flightPage.getContent().size());
+
+        return flightPage.getContent();
     }
 
     @Override
@@ -123,23 +163,38 @@ public class FlightServiceImpl implements FlightService {
                                       Double min, Double max,
                                       int page, int size) {
 
+        log.info("Filtering flights from '{}' to '{}' with minPrice={}, maxPrice={}",
+                source, destination, min, max);
+
         Pageable pageable = PageRequest.of(page, size);
 
         Page<Flight> flightPage;
 
         if (min != null && max != null) {
+            log.debug("Applying price filter between {} and {}", min, max);
+
             flightPage = repo.findBySourceAndDestinationAndPriceBetween(
                     source, destination, min, max, pageable);
         } else {
+            log.debug("No price filter applied");
+
             flightPage = repo.findBySourceAndDestination(source, destination, pageable);
         }
 
-        return flightPage.getContent(); 
+        log.info("Filter returned {} flights", flightPage.getContent().size());
+
+        return flightPage.getContent();
     }
 
     @Override
     public Flight getFlightById(Long id) {
+
+        log.info("Fetching flight with ID: {}", id);
+
         return repo.findById(id)
-                .orElseThrow(() -> new FlightNotFoundException("Flight not found"));
+                .orElseThrow(() -> {
+                    log.error("Flight not found with id {}", id);
+                    return new FlightNotFoundException("Flight not found");
+                });
     }
 }
