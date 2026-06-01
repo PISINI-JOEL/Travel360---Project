@@ -21,28 +21,38 @@ import com.cts.repository.PartnerRepository;
 import com.cts.service.HotelService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class HotelServiceImpl implements HotelService {
 
     private final HotelRepository hotelrepo;
     private final PartnerRepository partnerRepo;
 
-
     @Override
     public Hotel addHotel(HotelDTO dto) {
 
+        log.info("Adding new hotel with partnerId: {}", dto.getPartnerId());
+
         Partner partner = partnerRepo.findById(dto.getPartnerId())
-                .orElseThrow(() -> new PartnerNotFoundException(
-                        "Partner not found with id " + dto.getPartnerId()));
+                .orElseThrow(() -> {
+                    log.error("Partner not found with id {}", dto.getPartnerId());
+                    return new PartnerNotFoundException(
+                            "Partner not found with id " + dto.getPartnerId());
+                });
 
         if (partner.getType() != PartnerType.HOTEL) {
+            log.error("Invalid partner type for partnerId: {}", partner.getPartnerId());
             throw new InvalidPartnerException(
                     "Partner " + partner.getPartnerId() + " is not a HOTEL partner");
         }
+
         if (partner.getStatus() != PartnerStatus.ACTIVE) {
+            log.error("Inactive partner: {}", partner.getPartnerId());
             throw new InvalidPartnerException(
                     "Partner " + partner.getPartnerId() + " is not active");
         }
@@ -59,28 +69,45 @@ public class HotelServiceImpl implements HotelService {
                 .partner(partner)
                 .build();
 
-        return hotelrepo.save(hotel);
+        Hotel savedHotel = hotelrepo.save(hotel);
+
+        log.info("Hotel created successfully with ID: {}", savedHotel.getHotelId());
+
+        return savedHotel;
     }
 
     @Override
     @Transactional
     public Hotel updateHotel(Long id, HotelDTO dto) {
 
+        log.info("Updating hotel with ID: {}", id);
+
         Hotel hotel = hotelrepo.findById(id)
-                .orElseThrow(() -> new HotelNotFoundException("Hotel not found"));
+                .orElseThrow(() -> {
+                    log.error("Hotel not found with id {}", id);
+                    return new HotelNotFoundException("Hotel not found");
+                });
 
         Partner partner = partnerRepo.findById(dto.getPartnerId())
-                .orElseThrow(() -> new PartnerNotFoundException(
-                        "Partner not found with id " + dto.getPartnerId()));
+                .orElseThrow(() -> {
+                    log.error("Partner not found with id {}", dto.getPartnerId());
+                    return new PartnerNotFoundException(
+                            "Partner not found with id " + dto.getPartnerId());
+                });
 
         if (partner.getType() != PartnerType.HOTEL) {
+            log.error("Invalid partner type for partnerId: {}", partner.getPartnerId());
             throw new InvalidPartnerException(
                     "Partner " + partner.getPartnerId() + " is not a HOTEL partner");
         }
+
         if (partner.getStatus() != PartnerStatus.ACTIVE) {
+            log.error("Inactive partner: {}", partner.getPartnerId());
             throw new InvalidPartnerException(
                     "Partner " + partner.getPartnerId() + " is not active");
         }
+
+        log.debug("Updating fields for hotel ID: {}", id);
 
         hotel.setHotelName(dto.getHotelName());
         hotel.setCity(dto.getCity());
@@ -92,7 +119,11 @@ public class HotelServiceImpl implements HotelService {
         hotel.setStatus(dto.getStatus());
         hotel.setPartner(partner);
 
-        return hotelrepo.save(hotel);
+        Hotel updatedHotel = hotelrepo.save(hotel);
+
+        log.info("Hotel updated successfully with ID: {}", id);
+
+        return updatedHotel;
     }
 
     @Override
@@ -100,19 +131,28 @@ public class HotelServiceImpl implements HotelService {
             String location,
             Integer ratings,
             Double minPrice,
-            Double maxPrice,int page,int size) {
+            Double maxPrice,
+            int page,
+            int size) {
 
-    	Pageable pageable = PageRequest.of(page, size);
+        log.info("Filtering hotels with location={}, ratings={}, minPrice={}, maxPrice={}, page={}, size={}",
+                location, ratings, minPrice, maxPrice, page, size);
+
+        Pageable pageable = PageRequest.of(page, size);
+
         Page<Hotel> hotelPage = hotelrepo.filterHotels(
                 location,
                 ratings,
                 minPrice,
-                maxPrice,pageable
+                maxPrice,
+                pageable
         );
+
+        log.info("Filter query returned {} hotels", hotelPage.getTotalElements());
 
         return hotelPage.stream()
                 .map(h -> Hotel.builder()
-                        .hotelName(h.getHotelName())   
+                        .hotelName(h.getHotelName())
                         .hotelId(h.getHotelId())
                         .ratings(h.getRatings())
                         .price(h.getPrice())
@@ -123,12 +163,19 @@ public class HotelServiceImpl implements HotelService {
                 .toList();
     }
 
+    @Override
+    public List<Hotel> findByLocation(String location, int page, int size) {
 
-	@Override
-	public List<Hotel> findByLocation(String location, int page, int size) {
-		// TODO Auto-generated method stub
-		 Pageable pageable = PageRequest.of(page, size);
-		 Page<Hotel> hotelPage= hotelrepo.findByCity(location,pageable);
-		return hotelPage.getContent();
-	}
+        log.info("Fetching hotels by location '{}' (page={}, size={})",
+                location, page, size);
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Hotel> hotelPage = hotelrepo.findByCity(location, pageable);
+
+        log.info("Found {} hotels in location '{}'",
+                hotelPage.getContent().size(), location);
+
+        return hotelPage.getContent();
+    }
 }
