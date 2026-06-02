@@ -22,6 +22,7 @@ import com.cts.repository.TravelPackageRepository;
 import com.cts.service.PartnerService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class PartnerServiceImpl implements PartnerService {
 
     private final PartnerRepository partnerRepo;
@@ -42,9 +44,12 @@ public class PartnerServiceImpl implements PartnerService {
     @Override
     public PartnerResponseDTO getPartnerById(Long id) {
 
+        log.info("Fetching partner with ID: {}", id);
+
         Partner partner = partnerRepo.findById(id).orElse(null);
 
         if (partner == null) {
+            log.error("Partner not found with id {}", id);
             throw new PartnerNotFoundException("Partner not found");
         }
 
@@ -56,9 +61,12 @@ public class PartnerServiceImpl implements PartnerService {
     @Transactional
     public PartnerResponseDTO updatePartner(Long id, PartnerDTO dto) {
 
+        log.info("Updating partner with ID: {}", id);
+
         Partner partner = partnerRepo.findById(id).orElse(null);
 
         if (partner == null) {
+            log.error("Partner not found with id {}", id);
             throw new PartnerNotFoundException("Partner not found");
         }
 
@@ -68,7 +76,10 @@ public class PartnerServiceImpl implements PartnerService {
 
         partner = partnerRepo.save(partner);
 
+        log.info("Partner updated successfully with ID: {}", partner.getPartnerId());
+
         if (isDisabled(partner.getStatus())) {
+            log.debug("Partner {} is not ACTIVE, deactivating inventory", partner.getPartnerId());
             deactivateInventory(partner);
         }
 
@@ -80,14 +91,19 @@ public class PartnerServiceImpl implements PartnerService {
     @Transactional
     public void deletePartner(Long id) {
 
+        log.info("Deleting (deactivating) partner with ID: {}", id);
+
         Partner partner = partnerRepo.findById(id).orElse(null);
 
         if (partner == null) {
+            log.error("Partner not found with id {}", id);
             throw new PartnerNotFoundException("Partner not found");
         }
 
         partner.setStatus(PartnerStatus.INACTIVE);
         partnerRepo.save(partner);
+
+        log.info("Partner deactivated successfully with ID: {}", partner.getPartnerId());
 
         deactivateInventory(partner);
     }
@@ -99,6 +115,9 @@ public class PartnerServiceImpl implements PartnerService {
 
     // Cascade: take all of this partner's inventory out of sale.
     private void deactivateInventory(Partner partner) {
+
+        log.debug("Deactivating inventory for partner {} of type {}",
+                partner.getPartnerId(), partner.getType());
 
         switch (partner.getType()) {
 
@@ -129,7 +148,11 @@ public class PartnerServiceImpl implements PartnerService {
     @Override
     public List<PartnerResponseDTO> getPartnerByCategory(PartnerType type) {
 
+        log.info("Fetching partners by category: {}", type);
+
         List<Partner> list = partnerRepo.findByType(type);
+
+        log.info("Found {} partners for category {}", list.size(), type);
 
         return list.stream()
                 .map(this::mapToDTO)
@@ -152,6 +175,9 @@ public class PartnerServiceImpl implements PartnerService {
 
     @Override
      public PartnerResponseDTO createPartner(PartnerDTO dto) {
+
+    log.info("Creating new partner of type: {}", dto.getType());
+
     Partner partner = Partner.builder()
             .name(dto.getName())
             .type(dto.getType())
@@ -159,6 +185,8 @@ public class PartnerServiceImpl implements PartnerService {
             .build();
 
     partner = partnerRepo.save(partner);
+
+    log.info("Partner created successfully with ID: {}", partner.getPartnerId());
 
     return mapToDTO(partner);
 }

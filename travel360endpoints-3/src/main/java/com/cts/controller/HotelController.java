@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.cts.dto.HotelDTO;
@@ -27,6 +28,7 @@ public class HotelController {
     private final HotelService hotelService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
     public ResponseEntity<Hotel> addHotel(@RequestBody @Valid HotelDTO dto) {
 
         log.info("Received request to add hotel: {}", dto);
@@ -39,6 +41,7 @@ public class HotelController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
     public ResponseEntity<Hotel> updateHotel(@PathVariable Long id,
                                              @RequestBody @Valid HotelDTO dto) {
 

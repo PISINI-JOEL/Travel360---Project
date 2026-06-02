@@ -7,8 +7,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +20,7 @@ import java.util.List;
 @RequestMapping("/api/v1/users")
 @AllArgsConstructor
 @Tag(name = "User Controller", description = "Operations related to User Registration Login and getAll")
-
+@Slf4j
 public class UserController {
 
 	private final UserService service;
@@ -27,18 +29,37 @@ public class UserController {
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody @Valid UserDTO dto) {
 
-		return new ResponseEntity<>(service.register(dto), HttpStatus.CREATED);
+		log.info("Received request to register user with email: {}", dto.getEmail());
+
+		UserResponseDTO registeredUser = service.register(dto);
+
+		log.info("User registered successfully with ID: {}", registeredUser.getUserId());
+
+		return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
 	}
 	@Operation(summary = "Login for User")
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody @Valid LoginDTO dto) {
 
-		return new ResponseEntity<>(service.login(dto.getEmail(), dto.getPassword()), HttpStatus.OK);
+		log.info("Login attempt for email: {}", dto.getEmail());
+
+		AuthResponseDTO authResponse = service.login(dto.getEmail(), dto.getPassword());
+
+		log.info("User logged in successfully with ID: {}", authResponse.getUser().getUserId());
+
+		return new ResponseEntity<>(authResponse, HttpStatus.OK);
 	}
 	@Operation(summary = "Get all Users")
 	@GetMapping
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<List<UserResponseDTO>> getAll() {
 
-		return new ResponseEntity<>(service.getAllUsers(), HttpStatus.OK);
+		log.info("Fetching all users");
+
+		List<UserResponseDTO> users = service.getAllUsers();
+
+		log.info("Total users fetched: {}", users.size());
+
+		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
 }

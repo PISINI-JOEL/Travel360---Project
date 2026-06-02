@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class PaymentController {
     private final PaymentService service;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('CUSTOMER','CORPORATE_TRAVEL_MANAGER')")
     public ResponseEntity<?> makePayment(@RequestBody @Valid PaymentDTO dto) {
 
         log.info("Received payment request for invoiceId: {}", dto.getInvoiceId());
@@ -36,6 +38,7 @@ public class PaymentController {
     }
 
     @GetMapping("/invoice/{invoiceId}")
+    @PreAuthorize("hasAnyRole('CUSTOMER','FINANCE_OFFICER','ADMIN')")
     public ResponseEntity<?> getByInvoice(@PathVariable Long invoiceId) {
 
         log.info("Fetching payments for invoiceId: {}", invoiceId);
@@ -53,6 +56,7 @@ public class PaymentController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('FINANCE_OFFICER','ADMIN')")
     public ResponseEntity<List<PaymentResponseDTO>> getAllPayments() {
 
         log.info("Fetching all payments");
@@ -65,6 +69,7 @@ public class PaymentController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('CUSTOMER','FINANCE_OFFICER','ADMIN')")
     public ResponseEntity<?> getById(@PathVariable Long id) {
 
         log.info("Fetching payment with ID: {}", id);

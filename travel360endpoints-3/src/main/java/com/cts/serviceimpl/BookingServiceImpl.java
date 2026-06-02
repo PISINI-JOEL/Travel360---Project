@@ -15,6 +15,7 @@ import com.cts.dto.BookingTransportResponseDTO;
 import com.cts.dto.PassengerCancelResponseDTO;
 import com.cts.dto.PassengerDTO;
 import com.cts.dto.PassengerResponseDTO;
+import com.cts.config.AuthenticatedUserProvider;
 import com.cts.entity.*;
 import com.cts.enums.BookingStatus;
 import com.cts.enums.BookingType;
@@ -38,6 +39,7 @@ import com.cts.service.BookingService;
 import com.cts.service.NotificationService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +52,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class BookingServiceImpl implements BookingService {
 
 	private final BookingRepository bookingRepo;
@@ -62,27 +65,43 @@ public class BookingServiceImpl implements BookingService {
 	private final TransportRepository transportRepo;
 	private final PaymentRepository paymentRepo;
 	private final PassengerRepository passengerRepo;
+	private final AuthenticatedUserProvider authUser;
 
 	@Override
 	@Transactional
 	public BookingFlightResponseDTO createFlightBooking(BookingFlightDTO dto) {
 
-		User user = userRepo.findById(dto.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
+		log.info("Creating flight booking for userId: {} and flightId: {}", dto.getUserId(), dto.getFlightId());
+
+		User user = userRepo.findById(dto.getUserId()).orElseThrow(() -> {
+			log.error("User not found with id {}", dto.getUserId());
+			return new UserNotFoundException("User not found");
+		});
 
 		Flight flight = flightRepo.findById(dto.getFlightId())
-				.orElseThrow(() -> new FlightNotFoundException("Flight not found"));
+				.orElseThrow(() -> {
+					log.error("Flight not found with id {}", dto.getFlightId());
+					return new FlightNotFoundException("Flight not found");
+				});
 
 		if (flight.getStatus() != FlightStatus.SCHEDULED) {
+			log.error("Flight {} is not available for booking, status: {}", flight.getFlightId(), flight.getStatus());
 			throw new InvalidBookingException("Flight is not available for booking");
 		}
 
 		int totalSeats = flight.getTotalSeats();
 		int bookedSeats = bookingRepo.getBookedSeats(flight.getFlightId(), dto.getFlightDate());
 		int availableSeats = totalSeats - bookedSeats;
+		log.debug("Flight {} availability: {} seats available, {} requested",
+				flight.getFlightId(), availableSeats, dto.getUnits());
 		if (availableSeats < dto.getUnits()) {
+			log.error("Insufficient seats for flight {}: {} available, {} requested",
+					flight.getFlightId(), availableSeats, dto.getUnits());
 			throw new InsufficientAvailabilityException("Not enough seats available");
 		}
 		if (dto.getFlightDate() == null || !dto.getFlightDate().equals(flight.getFlightDate())) {
+			log.error("Invalid booking info for flight {}: requested date {}, flight date {}",
+					flight.getFlightId(), dto.getFlightDate(), flight.getFlightDate());
 			throw new InvalidBookingException("Booking info not valid");
 		}
 
@@ -90,6 +109,7 @@ public class BookingServiceImpl implements BookingService {
 		LocalDate flightDate = flight.getFlightDate();
 
 		if (!flightDate.isAfter(today.plusDays(1))) {
+			log.error("Booking not allowed for flight {} on date {}", flight.getFlightId(), flightDate);
 			throw new InvalidBookingException("Booking is not allowed 1 day before or on the same day of the flight");
 		}
 
@@ -102,6 +122,8 @@ public class BookingServiceImpl implements BookingService {
 
 		booking.setPassengers(buildPassengers(dto.getPassengers(), booking));
 		bookingRepo.save(booking);
+
+		log.info("Flight booking created successfully with bookingId: {}", booking.getBookingId());
 
 		Invoice invoice = Invoice.builder().booking(booking).invoiceDate(LocalDateTime.now())
 				.amount(booking.getAmount()).status(PaymentStatus.PENDING).build();
@@ -124,24 +146,39 @@ public class BookingServiceImpl implements BookingService {
 	@Transactional
 	public BookingHotelResponseDTO createHotelBooking(BookingHotelDTO dto) {
 
-		User user = userRepo.findById(dto.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
+		log.info("Creating hotel booking for userId: {} and hotelId: {}", dto.getUserId(), dto.getHotelId());
+
+		User user = userRepo.findById(dto.getUserId()).orElseThrow(() -> {
+			log.error("User not found with id {}", dto.getUserId());
+			return new UserNotFoundException("User not found");
+		});
 
 		Hotel hotel = hotelrepo.findById(dto.getHotelId())
-				.orElseThrow(() -> new HotelNotFoundException("Hotel not found"));
+				.orElseThrow(() -> {
+					log.error("Hotel not found with id {}", dto.getHotelId());
+					return new HotelNotFoundException("Hotel not found");
+				});
 
 		int totalRooms = hotel.getTotalRooms();
 		int bookedRooms = bookingRepo.getBookedRooms(hotel.getHotelId());
 		int availableRooms = totalRooms - bookedRooms;
+		log.debug("Hotel {} availability: {} rooms available, {} requested",
+				hotel.getHotelId(), availableRooms, dto.getUnits());
 
 		if (availableRooms < dto.getUnits()) {
+			log.error("Insufficient rooms for hotel {}: {} available, {} requested",
+					hotel.getHotelId(), availableRooms, dto.getUnits());
 			throw new InsufficientAvailabilityException("Not enough rooms available");
 		}
 		long days = ChronoUnit.DAYS.between(dto.getCheckInDate(), dto.getCheckOutDate());
 		if (days <= 0) {
+			log.error("Invalid date range for hotel {}: checkIn {}, checkOut {}",
+					hotel.getHotelId(), dto.getCheckInDate(), dto.getCheckOutDate());
 			throw new InvalidBookingException("Check-out date must be after check-in date");
 		}
 
 		if (hotel.getStatus() != HotelStatus.AVAILABLE) {
+			log.error("Hotel {} is not available for booking, status: {}", hotel.getHotelId(), hotel.getStatus());
 			throw new InvalidBookingException("Hotel is not available for booking");
 		}
 
@@ -152,6 +189,9 @@ public class BookingServiceImpl implements BookingService {
 				.bookingDate(LocalDate.now()).build();
 
 		bookingRepo.save(booking);
+
+		log.info("Hotel booking created successfully with bookingId: {}", booking.getBookingId());
+
 		Invoice invoice = Invoice.builder().booking(booking).invoiceDate(LocalDateTime.now())
 				.amount(booking.getAmount()).status(PaymentStatus.PENDING).build();
 
@@ -171,19 +211,33 @@ public class BookingServiceImpl implements BookingService {
 	@Transactional
 	public BookingPackageResponseDTO createPackageBooking(BookingPackageDTO dto) {
 
-		User user = userRepo.findById(dto.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
+		log.info("Creating package booking for userId: {} and packageId: {}", dto.getUserId(), dto.getPackageId());
+
+		User user = userRepo.findById(dto.getUserId()).orElseThrow(() -> {
+			log.error("User not found with id {}", dto.getUserId());
+			return new UserNotFoundException("User not found");
+		});
 
 		TravelPackage tpackage = packageRepo.findById(dto.getPackageId())
-				.orElseThrow(() -> new PackageNotFoundException("Package not found"));
+				.orElseThrow(() -> {
+					log.error("Package not found with id {}", dto.getPackageId());
+					return new PackageNotFoundException("Package not found");
+				});
 
 		if (tpackage.getStatus() != PackageStatus.AVAILABLE) {
+			log.error("Package {} is not available for booking, status: {}",
+					tpackage.getPackageId(), tpackage.getStatus());
 			throw new InvalidBookingException("Package is not available for booking");
 		}
 
 		int totalSlots = tpackage.getTotalSlots();
 		int bookedSlots = bookingRepo.getBookedSlots(tpackage.getPackageId());
 		int availableSlots = totalSlots - bookedSlots;
+		log.debug("Package {} availability: {} slots available, {} requested",
+				tpackage.getPackageId(), availableSlots, dto.getUnits());
 		if (availableSlots < dto.getUnits()) {
+			log.error("Insufficient slots for package {}: {} available, {} requested",
+					tpackage.getPackageId(), availableSlots, dto.getUnits());
 			throw new InsufficientAvailabilityException("Not enough package slots available");
 		}
 
@@ -193,6 +247,8 @@ public class BookingServiceImpl implements BookingService {
 				.bookingDate(tpackage.getStartDate() != null ? tpackage.getStartDate() : LocalDate.now()).build();
 
 		booking = bookingRepo.save(booking);
+
+		log.info("Package booking created successfully with bookingId: {}", booking.getBookingId());
 
 		Invoice invoice = Invoice.builder().booking(booking).invoiceDate(LocalDateTime.now())
 				.amount(booking.getAmount()).status(PaymentStatus.PENDING).build();
@@ -215,19 +271,34 @@ public class BookingServiceImpl implements BookingService {
 	@Transactional
 	public BookingTransportResponseDTO createTransportBooking(BookingTransportDTO dto) {
 
-		User user = userRepo.findById(dto.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
+		log.info("Creating transport booking for userId: {} and transportId: {}",
+				dto.getUserId(), dto.getTransportId());
+
+		User user = userRepo.findById(dto.getUserId()).orElseThrow(() -> {
+			log.error("User not found with id {}", dto.getUserId());
+			return new UserNotFoundException("User not found");
+		});
 
 		Transport transport = transportRepo.findById(dto.getTransportId())
-				.orElseThrow(() -> new TransportNotFoundException("Transport not found"));
+				.orElseThrow(() -> {
+					log.error("Transport not found with id {}", dto.getTransportId());
+					return new TransportNotFoundException("Transport not found");
+				});
 
 		if (transport.getTransportStatus() != TransportStatus.AVAILABLE) {
+			log.error("Transport {} is not available for booking, status: {}",
+					transport.getTransportId(), transport.getTransportStatus());
 			throw new InvalidBookingException("Transport is not available for booking");
 		}
 
 		int totalSeats = transport.getTransportTotalSeats();
 		int bookedSeats = bookingRepo.getBookedTransportSeats(transport.getTransportId());
 		int availableSeats = totalSeats - bookedSeats;
+		log.debug("Transport {} availability: {} seats available, {} requested",
+				transport.getTransportId(), availableSeats, dto.getUnits());
 		if (availableSeats < dto.getUnits()) {
+			log.error("Insufficient seats for transport {}: {} available, {} requested",
+					transport.getTransportId(), availableSeats, dto.getUnits());
 			throw new InsufficientAvailabilityException("Not enough seats available");
 		}
 
@@ -242,6 +313,8 @@ public class BookingServiceImpl implements BookingService {
 
 		booking.setPassengers(buildPassengers(dto.getPassengers(), booking));
 		booking = bookingRepo.save(booking);
+
+		log.info("Transport booking created successfully with bookingId: {}", booking.getBookingId());
 
 		Invoice invoice = Invoice.builder().booking(booking).invoiceDate(LocalDateTime.now())
 				.amount(booking.getAmount()).status(PaymentStatus.PENDING).build();
@@ -264,13 +337,18 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	public List<BookingResponseDTO> getBookingsByUser(Long userId) {
+		authUser.assertCanActAs(userId);
+		log.info("Fetching bookings for userId: {}", userId);
 		List<Booking> list = bookingRepo.findByUserUserId(userId);
+		log.info("Found {} bookings for userId: {}", list.size(), userId);
 		return list.stream().map(this::mapToDTO).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<BookingResponseDTO> getAllBookings() {
+		log.info("Fetching all bookings");
 		List<Booking> list = bookingRepo.findAll();
+		log.info("Total bookings fetched: {}", list.size());
 		return list.stream().map(this::mapToDTO).collect(Collectors.toList());
 	}
 
@@ -297,14 +375,18 @@ public class BookingServiceImpl implements BookingService {
 	@Transactional
 	public BookingCancelResponseDTO deleteBooking(BookingCancelDTO dto) {
 
-		Booking booking = bookingRepo.findById(dto.getBookingId())
-				.orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+		log.info("Cancelling booking with bookingId: {} for userId: {}", dto.getBookingId(), dto.getUserId());
 
-		if (!booking.getUser().getUserId().equals(dto.getUserId())) {
-			throw new InvalidBookingException("Booking does not belong to the given user");
-		}
+		Booking booking = bookingRepo.findById(dto.getBookingId())
+				.orElseThrow(() -> {
+					log.error("Booking not found with id {}", dto.getBookingId());
+					return new ResourceNotFoundException("Booking not found");
+				});
+
+		authUser.assertCanActAs(booking.getUser().getUserId());
 
 		if (booking.getStatus() == BookingStatus.CANCELLED) {
+			log.error("Booking {} is already cancelled", dto.getBookingId());
 			throw new InvalidBookingException("Booking is already cancelled");
 		}
 
@@ -313,6 +395,7 @@ public class BookingServiceImpl implements BookingService {
 		String refundStatus = "NONE";
 
 		if (booking.getStatus() == BookingStatus.PENDING) {
+			log.debug("Booking {} is PENDING, cancelling with no refund", booking.getBookingId());
 			booking.setStatus(BookingStatus.CANCELLED);
 			bookingRepo.save(booking);
 
@@ -329,6 +412,8 @@ public class BookingServiceImpl implements BookingService {
 					"Booking cancelled (no payment made). Booking ID: " + booking.getBookingId(),
 					NotificationCategory.BOOKING);
 
+			log.info("Booking {} cancelled successfully (no payment made)", booking.getBookingId());
+
 			return BookingCancelResponseDTO.builder().bookingId(booking.getBookingId())
 					.userId(booking.getUser().getUserId()).status(booking.getStatus())
 					.originalAmount(booking.getAmount()).refundAmount(0.0).deductionAmount(booking.getAmount())
@@ -338,6 +423,7 @@ public class BookingServiceImpl implements BookingService {
 
 		if (booking.getStatus() == BookingStatus.CONFIRMED) {
 			refundAmount = calculateRefundAmount(booking.getAmount(), booking.getBookingDate());
+			log.debug("Booking {} is CONFIRMED, calculated refund amount: {}", booking.getBookingId(), refundAmount);
 
 			if (refundAmount == booking.getAmount()) {
 				refundStatus = "FULL";
@@ -364,6 +450,9 @@ public class BookingServiceImpl implements BookingService {
 					"Booking cancelled. Refund amount: " + refundAmount + " | Booking ID: " + booking.getBookingId(),
 					NotificationCategory.BOOKING);
 
+			log.info("Booking {} cancelled successfully with refund amount: {} (status: {})",
+					booking.getBookingId(), refundAmount, refundStatus);
+
 			return BookingCancelResponseDTO.builder().bookingId(booking.getBookingId())
 					.userId(booking.getUser().getUserId()).status(booking.getStatus())
 					.originalAmount(booking.getAmount()).refundAmount(refundAmount)
@@ -371,6 +460,7 @@ public class BookingServiceImpl implements BookingService {
 					.cancelledAt(now).refundStatus(refundStatus).message("Booking cancelled successfully").build();
 		}
 
+		log.error("Invalid booking state for booking {}: {}", booking.getBookingId(), booking.getStatus());
 		throw new InvalidBookingException("Invalid booking state");
 	}
 
@@ -384,30 +474,41 @@ public class BookingServiceImpl implements BookingService {
 	@Transactional
 	public PassengerCancelResponseDTO cancelPassenger(Long bookingId, Long passengerId, Long userId) {
 
-		Booking booking = bookingRepo.findById(bookingId)
-				.orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+		log.info("Cancelling passengerId: {} from bookingId: {} for userId: {}", passengerId, bookingId, userId);
 
-		if (!booking.getUser().getUserId().equals(userId)) {
-			throw new InvalidBookingException("Booking does not belong to the given user");
-		}
+		Booking booking = bookingRepo.findById(bookingId)
+				.orElseThrow(() -> {
+					log.error("Booking not found with id {}", bookingId);
+					return new ResourceNotFoundException("Booking not found");
+				});
+
+		authUser.assertCanActAs(booking.getUser().getUserId());
 
 		if (booking.getStatus() == BookingStatus.CANCELLED) {
+			log.error("Booking {} is already cancelled", bookingId);
 			throw new InvalidBookingException("Booking is already cancelled");
 		}
 
 		if (booking.getBookingType() != BookingType.FLIGHT && booking.getBookingType() != BookingType.TRANSPORT) {
+			log.error("Passenger cancellation not allowed for booking {} of type {}",
+					bookingId, booking.getBookingType());
 			throw new InvalidBookingException(
 					"Passenger cancellation is only allowed for flight and transport bookings");
 		}
 
 		Passenger passenger = passengerRepo.findById(passengerId)
-				.orElseThrow(() -> new ResourceNotFoundException("Passenger not found"));
+				.orElseThrow(() -> {
+					log.error("Passenger not found with id {}", passengerId);
+					return new ResourceNotFoundException("Passenger not found");
+				});
 
 		if (passenger.getBooking() == null || !passenger.getBooking().getBookingId().equals(bookingId)) {
+			log.error("Passenger {} does not belong to booking {}", passengerId, bookingId);
 			throw new InvalidBookingException("Passenger does not belong to the given booking");
 		}
 
 		if (passenger.getStatus() == PassengerStatus.CANCELLED) {
+			log.error("Passenger {} is already cancelled", passengerId);
 			throw new InvalidBookingException("Passenger is already cancelled");
 		}
 
@@ -415,6 +516,7 @@ public class BookingServiceImpl implements BookingService {
 		long activePassengers = passengerRepo.countByBookingBookingIdAndStatus(bookingId, PassengerStatus.ACTIVE);
 
 		if (activePassengers <= 1) {
+			log.debug("Last active passenger in booking {}, cancelling entire booking", bookingId);
 			BookingCancelDTO cancelDto = new BookingCancelDTO();
 			cancelDto.setBookingId(bookingId);
 			cancelDto.setUserId(userId);
@@ -422,6 +524,8 @@ public class BookingServiceImpl implements BookingService {
 
 			passenger.setStatus(PassengerStatus.CANCELLED);
 			passengerRepo.save(passenger);
+
+			log.info("Last passenger {} removed; booking {} cancelled entirely", passengerId, bookingId);
 
 			return PassengerCancelResponseDTO.builder().bookingId(bookingId).passengerId(passengerId)
 					.passengerName(passenger.getPassengerName()).bookingStatus(BookingStatus.CANCELLED)
@@ -476,6 +580,9 @@ public class BookingServiceImpl implements BookingService {
 
 		notificationService.sendNotification(booking.getUser(), "Passenger " + passenger.getPassengerName()
 				+ " removed from booking " + bookingId + ". Refund: " + refundAmount, NotificationCategory.BOOKING);
+
+		log.info("Passenger {} removed from booking {} successfully. Refund: {} (status: {})",
+				passengerId, bookingId, refundAmount, refundStatus);
 
 		return PassengerCancelResponseDTO.builder().bookingId(bookingId).passengerId(passengerId)
 				.passengerName(passenger.getPassengerName()).bookingStatus(booking.getStatus())

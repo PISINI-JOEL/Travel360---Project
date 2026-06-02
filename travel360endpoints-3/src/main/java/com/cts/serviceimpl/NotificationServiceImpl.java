@@ -14,9 +14,11 @@ import com.cts.repository.NotificationRepository;
 import com.cts.service.NotificationService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepo;
@@ -25,25 +27,35 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void sendNotification(User user, String message, NotificationCategory category) {
 
+        log.info("Sending notification to userId: {} with category: {}", user.getUserId(), category);
+
         Notification notification = Notification.builder()
                 .user(user)
                 .message(message)
-                .category(category)                        
-                .status(NotificationStatus.UNREAD)         
+                .category(category)
+                .status(NotificationStatus.UNREAD)
                 .createdDate(LocalDateTime.now())
                 .build();
 
-        notificationRepo.save(notification);
+        Notification savedNotification = notificationRepo.save(notification);
+
+        log.info("Notification created successfully with ID: {}", savedNotification.getNotificationId());
     }
 
     
     @Override
     public List<NotificationResponseDTO> getUserNotifications(Long userId) {
 
-        return notificationRepo.findByUserUserId(userId)
+        log.info("Fetching notifications for userId: {}", userId);
+
+        List<NotificationResponseDTO> notifications = notificationRepo.findByUserUserId(userId)
                 .stream()
                 .map(this::mapToDTO)
                 .toList();
+
+        log.info("Total notifications fetched for userId {}: {}", userId, notifications.size());
+
+        return notifications;
     }
 
     

@@ -1,5 +1,6 @@
 package com.cts.serviceimpl;
 
+import com.cts.config.AuthenticatedUserProvider;
 import com.cts.dto.AddBookingDTO;
 import com.cts.dto.BookingResponseDTO;
 import com.cts.dto.CreateItineraryDTO;
@@ -16,6 +17,7 @@ import com.cts.repository.UserRepository;
 import com.cts.service.ItineraryService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,19 +27,27 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ItineraryServiceImpl implements ItineraryService {
 
 	private final ItineraryRepository itineraryRepo;
 	private final BookingRepository bookingRepo;
 	private final UserRepository userRepo;
+	private final AuthenticatedUserProvider authUser;
 
 	@Override
 	@Transactional
 	public ItineraryResponseDTO createItinerary(CreateItineraryDTO dto) {
 
-		User user = userRepo.findById(dto.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found"));
+		log.info("Creating itinerary for userId: {}", dto.getUserId());
+
+		User user = userRepo.findById(dto.getUserId()).orElseThrow(() -> {
+			log.error("User not found with id {}", dto.getUserId());
+			return new UserNotFoundException("User not found");
+		});
 
 		if (!dto.getEndDate().isAfter(dto.getStartDate())) {
+			log.error("Invalid date range: endDate {} is not after startDate {}", dto.getEndDate(), dto.getStartDate());
 			throw new InvalidBookingException("End date must be after start date");
 		}
 
@@ -48,6 +58,8 @@ public class ItineraryServiceImpl implements ItineraryService {
 
 		itinerary = itineraryRepo.save(itinerary);
 
+		log.info("Itinerary created successfully with ID: {}", itinerary.getItineraryId());
+
 		return mapToDTO(itinerary);
 	}
 
@@ -55,17 +67,28 @@ public class ItineraryServiceImpl implements ItineraryService {
 	@Transactional
 	public ItineraryResponseDTO addBookingToItinerary(AddBookingDTO dto) {
 
+		log.info("Adding bookingId: {} to itineraryId: {}", dto.getBookingId(), dto.getItineraryId());
+
 		Itinerary itinerary = itineraryRepo.findById(dto.getItineraryId())
-				.orElseThrow(() -> new ResourceNotFoundException("Itinerary not found"));
+				.orElseThrow(() -> {
+					log.error("Itinerary not found with id {}", dto.getItineraryId());
+					return new ResourceNotFoundException("Itinerary not found");
+				});
 
 		Booking booking = bookingRepo.findById(dto.getBookingId())
-				.orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+				.orElseThrow(() -> {
+					log.error("Booking not found with id {}", dto.getBookingId());
+					return new ResourceNotFoundException("Booking not found");
+				});
 
 		if (!booking.getUser().getUserId().equals(itinerary.getUser().getUserId())) {
+			log.error("Booking {} does not belong to the owner of itinerary {}", dto.getBookingId(),
+					dto.getItineraryId());
 			throw new InvalidBookingException("Booking does not belong to the itinerary owner");
 		}
 
 		if (booking.getItinerary() != null) {
+			log.error("Booking {} already belongs to an itinerary", dto.getBookingId());
 			throw new InvalidBookingException("Booking already belongs to an itinerary");
 		}
 
@@ -78,6 +101,8 @@ public class ItineraryServiceImpl implements ItineraryService {
 
 		bookingRepo.save(booking);
 
+		log.info("Booking {} added successfully to itinerary {}", dto.getBookingId(), dto.getItineraryId());
+
 		return mapToDTO(itinerary);
 	}
 
@@ -85,14 +110,23 @@ public class ItineraryServiceImpl implements ItineraryService {
 	@Transactional
 	public ItineraryResponseDTO removeBookingFromItinerary(AddBookingDTO dto) {
 
+		log.info("Removing bookingId: {} from itineraryId: {}", dto.getBookingId(), dto.getItineraryId());
+
 		Itinerary itinerary = itineraryRepo.findById(dto.getItineraryId())
-				.orElseThrow(() -> new ResourceNotFoundException("Itinerary not found"));
+				.orElseThrow(() -> {
+					log.error("Itinerary not found with id {}", dto.getItineraryId());
+					return new ResourceNotFoundException("Itinerary not found");
+				});
 
 		Booking booking = bookingRepo.findById(dto.getBookingId())
-				.orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+				.orElseThrow(() -> {
+					log.error("Booking not found with id {}", dto.getBookingId());
+					return new ResourceNotFoundException("Booking not found");
+				});
 
 		if (booking.getItinerary() == null
 				|| !booking.getItinerary().getItineraryId().equals(itinerary.getItineraryId())) {
+			log.error("Booking {} does not belong to itinerary {}", dto.getBookingId(), dto.getItineraryId());
 			throw new InvalidBookingException("Booking does not belong to this itinerary");
 		}
 
@@ -104,13 +138,21 @@ public class ItineraryServiceImpl implements ItineraryService {
 
 		bookingRepo.save(booking);
 
+		log.info("Booking {} removed successfully from itinerary {}", dto.getBookingId(), dto.getItineraryId());
+
 		return mapToDTO(itinerary);
 	}
 
 	@Override
 	public List<ItineraryResponseDTO> getUserItineraries(Long userId) {
 
+		log.info("Fetching itineraries for userId: {}", userId);
+
+		authUser.assertCanActAs(userId);
+
 		List<Itinerary> list = itineraryRepo.findByUserUserId(userId);
+
+		log.info("Total itineraries fetched for userId {}: {}", userId, list.size());
 
 		return list.stream().map(this::mapToDTO).toList();
 	}
@@ -118,12 +160,15 @@ public class ItineraryServiceImpl implements ItineraryService {
 	@Override
 	public ItineraryResponseDTO getItineraryById(Long itineraryId, Long userId) {
 
-		Itinerary itinerary = itineraryRepo.findById(itineraryId)
-				.orElseThrow(() -> new ResourceNotFoundException("Itinerary not found"));
+		log.info("Fetching itineraryId: {} for userId: {}", itineraryId, userId);
 
-		if (!itinerary.getUser().getUserId().equals(userId)) {
-			throw new InvalidBookingException("Unauthorized access");
-		}
+		Itinerary itinerary = itineraryRepo.findById(itineraryId)
+				.orElseThrow(() -> {
+					log.error("Itinerary not found with id {}", itineraryId);
+					return new ResourceNotFoundException("Itinerary not found");
+				});
+
+		authUser.assertCanActAs(itinerary.getUser().getUserId());
 
 		return mapToDTO(itinerary);
 	}
@@ -132,16 +177,22 @@ public class ItineraryServiceImpl implements ItineraryService {
 	@Transactional
 	public ItineraryResponseDTO updateItinerary(Long itineraryId, CreateItineraryDTO dto) {
 
-		Itinerary itinerary = itineraryRepo.findById(itineraryId)
-				.orElseThrow(() -> new ResourceNotFoundException("Itinerary not found"));
+		log.info("Updating itineraryId: {}", itineraryId);
 
-		if (!itinerary.getUser().getUserId().equals(dto.getUserId())) {
-			throw new InvalidBookingException("Unauthorized access");
-		}
+		Itinerary itinerary = itineraryRepo.findById(itineraryId)
+				.orElseThrow(() -> {
+					log.error("Itinerary not found with id {}", itineraryId);
+					return new ResourceNotFoundException("Itinerary not found");
+				});
+
+		authUser.assertCanActAs(itinerary.getUser().getUserId());
 
 		if (!dto.getEndDate().isAfter(dto.getStartDate())) {
+			log.error("Invalid date range: endDate {} is not after startDate {}", dto.getEndDate(), dto.getStartDate());
 			throw new InvalidBookingException("End date must be after start date");
 		}
+
+		log.debug("Updating itinerary details for ID: {}", itineraryId);
 
 		itinerary.setTripName(dto.getTripName());
 		itinerary.setDescription(dto.getDescription());
@@ -150,6 +201,8 @@ public class ItineraryServiceImpl implements ItineraryService {
 
 		itinerary = itineraryRepo.save(itinerary);
 
+		log.info("Itinerary updated successfully with ID: {}", itineraryId);
+
 		return mapToDTO(itinerary);
 	}
 
@@ -157,18 +210,24 @@ public class ItineraryServiceImpl implements ItineraryService {
 	@Transactional
 	public void deleteItinerary(Long itineraryId, Long userId) {
 
-		Itinerary itinerary = itineraryRepo.findById(itineraryId)
-				.orElseThrow(() -> new ResourceNotFoundException("Itinerary not found"));
+		log.info("Deleting itineraryId: {} for userId: {}", itineraryId, userId);
 
-		if (!itinerary.getUser().getUserId().equals(userId)) {
-			throw new InvalidBookingException("Unauthorized access");
-		}
+		Itinerary itinerary = itineraryRepo.findById(itineraryId)
+				.orElseThrow(() -> {
+					log.error("Itinerary not found with id {}", itineraryId);
+					return new ResourceNotFoundException("Itinerary not found");
+				});
+
+		authUser.assertCanActAs(itinerary.getUser().getUserId());
 
 		List<Booking> bookings = bookingRepo.findByItineraryItineraryId(itineraryId);
+		log.debug("Detaching {} bookings from itinerary {}", bookings.size(), itineraryId);
 		bookings.forEach(booking -> booking.setItinerary(null));
 		bookingRepo.saveAll(bookings);
 
 		itineraryRepo.delete(itinerary);
+
+		log.info("Itinerary deleted successfully with ID: {}", itineraryId);
 	}
 
 	private ItineraryResponseDTO mapToDTO(Itinerary itinerary) {

@@ -20,10 +20,12 @@ import com.cts.repository.TravelPackageRepository;
 import com.cts.service.TravelPackageService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class TravelPackageServiceImpl implements TravelPackageService {
 
     private final TravelPackageRepository packageRepo;
@@ -32,15 +34,22 @@ public class TravelPackageServiceImpl implements TravelPackageService {
     @Override
     public TravelPackageResponseDTO addPackage(TravelPackageDTO dto) {
 
+        log.info("Adding new travel package with partnerId: {}", dto.getPartnerId());
+
         Partner partner = partnerRepo.findById(dto.getPartnerId())
-                .orElseThrow(() -> new PartnerNotFoundException(
-                        "Partner not found with id " + dto.getPartnerId()));
+                .orElseThrow(() -> {
+                    log.error("Partner not found with id {}", dto.getPartnerId());
+                    return new PartnerNotFoundException(
+                            "Partner not found with id " + dto.getPartnerId());
+                });
 
         if (partner.getType() != PartnerType.PACKAGE) {
+            log.error("Invalid partner type for partnerId: {}", partner.getPartnerId());
             throw new InvalidPartnerException(
                     "Partner " + partner.getPartnerId() + " is not a PACKAGE partner");
         }
         if (partner.getStatus() != PartnerStatus.ACTIVE) {
+            log.error("Inactive partner: {}", partner.getPartnerId());
             throw new InvalidPartnerException(
                     "Partner " + partner.getPartnerId() + " is not active");
         }
@@ -62,6 +71,8 @@ public class TravelPackageServiceImpl implements TravelPackageService {
 
         packageRepo.save(tpackage);
 
+        log.info("Travel package created successfully with ID: {}", tpackage.getPackageId());
+
         return mapToDTO(tpackage);
     }
 
@@ -69,21 +80,33 @@ public class TravelPackageServiceImpl implements TravelPackageService {
     @Transactional
     public TravelPackageResponseDTO updatePackage(Long id, TravelPackageDTO dto) {
 
+        log.info("Updating travel package with ID: {}", id);
+
         TravelPackage tpackage = packageRepo.findById(id)
-                .orElseThrow(() -> new PackageNotFoundException("Package not found"));
+                .orElseThrow(() -> {
+                    log.error("Package not found with id {}", id);
+                    return new PackageNotFoundException("Package not found");
+                });
 
         Partner partner = partnerRepo.findById(dto.getPartnerId())
-                .orElseThrow(() -> new PartnerNotFoundException(
-                        "Partner not found with id " + dto.getPartnerId()));
+                .orElseThrow(() -> {
+                    log.error("Partner not found with id {}", dto.getPartnerId());
+                    return new PartnerNotFoundException(
+                            "Partner not found with id " + dto.getPartnerId());
+                });
 
         if (partner.getType() != PartnerType.PACKAGE) {
+            log.error("Invalid partner type for partnerId: {}", partner.getPartnerId());
             throw new InvalidPartnerException(
                     "Partner " + partner.getPartnerId() + " is not a PACKAGE partner");
         }
         if (partner.getStatus() != PartnerStatus.ACTIVE) {
+            log.error("Inactive partner: {}", partner.getPartnerId());
             throw new InvalidPartnerException(
                     "Partner " + partner.getPartnerId() + " is not active");
         }
+
+        log.debug("Updating travel package details for ID: {}", id);
 
         tpackage.setPackageName(dto.getPackageName());
         tpackage.setSource(dto.getSource());
@@ -100,29 +123,43 @@ public class TravelPackageServiceImpl implements TravelPackageService {
 
         packageRepo.save(tpackage);
 
+        log.info("Travel package updated successfully with ID: {}", id);
+
         return mapToDTO(tpackage);
     }
 
     @Override
     public List<TravelPackageResponseDTO> getAllPackages(int page, int size) {
 
+        log.info("Fetching all travel packages (page={}, size={})", page, size);
+
         Pageable pageable = PageRequest.of(page, size);
 
-        return packageRepo.findAll(pageable)
+        List<TravelPackageResponseDTO> packages = packageRepo.findAll(pageable)
                 .stream()
                 .map(this::mapToDTO)
                 .toList();
+
+        log.info("Total travel packages fetched: {}", packages.size());
+
+        return packages;
     }
 
     @Override
     public List<TravelPackageResponseDTO> searchByCategory(TravelPackageCategory category, int page, int size) {
 
+        log.info("Searching travel packages by category: {} (page={}, size={})", category, page, size);
+
         Pageable pageable = PageRequest.of(page, size);
 
-        return packageRepo.findByCategory(category, pageable)
+        List<TravelPackageResponseDTO> packages = packageRepo.findByCategory(category, pageable)
                 .stream()
                 .map(this::mapToDTO)
                 .toList();
+
+        log.info("Category search returned {} travel packages", packages.size());
+
+        return packages;
     }
 
     private TravelPackageResponseDTO mapToDTO(TravelPackage t) {

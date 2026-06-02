@@ -1,5 +1,6 @@
 package com.cts.serviceimpl;
 
+import com.cts.config.AuthenticatedUserProvider;
 import com.cts.dto.InvoiceDTO;
 import com.cts.dto.InvoiceResponseDTO;
 import com.cts.entity.Booking;
@@ -29,6 +30,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepo;
     private final UserRepository userRepo;
     private final BookingRepository bookingRepo;
+    private final AuthenticatedUserProvider authUser;
 
     @Override
     public InvoiceResponseDTO createInvoice(InvoiceDTO dto) {
@@ -61,6 +63,14 @@ public class InvoiceServiceImpl implements InvoiceService {
     public List<InvoiceResponseDTO> getInvoicesByBooking(Long bookingId) {
 
         log.info("Fetching invoices for bookingId: {}", bookingId);
+
+        Booking booking = bookingRepo.findById(bookingId)
+                .orElseThrow(() -> {
+                    log.error("Booking not found with ID: {}", bookingId);
+                    return new ResourceNotFoundException("Booking not found");
+                });
+
+        authUser.assertCanActAs(booking.getUser().getUserId());
 
         List<Invoice> invoices = invoiceRepo.findByBookingBookingId(bookingId);
 
@@ -95,6 +105,8 @@ public class InvoiceServiceImpl implements InvoiceService {
                     log.error("Invoice not found with ID: {}", id);
                     return new InvoiceNotFoundException("Invoice not found");
                 });
+
+        authUser.assertCanActAs(invoice.getBooking().getUser().getUserId());
 
         log.info("Invoice fetched successfully with ID: {}", id);
 

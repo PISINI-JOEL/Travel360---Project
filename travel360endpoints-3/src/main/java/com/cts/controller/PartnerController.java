@@ -8,6 +8,7 @@ import com.cts.service.PartnerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class PartnerController {
 
     // ✅ CREATE
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public PartnerResponseDTO createPartner(@RequestBody PartnerDTO dto) {
 
         log.info("Received request to create partner");
@@ -35,6 +37,7 @@ public class PartnerController {
 
     // ✅ UPDATE
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public PartnerResponseDTO updatePartner(@PathVariable Long id,
                                             @RequestBody PartnerDTO dto) {
 
@@ -49,6 +52,7 @@ public class PartnerController {
 
     // ✅ DELETE
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String deletePartner(@PathVariable Long id) {
 
         log.info("Received request to delete partner with ID: {}", id);
@@ -62,6 +66,7 @@ public class PartnerController {
 
     // ✅ GET BY CATEGORY (type)
     @GetMapping("/category/{type}")
+    @PreAuthorize("hasAnyRole('ADMIN','COMPLIANCE_OFFICER')")
     public List<PartnerResponseDTO> getPartnerByCategory(@PathVariable PartnerType type) {
 
         log.info("Fetching partners by category: {}", type);
@@ -75,6 +80,7 @@ public class PartnerController {
 
     // ✅ GET BY ID
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','COMPLIANCE_OFFICER')")
     public PartnerResponseDTO getPartnerById(@PathVariable Long id) {
 
         log.info("Fetching partner with ID: {}", id);

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.cts.dto.TransportDTO;
@@ -29,6 +30,7 @@ public class TransportController {
     private final TransportService service;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
     public ResponseEntity<?> addTransport(@RequestBody @Valid TransportDTO dto) {
         log.info("addTransport() is called");
         log.debug("Request payload: {}", dto);
@@ -36,6 +38,7 @@ public class TransportController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
     public ResponseEntity<?> updateTransport(@PathVariable Long id, @RequestBody @Valid TransportDTO dto) {
         log.info("updateTransport() is called for id: {}", id);
         log.debug("Update payload: {}", dto);

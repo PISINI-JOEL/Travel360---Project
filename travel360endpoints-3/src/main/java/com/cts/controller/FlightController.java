@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ public class FlightController {
     private final FlightService service;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
     public ResponseEntity<Flight> addFlight(@RequestBody @Valid FlightDTO dto) {
 
         log.info("Received request to add flight: {}", dto);
@@ -39,6 +41,7 @@ public class FlightController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
     public ResponseEntity<Flight> updateFlight(@PathVariable Long id,
                                                @RequestBody @Valid FlightDTO dto) {
 

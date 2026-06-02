@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class BookingController {
     private final BookingService service;
 
     @PostMapping("/flight")
+    @PreAuthorize("hasAnyRole('CUSTOMER','CORPORATE_TRAVEL_MANAGER','TRAVEL_AGENT')")
     public ResponseEntity<BookingFlightResponseDTO> createFlightBooking(
             @RequestBody @Valid BookingFlightDTO dto) {
 
@@ -35,6 +37,7 @@ public class BookingController {
     }
 
     @PostMapping("/hotel")
+    @PreAuthorize("hasAnyRole('CUSTOMER','CORPORATE_TRAVEL_MANAGER','TRAVEL_AGENT')")
     public ResponseEntity<BookingHotelResponseDTO> createHotelBooking(
             @RequestBody @Valid BookingHotelDTO dto) {
 
@@ -48,6 +51,7 @@ public class BookingController {
     }
 
     @PostMapping("/package")
+    @PreAuthorize("hasAnyRole('CUSTOMER','CORPORATE_TRAVEL_MANAGER','TRAVEL_AGENT')")
     public ResponseEntity<BookingPackageResponseDTO> createPackageBooking(
             @RequestBody @Valid BookingPackageDTO dto) {
 
@@ -61,6 +65,7 @@ public class BookingController {
     }
 
     @PostMapping("/transport")
+    @PreAuthorize("hasAnyRole('CUSTOMER','CORPORATE_TRAVEL_MANAGER','TRAVEL_AGENT')")
     public ResponseEntity<BookingTransportResponseDTO> createTransportBooking(
             @RequestBody @Valid BookingTransportDTO dto) {
 
@@ -74,6 +79,7 @@ public class BookingController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('TRAVEL_AGENT','ADMIN')")
     public ResponseEntity<List<BookingResponseDTO>> getAll() {
 
         log.info("Fetching all bookings");
@@ -86,6 +92,7 @@ public class BookingController {
     }
 
     @GetMapping("/user/{userId}")
+    @PreAuthorize("hasAnyRole('CUSTOMER','TRAVEL_AGENT','ADMIN')")
     public ResponseEntity<List<BookingResponseDTO>> getByUser(@PathVariable Long userId) {
 
         log.info("Fetching bookings for userId: {}", userId);
@@ -98,6 +105,7 @@ public class BookingController {
     }
 
     @PostMapping("/cancel")
+    @PreAuthorize("hasAnyRole('CUSTOMER','CORPORATE_TRAVEL_MANAGER','TRAVEL_AGENT')")
     public ResponseEntity<BookingCancelResponseDTO> cancelBooking(
             @RequestBody BookingCancelDTO dto) {
 
@@ -106,11 +114,12 @@ public class BookingController {
         BookingCancelResponseDTO response = service.deleteBooking(dto);
 
         log.info("Booking cancelled successfully for bookingId: {}", dto.getBookingId());
-
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+        
     }
 
     @DeleteMapping("/{bookingId}/passengers/{passengerId}")
+    @PreAuthorize("hasAnyRole('CUSTOMER','CORPORATE_TRAVEL_MANAGER','TRAVEL_AGENT')")
     public ResponseEntity<PassengerCancelResponseDTO> cancelPassenger(
             @PathVariable Long bookingId,
             @PathVariable Long passengerId,

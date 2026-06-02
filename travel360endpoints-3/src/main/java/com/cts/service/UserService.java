@@ -1,5 +1,6 @@
 package com.cts.service;
 
+import com.cts.dto.AuthResponseDTO;
 import com.cts.dto.UserDTO;
 import com.cts.dto.UserResponseDTO;
 
@@ -9,7 +10,7 @@ public interface UserService {
 
     UserResponseDTO register(UserDTO dto);
 
-    UserResponseDTO login(String email, String password);
+    AuthResponseDTO login(String email, String password);
 
     List<UserResponseDTO> getAllUsers();
 }

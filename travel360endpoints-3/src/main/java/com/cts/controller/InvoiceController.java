@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class InvoiceController {
     private final InvoiceService service;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('FINANCE_OFFICER','ADMIN')")
     public ResponseEntity<InvoiceResponseDTO> create(@RequestBody @Valid InvoiceDTO dto) {
 
         log.info("Received request to create invoice for bookingId: {}", dto.getBookingId());
@@ -35,6 +37,7 @@ public class InvoiceController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('FINANCE_OFFICER','ADMIN')")
     public ResponseEntity<List<InvoiceResponseDTO>> getAll() {
 
         log.info("Fetching all invoices");
@@ -47,6 +50,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/booking/{bookingId}")
+    @PreAuthorize("hasAnyRole('CUSTOMER','FINANCE_OFFICER','ADMIN')")
     public ResponseEntity<List<InvoiceResponseDTO>> getByBooking(@PathVariable Long bookingId) {
 
         log.info("Fetching invoices for bookingId: {}", bookingId);
@@ -59,6 +63,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('CUSTOMER','FINANCE_OFFICER','ADMIN')")
     public ResponseEntity<InvoiceResponseDTO> getById(@PathVariable Long id) {
 
         log.info("Fetching invoice with ID: {}", id);

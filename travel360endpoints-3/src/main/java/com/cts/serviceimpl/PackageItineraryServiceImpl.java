@@ -11,12 +11,14 @@ import com.cts.repository.TravelPackageRepository;
 import com.cts.service.PackageItineraryService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class PackageItineraryServiceImpl implements PackageItineraryService {
 
     private final PackageItineraryRepository itineraryRepository;
@@ -24,8 +26,13 @@ public class PackageItineraryServiceImpl implements PackageItineraryService {
 
     @Override
     public PackageItinerary save(PackageItineraryRequestDTO dto) {
+        log.info("Saving package itinerary for packageId: {}", dto.getPackageId());
+
         TravelPackage pkg = travelPackageRepository.findById(dto.getPackageId())
-                .orElseThrow(() -> new PackageNotFoundException("Package not found with id: " + dto.getPackageId()));
+                .orElseThrow(() -> {
+                    log.error("Package not found with id {}", dto.getPackageId());
+                    return new PackageNotFoundException("Package not found with id: " + dto.getPackageId());
+                });
 
         PackageItinerary itinerary = PackageItinerary.builder()
                 .startDate(dto.getStart_date())
@@ -36,18 +43,33 @@ public class PackageItineraryServiceImpl implements PackageItineraryService {
                 .travelPackage(pkg)
                 .build();
 
-        return itineraryRepository.save(itinerary);
+        PackageItinerary saved = itineraryRepository.save(itinerary);
+
+        log.info("Package itinerary created successfully with ID: {}", saved.getPackageItineraryId());
+
+        return saved;
     }
 
     @Override
     public List<PackageItinerary> getAll() {
-        return itineraryRepository.findAll();
+        log.info("Fetching all package itineraries");
+
+        List<PackageItinerary> itineraries = itineraryRepository.findAll();
+
+        log.info("Total package itineraries fetched: {}", itineraries.size());
+
+        return itineraries;
     }
 
     @Override
     public PackageItineraryResponceDTO getItineraryById(Long id) {
+        log.info("Fetching package itinerary with ID: {}", id);
+
         PackageItinerary itinerary = itineraryRepository.findById(id)
-                .orElseThrow(() -> new PackageItineraryNotFound("Itinerary not found with id: " + id));
+                .orElseThrow(() -> {
+                    log.error("Package itinerary not found with id {}", id);
+                    return new PackageItineraryNotFound("Itinerary not found with id: " + id);
+                });
 
         TravelPackage pkg = itinerary.getTravelPackage();
 
@@ -74,10 +96,15 @@ public class PackageItineraryServiceImpl implements PackageItineraryService {
 
     @Override
     public void delete(Long id) {
+        log.info("Deleting package itinerary with ID: {}", id);
+
         if (!itineraryRepository.existsById(id)) {
+            log.error("Package itinerary not found with id {}", id);
             throw new PackageItineraryNotFound("Itinerary not found with id: " + id);
         }
         itineraryRepository.deleteById(id);
+
+        log.info("Package itinerary deleted successfully with ID: {}", id);
     }
 
 	

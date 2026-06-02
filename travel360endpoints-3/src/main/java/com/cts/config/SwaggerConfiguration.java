@@ -3,9 +3,12 @@ package com.cts.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration
 public class SwaggerConfiguration {
@@ -17,6 +20,14 @@ public class SwaggerConfiguration {
 	            .title("Travel360")
 	            .version("1.0")
 	            .description("It allows to create web api end points to manage travel related bookings")
-	            .contact(new Contact().name("Travel360-front office").email("travel360@gmail.com")));
+	            .contact(new Contact().name("Travel360-front office").email("travel360@gmail.com")))
+	            .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+	            .components(new Components()
+	                .addSecuritySchemes("bearerAuth",
+	                    new SecurityScheme()
+	                        .name("Authorization")
+	                        .type(SecurityScheme.Type.HTTP)
+	                        .scheme("bearer")
+	                        .bearerFormat("JWT")));
 	}
 }
