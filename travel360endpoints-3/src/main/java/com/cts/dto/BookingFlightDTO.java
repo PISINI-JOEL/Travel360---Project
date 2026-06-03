@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.cts.enums.Gender;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -30,7 +31,10 @@ public class BookingFlightDTO {
     @NotBlank(message = "Booking name is required")
     @Size(min = 2, max = 50, message = "Booking name must be between 2 and 50 characters")
     private String bookingName;
-    private LocalDate flightDate;
+
+    @NotNull(message = "Travel date is required")
+    @Future(message = "Travel date must be in the future")
+    private LocalDate travelDate;
 
     @NotNull(message = "Gender is required")
     private Gender gender;

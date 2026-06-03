@@ -6,6 +6,7 @@ import com.cts.enums.PackageStatus;
 import com.cts.enums.TravelPackageCategory;
 import lombok.Data;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
@@ -56,4 +57,12 @@ public class TravelPackageDTO {
 
     @NotNull(message = "Partner id is required")
     private Long partnerId;
+
+    @AssertTrue(message = "End date must be the same as or after the start date")
+    private boolean isEndDateValid() {
+        if (startDate == null || endDate == null) {
+            return true; // @NotNull handles the null cases
+        }
+        return !endDate.isBefore(startDate);
+    }
 }

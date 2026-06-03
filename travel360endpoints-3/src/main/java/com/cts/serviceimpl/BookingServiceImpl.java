@@ -90,26 +90,21 @@ public class BookingServiceImpl implements BookingService {
 		}
 
 		int totalSeats = flight.getTotalSeats();
-		int bookedSeats = bookingRepo.getBookedSeats(flight.getFlightId(), dto.getFlightDate());
+		int bookedSeats = bookingRepo.getBookedSeats(flight.getFlightId(), dto.getTravelDate());
 		int availableSeats = totalSeats - bookedSeats;
-		log.debug("Flight {} availability: {} seats available, {} requested",
-				flight.getFlightId(), availableSeats, dto.getUnits());
+		log.debug("Flight {} availability on {}: {} seats available, {} requested",
+				flight.getFlightId(), dto.getTravelDate(), availableSeats, dto.getUnits());
 		if (availableSeats < dto.getUnits()) {
-			log.error("Insufficient seats for flight {}: {} available, {} requested",
-					flight.getFlightId(), availableSeats, dto.getUnits());
+			log.error("Insufficient seats for flight {} on {}: {} available, {} requested",
+					flight.getFlightId(), dto.getTravelDate(), availableSeats, dto.getUnits());
 			throw new InsufficientAvailabilityException("Not enough seats available");
-		}
-		if (dto.getFlightDate() == null || !dto.getFlightDate().equals(flight.getFlightDate())) {
-			log.error("Invalid booking info for flight {}: requested date {}, flight date {}",
-					flight.getFlightId(), dto.getFlightDate(), flight.getFlightDate());
-			throw new InvalidBookingException("Booking info not valid");
 		}
 
 		LocalDate today = LocalDate.now();
-		LocalDate flightDate = flight.getFlightDate();
+		LocalDate travelDate = dto.getTravelDate();
 
-		if (!flightDate.isAfter(today.plusDays(1))) {
-			log.error("Booking not allowed for flight {} on date {}", flight.getFlightId(), flightDate);
+		if (!travelDate.isAfter(today.plusDays(1))) {
+			log.error("Booking not allowed for flight {} on date {}", flight.getFlightId(), travelDate);
 			throw new InvalidBookingException("Booking is not allowed 1 day before or on the same day of the flight");
 		}
 
@@ -118,7 +113,7 @@ public class BookingServiceImpl implements BookingService {
 		Booking booking = Booking.builder().user(user).flight(flight).bookingType(BookingType.FLIGHT)
 				.bookingName(dto.getBookingName()).gender(dto.getGender()).amount(flight.getPrice() * dto.getUnits())
 				.units(dto.getUnits()).days(1).createdAt(LocalDateTime.now()).status(BookingStatus.PENDING)
-				.bookingDate(flight.getFlightDate()).build();
+				.bookingDate(dto.getTravelDate()).build();
 
 		booking.setPassengers(buildPassengers(dto.getPassengers(), booking));
 		bookingRepo.save(booking);
@@ -136,7 +131,7 @@ public class BookingServiceImpl implements BookingService {
 				.bookingType(booking.getBookingType()).amount(booking.getAmount()).status(booking.getStatus())
 				.userId(user.getUserId()).email(user.getEmail()).units(dto.getUnits()).createdAt(booking.getCreatedAt())
 				.bookingDate(booking.getBookingDate()).arrivalTime(flight.getArrivalTime())
-				.departureTime(flight.getDepartureTime()).flightDate(flight.getFlightDate())
+				.departureTime(flight.getDepartureTime()).travelDate(dto.getTravelDate())
 				.bookingName(booking.getBookingName()).gender(booking.getGender()).flightId(flight.getFlightId())
 				.flightNumber(flight.getFlightNumber()).source(flight.getSource()).destination(flight.getDestination())
 				.passengers(mapPassengers(booking.getPassengers())).build();
@@ -159,17 +154,11 @@ public class BookingServiceImpl implements BookingService {
 					return new HotelNotFoundException("Hotel not found");
 				});
 
-		int totalRooms = hotel.getTotalRooms();
-		int bookedRooms = bookingRepo.getBookedRooms(hotel.getHotelId());
-		int availableRooms = totalRooms - bookedRooms;
-		log.debug("Hotel {} availability: {} rooms available, {} requested",
-				hotel.getHotelId(), availableRooms, dto.getUnits());
-
-		if (availableRooms < dto.getUnits()) {
-			log.error("Insufficient rooms for hotel {}: {} available, {} requested",
-					hotel.getHotelId(), availableRooms, dto.getUnits());
-			throw new InsufficientAvailabilityException("Not enough rooms available");
+		if (hotel.getStatus() != HotelStatus.AVAILABLE) {
+			log.error("Hotel {} is not available for booking, status: {}", hotel.getHotelId(), hotel.getStatus());
+			throw new InvalidBookingException("Hotel is not available for booking");
 		}
+
 		long days = ChronoUnit.DAYS.between(dto.getCheckInDate(), dto.getCheckOutDate());
 		if (days <= 0) {
 			log.error("Invalid date range for hotel {}: checkIn {}, checkOut {}",
@@ -177,16 +166,24 @@ public class BookingServiceImpl implements BookingService {
 			throw new InvalidBookingException("Check-out date must be after check-in date");
 		}
 
-		if (hotel.getStatus() != HotelStatus.AVAILABLE) {
-			log.error("Hotel {} is not available for booking, status: {}", hotel.getHotelId(), hotel.getStatus());
-			throw new InvalidBookingException("Hotel is not available for booking");
+		int totalRooms = hotel.getTotalRooms();
+		int bookedRooms = bookingRepo.getBookedRooms(
+				hotel.getHotelId(), dto.getCheckInDate(), dto.getCheckOutDate());
+		int availableRooms = totalRooms - bookedRooms;
+		log.debug("Hotel {} availability for {} to {}: {} rooms available, {} requested",
+				hotel.getHotelId(), dto.getCheckInDate(), dto.getCheckOutDate(), availableRooms, dto.getUnits());
+
+		if (availableRooms < dto.getUnits()) {
+			log.error("Insufficient rooms for hotel {}: {} available, {} requested",
+					hotel.getHotelId(), availableRooms, dto.getUnits());
+			throw new InsufficientAvailabilityException("Not enough rooms available");
 		}
 
 		Booking booking = Booking.builder().user(user).hotel(hotel).bookingType(BookingType.HOTEL)
 				.bookingName(dto.getBookingName()).gender(dto.getGender()).units(dto.getUnits()).days((int) days)
 				.checkInDate(dto.getCheckInDate()).checkOutDate(dto.getCheckOutDate())
 				.amount(hotel.getPrice() * dto.getUnits() * days).status(BookingStatus.PENDING)
-				.bookingDate(LocalDate.now()).build();
+				.bookingDate(dto.getCheckInDate()).createdAt(LocalDateTime.now()).build();
 
 		bookingRepo.save(booking);
 
@@ -244,7 +241,8 @@ public class BookingServiceImpl implements BookingService {
 		Booking booking = Booking.builder().user(user).travelPackage(tpackage).bookingType(BookingType.PACKAGE)
 				.bookingName(dto.getBookingName()).gender(dto.getGender()).units(dto.getUnits())
 				.amount(tpackage.getPrice() * dto.getUnits()).status(BookingStatus.PENDING)
-				.bookingDate(tpackage.getStartDate() != null ? tpackage.getStartDate() : LocalDate.now()).build();
+				.bookingDate(tpackage.getStartDate() != null ? tpackage.getStartDate() : LocalDate.now())
+				.createdAt(LocalDateTime.now()).build();
 
 		booking = bookingRepo.save(booking);
 
@@ -259,7 +257,7 @@ public class BookingServiceImpl implements BookingService {
 
 		return BookingPackageResponseDTO.builder().bookingId(booking.getBookingId())
 				.bookingType(booking.getBookingType()).amount(booking.getAmount()).status(booking.getStatus())
-				.bookingDate(LocalDate.now()).userId(user.getUserId()).email(user.getEmail()).units(dto.getUnits())
+				.bookingDate(booking.getBookingDate()).userId(user.getUserId()).email(user.getEmail()).units(dto.getUnits())
 				.bookingName(booking.getBookingName()).gender(booking.getGender()).packageId(tpackage.getPackageId())
 				.packageName(tpackage.getPackageName()).source(tpackage.getSource())
 				.destination(tpackage.getDestination()).durationDays(tpackage.getDurationDays())
@@ -278,6 +276,7 @@ public class BookingServiceImpl implements BookingService {
 			log.error("User not found with id {}", dto.getUserId());
 			return new UserNotFoundException("User not found");
 		});
+		
 
 		Transport transport = transportRepo.findById(dto.getTransportId())
 				.orElseThrow(() -> {
@@ -291,14 +290,22 @@ public class BookingServiceImpl implements BookingService {
 			throw new InvalidBookingException("Transport is not available for booking");
 		}
 
+		LocalDate today = LocalDate.now();
+		LocalDate travelDate = dto.getTravelDate();
+
+		if (!travelDate.isAfter(today.plusDays(1))) {
+			log.error("Booking not allowed for transport {} on date {}", transport.getTransportId(), travelDate);
+			throw new InvalidBookingException("Booking is not allowed 1 day before or on the same day of travel");
+		}
+
 		int totalSeats = transport.getTransportTotalSeats();
-		int bookedSeats = bookingRepo.getBookedTransportSeats(transport.getTransportId());
+		int bookedSeats = bookingRepo.getBookedTransportSeats(transport.getTransportId(), dto.getTravelDate());
 		int availableSeats = totalSeats - bookedSeats;
-		log.debug("Transport {} availability: {} seats available, {} requested",
-				transport.getTransportId(), availableSeats, dto.getUnits());
+		log.debug("Transport {} availability on {}: {} seats available, {} requested",
+				transport.getTransportId(), dto.getTravelDate(), availableSeats, dto.getUnits());
 		if (availableSeats < dto.getUnits()) {
-			log.error("Insufficient seats for transport {}: {} available, {} requested",
-					transport.getTransportId(), availableSeats, dto.getUnits());
+			log.error("Insufficient seats for transport {} on {}: {} available, {} requested",
+					transport.getTransportId(), dto.getTravelDate(), availableSeats, dto.getUnits());
 			throw new InsufficientAvailabilityException("Not enough seats available");
 		}
 
@@ -307,8 +314,8 @@ public class BookingServiceImpl implements BookingService {
 		Booking booking = Booking.builder().user(user).transport(transport).bookingType(BookingType.TRANSPORT)
 				.bookingName(dto.getBookingName()).gender(dto.getGender()).units(dto.getUnits())
 				.amount(transport.getPrice() * dto.getUnits()).status(BookingStatus.PENDING)
-				.bookingDate(transport.getDepartureTime() != null ? transport.getDepartureTime().toLocalDate()
-						: LocalDate.now())
+				.bookingDate(dto.getTravelDate())
+				.createdAt(LocalDateTime.now())
 				.build();
 
 		booking.setPassengers(buildPassengers(dto.getPassengers(), booking));
@@ -327,7 +334,8 @@ public class BookingServiceImpl implements BookingService {
 
 		return BookingTransportResponseDTO.builder().bookingId(booking.getBookingId())
 				.bookingType(booking.getBookingType()).amount(booking.getAmount()).status(booking.getStatus())
-				.bookingDate(booking.getBookingDate()).userId(user.getUserId()).email(user.getEmail())
+				.bookingDate(booking.getBookingDate()).travelDate(dto.getTravelDate())
+				.userId(user.getUserId()).email(user.getEmail())
 				.units(dto.getUnits()).bookingName(booking.getBookingName()).gender(booking.getGender())
 				.transportId(transport.getTransportId()).source(transport.getSource())
 				.destination(transport.getDestination()).transportType(transport.getTransportType())

@@ -1,7 +1,7 @@
 package com.cts.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import com.cts.enums.BookingStatus;
@@ -20,6 +20,7 @@ public class BookingTransportResponseDTO {
     private double amount;
     private BookingStatus status;
     private LocalDate bookingDate;
+    private LocalDate travelDate;
 
     private Long userId;
     private String email;
@@ -32,8 +33,8 @@ public class BookingTransportResponseDTO {
     private String source;
     private String destination;
     private String transportType;
-    private LocalDateTime departureTime;
-    private LocalDateTime arrivalTime;
+    private LocalTime departureTime;
+    private LocalTime arrivalTime;
 
     private List<PassengerResponseDTO> passengers;
 }

@@ -2,8 +2,6 @@ package com.cts.dto;
 
 import lombok.Data;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import com.cts.enums.FlightStatus;
@@ -33,10 +31,7 @@ public class FlightDTO {
 
     private LocalTime arrivalTime;
     private LocalTime departureTime;
-    
-    
-    private LocalDate flightDate;
-    
+
     @NotNull(message = "Total seats cannot be empty")
     @Min(value = 1, message = "Total seats must be at least 1")
     private Integer totalSeats;

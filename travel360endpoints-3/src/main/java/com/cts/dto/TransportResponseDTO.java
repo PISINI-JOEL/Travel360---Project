@@ -1,6 +1,6 @@
 package com.cts.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import com.cts.enums.TransportStatus;
 
@@ -16,8 +16,8 @@ public class TransportResponseDTO {
     private String source;
     private String destination;
     private String transportType;
-    private LocalDateTime departureTime;
-    private LocalDateTime arrivalTime;
+    private LocalTime departureTime;
+    private LocalTime arrivalTime;
     
     private int transportTotalSeats;
     private double price;

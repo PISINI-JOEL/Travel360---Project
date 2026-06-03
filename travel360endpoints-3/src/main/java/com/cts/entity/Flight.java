@@ -3,8 +3,6 @@ package com.cts.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import com.cts.enums.FlightStatus;
@@ -31,7 +29,6 @@ public class Flight {
 	private LocalTime departureTime;
 
 	
-	private LocalDate flightDate;
 	private int totalSeats;
 	//private int availableSeats;
 	private double price;

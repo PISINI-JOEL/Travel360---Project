@@ -33,9 +33,9 @@ public class BookingFlightResponseDTO {
     
     private LocalDateTime createdAt;
     
-    private LocalDate flightDate;
-    
-    
+    private LocalDate travelDate;
+
+
     private LocalDate bookingDate;
 
     private Long flightId;

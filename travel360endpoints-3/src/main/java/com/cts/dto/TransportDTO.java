@@ -1,10 +1,9 @@
 package com.cts.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import com.cts.enums.TransportStatus;
 
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -29,12 +28,10 @@ public class TransportDTO {
     private String transportType;
 
     @NotNull(message = "Departure time is required")
-    @Future(message = "Departure time must be a future date and time")
-    private LocalDateTime departureTime;
+    private LocalTime departureTime;
 
     @NotNull(message = "Arrival time is required")
-    @Future(message = "Arrival time must be a future date and time")
-    private LocalDateTime arrivalTime;
+    private LocalTime arrivalTime;
 
     @NotNull(message = "Total seats capacity cannot be empty")
     @Min(value = 1, message = "Total seats must be at least 1")

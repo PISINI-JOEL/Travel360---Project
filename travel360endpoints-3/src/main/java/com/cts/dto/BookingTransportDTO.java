@@ -1,9 +1,11 @@
 package com.cts.dto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.cts.enums.Gender;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -32,6 +34,10 @@ public class BookingTransportDTO {
 
     @NotNull(message = "Gender is required")
     private Gender gender;
+
+    @NotNull(message = "Travel date is required")
+    @Future(message = "Travel date must be in the future")
+    private LocalDate travelDate;
 
     @NotEmpty(message = "At least one passenger is required")
     @Size(max = 15, message = "You cannot add more than 15 passengers at once")

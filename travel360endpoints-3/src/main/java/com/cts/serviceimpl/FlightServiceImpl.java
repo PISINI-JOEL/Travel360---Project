@@ -62,7 +62,6 @@ public class FlightServiceImpl implements FlightService {
                 .destination(dto.getDestination())
                 .arrivalTime(dto.getArrivalTime())
                 .departureTime(dto.getDepartureTime())
-                .flightDate(dto.getFlightDate())
                 .totalSeats(dto.getTotalSeats())
                 .price(dto.getPrice())
                 .status(dto.getStatus())
@@ -115,7 +114,6 @@ public class FlightServiceImpl implements FlightService {
         flight.setDestination(dto.getDestination());
         flight.setArrivalTime(dto.getArrivalTime());
         flight.setDepartureTime(dto.getDepartureTime());
-        flight.setFlightDate(dto.getFlightDate());
         flight.setTotalSeats(dto.getTotalSeats());
         flight.setPrice(dto.getPrice());
         flight.setStatus(dto.getStatus());

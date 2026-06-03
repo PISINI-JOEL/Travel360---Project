@@ -3,6 +3,7 @@ package com.cts.dto;
 import java.time.LocalDate;
 
 import com.cts.enums.Gender;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -30,14 +31,13 @@ public class BookingHotelDTO {
 
     @NotNull(message = "Gender is required")
     private Gender gender;
-    @NotNull(message = "Number of days cannot be empty")
-    @Min(value = 1, message = "Stay must be at least 1 day")
-    @Max(value = 30, message = "Stay cannot exceed 30 days")
-    private Integer days;
+
     @NotNull(message = "Check-in date is required")
+    @FutureOrPresent(message = "Check-in date cannot be in the past")
     private LocalDate checkInDate;
 
     @NotNull(message = "Check-out date is required")
+    @FutureOrPresent(message = "Check-out date cannot be in the past")
     private LocalDate checkOutDate;
     
     

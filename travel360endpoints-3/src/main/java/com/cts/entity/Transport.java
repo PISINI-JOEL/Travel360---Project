@@ -8,7 +8,7 @@ import com.cts.enums.TransportStatus;
 
 
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 
 import jakarta.persistence.Entity;
@@ -42,8 +42,8 @@ public class Transport {
 	private String destination;
 	private String transportType;
 
-	private LocalDateTime departureTime;
-	private LocalDateTime arrivalTime;
+	private LocalTime departureTime;
+	private LocalTime arrivalTime;
 	
 	private int transportTotalSeats;
 	private double price;
