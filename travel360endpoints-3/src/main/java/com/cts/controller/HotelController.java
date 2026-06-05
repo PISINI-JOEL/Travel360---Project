@@ -86,9 +86,7 @@ public class HotelController {
 
         if (result instanceof List<?>) {
             log.info("Filter returned {} hotels", ((List<?>) result).size());
-        } else {
-            log.info("Filter executed successfully");
-        }
+        } 
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
