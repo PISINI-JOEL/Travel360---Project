@@ -21,9 +21,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.cts.config.AuthenticatedUserProvider;
 import com.cts.config.JWTUtil;
 import com.cts.dto.PartnerResponseDTO;
 import com.cts.enums.PartnerType;
+import com.cts.service.AuditLogService;
 import com.cts.service.PartnerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -36,6 +38,12 @@ class PartnerControllerTest {
 
     @MockBean
     private PartnerService service;
+
+    @MockBean
+    private AuditLogService auditLogService;
+
+    @MockBean
+    private AuthenticatedUserProvider authUser;
 
     @Autowired
     private MockMvc mockMvc;

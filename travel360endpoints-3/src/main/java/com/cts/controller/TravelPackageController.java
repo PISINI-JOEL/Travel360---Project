@@ -7,8 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.*;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
 import com.cts.enums.TravelPackageCategory;
+import com.cts.service.AuditLogService;
 import com.cts.service.TravelPackageService;
 
 import jakarta.validation.Valid;
@@ -26,6 +31,8 @@ import org.springframework.validation.annotation.Validated;
 public class TravelPackageController {
 
     private final TravelPackageService service;
+    private final AuthenticatedUserProvider authUser;
+    private final AuditLogService auditLogService;
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
@@ -33,6 +40,7 @@ public class TravelPackageController {
             @RequestBody @Valid TravelPackageDTO dto) {
 
         log.info("Received request to add travel package");
+        auditLogService.logAction(AuditActions.CREATE_PACKAGE, AuditEntity.TRAVELPACKAGE, null, authUser.currentOrNull(), LogType.INFO);
 
         TravelPackageResponseDTO response = service.addPackage(dto);
 
@@ -48,6 +56,7 @@ public class TravelPackageController {
             @RequestBody @Valid TravelPackageDTO dto) {
 
         log.info("Received request to update travel package with ID: {}", id);
+        auditLogService.logAction(AuditActions.UPDATE_PACKAGE, AuditEntity.TRAVELPACKAGE, id, authUser.currentOrNull(), LogType.INFO);
 
         TravelPackageResponseDTO response = service.updatePackage(id, dto);
 

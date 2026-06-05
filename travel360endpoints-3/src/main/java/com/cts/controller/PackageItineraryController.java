@@ -1,8 +1,13 @@
 package com.cts.controller;
 
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.PackageItineraryRequestDTO;
 import com.cts.dto.PackageItineraryResponceDTO;
 import com.cts.entity.PackageItinerary;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
+import com.cts.service.AuditLogService;
 import com.cts.service.PackageItineraryService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,9 +28,15 @@ import java.util.List;
 public class PackageItineraryController {
 
     private final PackageItineraryService service;
+    private final AuthenticatedUserProvider authUser;
+    private final AuditLogService auditLogService;
 
-    public PackageItineraryController(PackageItineraryService service) {
+    public PackageItineraryController(PackageItineraryService service,
+                                      AuthenticatedUserProvider authUser,
+                                      AuditLogService auditLogService) {
         this.service = service;
+        this.authUser = authUser;
+        this.auditLogService = auditLogService;
     }
 
     @PostMapping
@@ -34,6 +45,7 @@ public class PackageItineraryController {
                description="Posts only itinerary details with reference to packageId")
     public ResponseEntity<PackageItinerary> create(@RequestBody PackageItineraryRequestDTO dto) {
         log.info("Received request to create package itinerary for packageId: {}", dto.getPackageId());
+        auditLogService.logAction(AuditActions.CREATE_PACKAGE_ITINERARY, AuditEntity.ITINERARY, null, authUser.currentOrNull(), LogType.INFO);
         PackageItinerary saved = service.save(dto);
         log.info("Package itinerary created successfully with ID: {}", saved.getPackageItineraryId());
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
@@ -66,6 +78,7 @@ public class PackageItineraryController {
 	   description="Deleted the itinerary by id")
     public String delete(@PathVariable Long id) {
         log.info("Received request to delete package itinerary with ID: {}", id);
+        auditLogService.logAction(AuditActions.DELETE_PACKAGE_ITINERARY, AuditEntity.ITINERARY, id, authUser.currentOrNull(), LogType.WARN);
         service.delete(id);
         log.info("Package itinerary deleted successfully with ID: {}", id);
         return "Deleted successfully";

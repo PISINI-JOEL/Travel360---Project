@@ -18,8 +18,10 @@ import com.cts.entity.Flight;
 import com.cts.entity.Partner;
 import com.cts.enums.*;
 import com.cts.exception.*;
+import com.cts.config.AuthenticatedUserProvider;
 import com.cts.repository.FlightRepository;
 import com.cts.repository.PartnerRepository;
+import com.cts.service.AuditLogService;
 
 class FlightServiceImplTest {
 
@@ -31,6 +33,12 @@ class FlightServiceImplTest {
 
     @Mock
     private PartnerRepository partnerRepo;
+
+    @Mock
+    private AuthenticatedUserProvider authUser;
+
+    @Mock
+    private AuditLogService auditLogService;
 
     private FlightDTO dto;
     private Partner partner;

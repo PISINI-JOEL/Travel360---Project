@@ -1,12 +1,15 @@
 package com.cts.serviceimpl;
 
 import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.PaymentDTO;
 import com.cts.dto.PaymentResponseDTO;
 import com.cts.entity.Booking;
 import com.cts.entity.Invoice;
 import com.cts.entity.Payment;
+import com.cts.enums.AuditEntity;
 import com.cts.enums.BookingStatus;
+import com.cts.enums.LogType;
 import com.cts.enums.NotificationCategory;
 import com.cts.enums.PaymentStatus;
 import com.cts.exception.InvalidBookingException;
@@ -15,6 +18,7 @@ import com.cts.exception.PaymentNotFoundException;
 import com.cts.repository.BookingRepository;
 import com.cts.repository.InvoiceRepository;
 import com.cts.repository.PaymentRepository;
+import com.cts.service.AuditLogService;
 import com.cts.service.NotificationService;
 import com.cts.service.PaymentService;
 
@@ -37,6 +41,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final BookingRepository bookingRepo;
     private final NotificationService notificationService;
     private final AuthenticatedUserProvider authUser;
+    private final AuditLogService auditLogService;
     
 
    
@@ -76,6 +81,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
 
         payment = paymentRepo.save(payment);
+        auditLogService.logAction(AuditActions.MAKE_PAYMENT, AuditEntity.PAYMENT, payment.getPaymentId(), authUser.currentOrNull(), LogType.INFO);
 
         log.info("Payment created successfully with ID: {} and status: {}",
                 payment.getPaymentId(), payment.getStatus());

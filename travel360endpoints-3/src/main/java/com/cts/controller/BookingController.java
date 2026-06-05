@@ -1,6 +1,11 @@
 package com.cts.controller;
 
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.*;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
+import com.cts.service.AuditLogService;
 import com.cts.service.BookingService;
 
 import jakarta.validation.Valid;
@@ -21,6 +26,8 @@ import java.util.List;
 public class BookingController {
 
     private final BookingService service;
+    private final AuthenticatedUserProvider authUser;
+    private final AuditLogService auditLogService;
 
     @PostMapping("/flight")
     @PreAuthorize("hasAnyRole('CUSTOMER','CORPORATE_TRAVEL_MANAGER','TRAVEL_AGENT')")
@@ -28,6 +35,7 @@ public class BookingController {
             @RequestBody @Valid BookingFlightDTO dto) {
 
         log.info("Received request to create FLIGHT booking for userId: {}", dto.getUserId());
+        auditLogService.logAction(AuditActions.CREATE_BOOKING, AuditEntity.BOOKING, null, authUser.currentOrNull(), LogType.INFO);
 
         BookingFlightResponseDTO response = service.createFlightBooking(dto);
 
@@ -42,6 +50,7 @@ public class BookingController {
             @RequestBody @Valid BookingHotelDTO dto) {
 
         log.info("Received request to create HOTEL booking for userId: {}", dto.getUserId());
+        auditLogService.logAction(AuditActions.CREATE_BOOKING, AuditEntity.BOOKING, null, authUser.currentOrNull(), LogType.INFO);
 
         BookingHotelResponseDTO response = service.createHotelBooking(dto);
 
@@ -56,6 +65,7 @@ public class BookingController {
             @RequestBody @Valid BookingPackageDTO dto) {
 
         log.info("Received request to create PACKAGE booking for userId: {}", dto.getUserId());
+        auditLogService.logAction(AuditActions.CREATE_BOOKING, AuditEntity.BOOKING, null, authUser.currentOrNull(), LogType.INFO);
 
         BookingPackageResponseDTO response = service.createPackageBooking(dto);
 
@@ -70,6 +80,7 @@ public class BookingController {
             @RequestBody @Valid BookingTransportDTO dto) {
 
         log.info("Received request to create TRANSPORT booking for userId: {}", dto.getUserId());
+        auditLogService.logAction(AuditActions.CREATE_BOOKING, AuditEntity.BOOKING, null, authUser.currentOrNull(), LogType.INFO);
 
         BookingTransportResponseDTO response = service.createTransportBooking(dto);
 
@@ -110,6 +121,7 @@ public class BookingController {
             @RequestBody BookingCancelDTO dto) {
 
         log.info("Received request to cancel booking for bookingId: {}", dto.getBookingId());
+        auditLogService.logAction(AuditActions.CANCEL_BOOKING, AuditEntity.BOOKING, dto.getBookingId(), authUser.currentOrNull(), LogType.WARN);
 
         BookingCancelResponseDTO response = service.deleteBooking(dto);
 
@@ -127,6 +139,7 @@ public class BookingController {
 
         log.info("Cancelling passengerId: {} from bookingId: {} for userId: {}",
                 passengerId, bookingId, userId);
+        auditLogService.logAction(AuditActions.CANCEL_PASSENGER, AuditEntity.PASSENGER, passengerId, authUser.currentOrNull(), LogType.WARN);
 
         PassengerCancelResponseDTO response =
                 service.cancelPassenger(bookingId, passengerId, userId);

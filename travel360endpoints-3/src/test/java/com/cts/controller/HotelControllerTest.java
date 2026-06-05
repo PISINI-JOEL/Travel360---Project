@@ -18,8 +18,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.cts.config.AuthenticatedUserProvider;
 import com.cts.config.JWTUtil;
 import com.cts.entity.Hotel;
+import com.cts.service.AuditLogService;
 import com.cts.service.HotelService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,6 +34,12 @@ public class HotelControllerTest {
 
     @MockBean
     private HotelService service;
+
+    @MockBean
+    private AuditLogService auditLogService;
+
+    @MockBean
+    private AuthenticatedUserProvider authUser;
 
     @Autowired
     private MockMvc mockMvc;
@@ -51,6 +59,7 @@ public class HotelControllerTest {
           "hotelName":"Taj",
           "ratings":4,
           "city":"Chennai",
+          "address":"100 Marina Road",
           "price":3000,
           "contactNo":"9876543210",
           "emailId":"taj@mail.com",
@@ -78,6 +87,7 @@ public class HotelControllerTest {
           "hotelName":"Taj Updated",
           "ratings":5,
           "city":"Chennai",
+          "address":"100 Marina Road",
           "price":5000,
           "contactNo":"9876543210",
           "emailId":"taj@mail.com",

@@ -1,13 +1,18 @@
 package com.cts.serviceimpl;
 
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.PackageItineraryRequestDTO;
 import com.cts.dto.PackageItineraryResponceDTO;
 import com.cts.entity.PackageItinerary;
 import com.cts.entity.TravelPackage;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
 import com.cts.exception.PackageItineraryNotFound;
 import com.cts.exception.PackageNotFoundException;
 import com.cts.repository.PackageItineraryRepository;
 import com.cts.repository.TravelPackageRepository;
+import com.cts.service.AuditLogService;
 import com.cts.service.PackageItineraryService;
 
 import lombok.AllArgsConstructor;
@@ -23,6 +28,8 @@ public class PackageItineraryServiceImpl implements PackageItineraryService {
 
     private final PackageItineraryRepository itineraryRepository;
     private final TravelPackageRepository travelPackageRepository;
+    private final AuthenticatedUserProvider authUser;
+    private final AuditLogService auditLogService;
 
     @Override
     public PackageItinerary save(PackageItineraryRequestDTO dto) {
@@ -44,6 +51,7 @@ public class PackageItineraryServiceImpl implements PackageItineraryService {
                 .build();
 
         PackageItinerary saved = itineraryRepository.save(itinerary);
+        auditLogService.logAction(AuditActions.CREATE_PACKAGE_ITINERARY, AuditEntity.ITINERARY, saved.getPackageItineraryId(), authUser.currentOrNull(), LogType.INFO);
 
         log.info("Package itinerary created successfully with ID: {}", saved.getPackageItineraryId());
 
@@ -103,6 +111,7 @@ public class PackageItineraryServiceImpl implements PackageItineraryService {
             throw new PackageItineraryNotFound("Itinerary not found with id: " + id);
         }
         itineraryRepository.deleteById(id);
+        auditLogService.logAction(AuditActions.DELETE_PACKAGE_ITINERARY, AuditEntity.ITINERARY, id, authUser.currentOrNull(), LogType.WARN);
 
         log.info("Package itinerary deleted successfully with ID: {}", id);
     }

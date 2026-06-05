@@ -48,8 +48,6 @@ public class InvoiceServiceImpl implements InvoiceService {
                     return new ResourceNotFoundException("Booking not found");
                 });
 
-        User user = booking.getUser();
-
         Invoice invoice = Invoice.builder()
                 .invoiceDate(LocalDateTime.now())
                 .amount(booking.getAmount())
@@ -58,7 +56,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .build();
 
         invoice = invoiceRepo.save(invoice);
-        auditLogService.logAction(AuditActions.CREATE_INVOICE, AuditEntity.INVOICE, invoice.getInvoiceId(), user, LogType.INFO);
+        auditLogService.logAction(AuditActions.CREATE_INVOICE, AuditEntity.INVOICE, invoice.getInvoiceId(), authUser.currentOrNull(), LogType.INFO);
 
         log.info("Invoice created successfully with ID: {}", invoice.getInvoiceId());
 

@@ -25,6 +25,9 @@ public class HotelDTO {
     @NotBlank(message = "City is required")
     private String city;
 
+    @NotBlank(message = "Address is required")
+    private String address;
+
     @NotNull(message = "Price cannot be empty")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price per night must be greater than 0")
     private Double price; 

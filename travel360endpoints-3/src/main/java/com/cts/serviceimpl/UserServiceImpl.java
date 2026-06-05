@@ -1,12 +1,16 @@
 package com.cts.serviceimpl;
 
 import com.cts.config.JWTUtil;
+import com.cts.constants.AuditActions;
 import com.cts.dto.AuthResponseDTO;
 import com.cts.dto.UserDTO;
 import com.cts.dto.UserResponseDTO;
 import com.cts.entity.User;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
 import com.cts.exception.UserNotFoundException;
 import com.cts.repository.UserRepository;
+import com.cts.service.AuditLogService;
 import com.cts.service.UserService;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +30,7 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository repo;
 	private final PasswordEncoder encoder;
 	private final JWTUtil jwtUtil;
+	private final AuditLogService auditLogService;
 
 	@Override
 	public UserResponseDTO register(UserDTO dto) {
@@ -37,6 +42,7 @@ public class UserServiceImpl implements UserService {
 				.build();
 
 		user = repo.save(user);
+		auditLogService.logAction(AuditActions.REGISTER_USER, AuditEntity.USER, user.getUserId(), user, LogType.INFO);
 
 		log.info("User registered successfully with ID: {}", user.getUserId());
 
@@ -56,6 +62,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		String token = jwtUtil.generateToken(user.getEmail(),user.getRole());
+		auditLogService.logAction(AuditActions.LOGIN_USER, AuditEntity.USER, user.getUserId(), user, LogType.INFO);
 
 		log.info("User logged in successfully with ID: {}", user.getUserId());
 

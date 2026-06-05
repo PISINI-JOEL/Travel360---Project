@@ -21,9 +21,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.cts.config.AuthenticatedUserProvider;
 import com.cts.config.JWTUtil;
 import com.cts.dto.TravelPackageResponseDTO;
 import com.cts.enums.TravelPackageCategory;
+import com.cts.service.AuditLogService;
 import com.cts.service.TravelPackageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -36,6 +38,12 @@ class TravelPackageControllerTest {
 
     @MockBean
     private TravelPackageService service;
+
+    @MockBean
+    private AuditLogService auditLogService;
+
+    @MockBean
+    private AuthenticatedUserProvider authUser;
 
     @Autowired
     private MockMvc mockMvc;

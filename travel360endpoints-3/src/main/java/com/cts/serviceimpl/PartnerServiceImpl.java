@@ -1,5 +1,7 @@
 package com.cts.serviceimpl;
 
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.PartnerDTO;
 import com.cts.dto.PartnerResponseDTO;
 import com.cts.entity.Flight;
@@ -7,8 +9,10 @@ import com.cts.entity.Hotel;
 import com.cts.entity.Partner;
 import com.cts.entity.Transport;
 import com.cts.entity.TravelPackage;
+import com.cts.enums.AuditEntity;
 import com.cts.enums.FlightStatus;
 import com.cts.enums.HotelStatus;
+import com.cts.enums.LogType;
 import com.cts.enums.PackageStatus;
 import com.cts.enums.PartnerStatus;
 import com.cts.enums.PartnerType;
@@ -19,6 +23,7 @@ import com.cts.repository.HotelRepository;
 import com.cts.repository.PartnerRepository;
 import com.cts.repository.TransportRepository;
 import com.cts.repository.TravelPackageRepository;
+import com.cts.service.AuditLogService;
 import com.cts.service.PartnerService;
 
 import lombok.AllArgsConstructor;
@@ -39,6 +44,8 @@ public class PartnerServiceImpl implements PartnerService {
     private final HotelRepository hotelRepo;
     private final TransportRepository transportRepo;
     private final TravelPackageRepository packageRepo;
+    private final AuthenticatedUserProvider authUser;
+    private final AuditLogService auditLogService;
 
     // ✅ GET BY ID
     @Override
@@ -75,6 +82,7 @@ public class PartnerServiceImpl implements PartnerService {
         partner.setStatus(dto.getStatus());
 
         partner = partnerRepo.save(partner);
+        auditLogService.logAction(AuditActions.UPDATE_PARTNER, AuditEntity.PARTNER, partner.getPartnerId(), authUser.currentOrNull(), LogType.INFO);
 
         log.info("Partner updated successfully with ID: {}", partner.getPartnerId());
 
@@ -102,6 +110,7 @@ public class PartnerServiceImpl implements PartnerService {
 
         partner.setStatus(PartnerStatus.INACTIVE);
         partnerRepo.save(partner);
+        auditLogService.logAction(AuditActions.DELETE_PARTNER, AuditEntity.PARTNER, partner.getPartnerId(), authUser.currentOrNull(), LogType.WARN);
 
         log.info("Partner deactivated successfully with ID: {}", partner.getPartnerId());
 
@@ -185,6 +194,7 @@ public class PartnerServiceImpl implements PartnerService {
             .build();
 
     partner = partnerRepo.save(partner);
+    auditLogService.logAction(AuditActions.CREATE_PARTNER, AuditEntity.PARTNER, partner.getPartnerId(), authUser.currentOrNull(), LogType.INFO);
 
     log.info("Partner created successfully with ID: {}", partner.getPartnerId());
 

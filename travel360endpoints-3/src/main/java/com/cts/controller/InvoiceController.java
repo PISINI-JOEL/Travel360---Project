@@ -1,7 +1,12 @@
 package com.cts.controller;
 
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.InvoiceDTO;
 import com.cts.dto.InvoiceResponseDTO;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
+import com.cts.service.AuditLogService;
 import com.cts.service.InvoiceService;
 
 import jakarta.validation.Valid;
@@ -22,12 +27,15 @@ import java.util.List;
 public class InvoiceController {
 
     private final InvoiceService service;
+    private final AuthenticatedUserProvider authUser;
+    private final AuditLogService auditLogService;
 
     @PostMapping
     @PreAuthorize("hasAnyRole('FINANCE_OFFICER','ADMIN')")
     public ResponseEntity<InvoiceResponseDTO> create(@RequestBody @Valid InvoiceDTO dto) {
 
         log.info("Received request to create invoice for bookingId: {}", dto.getBookingId());
+        auditLogService.logAction(AuditActions.CREATE_INVOICE, AuditEntity.INVOICE, null, authUser.currentOrNull(), LogType.INFO);
 
         InvoiceResponseDTO response = service.createInvoice(dto);
 

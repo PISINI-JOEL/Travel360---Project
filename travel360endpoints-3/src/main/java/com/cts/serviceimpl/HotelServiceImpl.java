@@ -8,9 +8,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.HotelDTO;
 import com.cts.entity.Hotel;
 import com.cts.entity.Partner;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
 import com.cts.enums.PartnerStatus;
 import com.cts.enums.PartnerType;
 import com.cts.exception.HotelNotFoundException;
@@ -18,6 +22,7 @@ import com.cts.exception.InvalidPartnerException;
 import com.cts.exception.PartnerNotFoundException;
 import com.cts.repository.HotelRepository;
 import com.cts.repository.PartnerRepository;
+import com.cts.service.AuditLogService;
 import com.cts.service.HotelService;
 
 import lombok.AllArgsConstructor;
@@ -32,6 +37,8 @@ public class HotelServiceImpl implements HotelService {
 
     private final HotelRepository hotelrepo;
     private final PartnerRepository partnerRepo;
+    private final AuthenticatedUserProvider authUser;
+    private final AuditLogService auditLogService;
 
     @Override
     public Hotel addHotel(HotelDTO dto) {
@@ -60,6 +67,7 @@ public class HotelServiceImpl implements HotelService {
         Hotel hotel = Hotel.builder()
                 .hotelName(dto.getHotelName())
                 .city(dto.getCity())
+                .address(dto.getAddress())
                 .price(dto.getPrice())
                 .ratings(dto.getRatings())
                 .contactNo(dto.getContactNo())
@@ -70,6 +78,7 @@ public class HotelServiceImpl implements HotelService {
                 .build();
 
         Hotel savedHotel = hotelrepo.save(hotel);
+        auditLogService.logAction(AuditActions.CREATE_HOTEL, AuditEntity.HOTEL, savedHotel.getHotelId(), authUser.currentOrNull(), LogType.INFO);
 
         log.info("Hotel created successfully with ID: {}", savedHotel.getHotelId());
 
@@ -111,6 +120,7 @@ public class HotelServiceImpl implements HotelService {
 
         hotel.setHotelName(dto.getHotelName());
         hotel.setCity(dto.getCity());
+        hotel.setAddress(dto.getAddress());
         hotel.setPrice(dto.getPrice());
         hotel.setRatings(dto.getRatings());
         hotel.setContactNo(dto.getContactNo());
@@ -120,6 +130,7 @@ public class HotelServiceImpl implements HotelService {
         hotel.setPartner(partner);
 
         Hotel updatedHotel = hotelrepo.save(hotel);
+        auditLogService.logAction(AuditActions.UPDATE_HOTEL, AuditEntity.HOTEL, updatedHotel.getHotelId(), authUser.currentOrNull(), LogType.INFO);
 
         log.info("Hotel updated successfully with ID: {}", id);
 

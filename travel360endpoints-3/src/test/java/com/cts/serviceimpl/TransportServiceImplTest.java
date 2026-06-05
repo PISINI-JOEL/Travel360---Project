@@ -5,8 +5,10 @@ import com.cts.entity.Partner;
 import com.cts.entity.Transport;
 import com.cts.enums.*;
 import com.cts.exception.*;
+import com.cts.config.AuthenticatedUserProvider;
 import com.cts.repository.PartnerRepository;
 import com.cts.repository.TransportRepository;
+import com.cts.service.AuditLogService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +37,12 @@ class TransportServiceImplTest {
 
     @Mock
     private PartnerRepository partnerRepo;
+
+    @Mock
+    private AuthenticatedUserProvider authUser;
+
+    @Mock
+    private AuditLogService auditLogService;
 
     @InjectMocks
     private TransportServiceImpl service;

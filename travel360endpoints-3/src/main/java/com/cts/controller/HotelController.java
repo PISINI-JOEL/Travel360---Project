@@ -7,8 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.HotelDTO;
 import com.cts.entity.Hotel;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
+import com.cts.service.AuditLogService;
 import com.cts.service.HotelService;
 
 import jakarta.validation.Valid;
@@ -26,12 +31,15 @@ import org.springframework.validation.annotation.Validated;
 public class HotelController {
 
     private final HotelService hotelService;
+    private final AuthenticatedUserProvider authUser;
+    private final AuditLogService auditLogService;
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
     public ResponseEntity<Hotel> addHotel(@RequestBody @Valid HotelDTO dto) {
 
         log.info("Received request to add hotel: {}", dto);
+        auditLogService.logAction(AuditActions.CREATE_HOTEL, AuditEntity.HOTEL, null, authUser.currentOrNull(), LogType.INFO);
 
         Hotel hotel = hotelService.addHotel(dto);
 
@@ -46,6 +54,7 @@ public class HotelController {
                                              @RequestBody @Valid HotelDTO dto) {
 
         log.info("Received request to update hotel with ID: {}", id);
+        auditLogService.logAction(AuditActions.UPDATE_HOTEL, AuditEntity.HOTEL, id, authUser.currentOrNull(), LogType.INFO);
 
         Hotel updatedHotel = hotelService.updateHotel(id, dto);
 

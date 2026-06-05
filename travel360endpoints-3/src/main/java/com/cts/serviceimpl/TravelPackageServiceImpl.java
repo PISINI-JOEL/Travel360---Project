@@ -6,9 +6,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.*;
 import com.cts.entity.Partner;
 import com.cts.entity.TravelPackage;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
 import com.cts.enums.PartnerStatus;
 import com.cts.enums.PartnerType;
 import com.cts.enums.TravelPackageCategory;
@@ -17,6 +21,7 @@ import com.cts.exception.PackageNotFoundException;
 import com.cts.exception.PartnerNotFoundException;
 import com.cts.repository.PartnerRepository;
 import com.cts.repository.TravelPackageRepository;
+import com.cts.service.AuditLogService;
 import com.cts.service.TravelPackageService;
 
 import lombok.AllArgsConstructor;
@@ -30,6 +35,8 @@ public class TravelPackageServiceImpl implements TravelPackageService {
 
     private final TravelPackageRepository packageRepo;
     private final PartnerRepository partnerRepo;
+    private final AuthenticatedUserProvider authUser;
+    private final AuditLogService auditLogService;
 
     @Override
     public TravelPackageResponseDTO addPackage(TravelPackageDTO dto) {
@@ -70,6 +77,7 @@ public class TravelPackageServiceImpl implements TravelPackageService {
                 .build();
 
         packageRepo.save(tpackage);
+        auditLogService.logAction(AuditActions.CREATE_PACKAGE, AuditEntity.TRAVELPACKAGE, tpackage.getPackageId(), authUser.currentOrNull(), LogType.INFO);
 
         log.info("Travel package created successfully with ID: {}", tpackage.getPackageId());
 
@@ -122,6 +130,7 @@ public class TravelPackageServiceImpl implements TravelPackageService {
         tpackage.setPartner(partner);
 
         packageRepo.save(tpackage);
+        auditLogService.logAction(AuditActions.UPDATE_PACKAGE, AuditEntity.TRAVELPACKAGE, tpackage.getPackageId(), authUser.currentOrNull(), LogType.INFO);
 
         log.info("Travel package updated successfully with ID: {}", id);
 

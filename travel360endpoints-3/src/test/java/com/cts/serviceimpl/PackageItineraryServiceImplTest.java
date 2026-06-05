@@ -5,8 +5,10 @@ import com.cts.entity.PackageItinerary;
 import com.cts.entity.TravelPackage;
 import com.cts.exception.PackageItineraryNotFound;
 import com.cts.exception.PackageNotFoundException;
+import com.cts.config.AuthenticatedUserProvider;
 import com.cts.repository.PackageItineraryRepository;
 import com.cts.repository.TravelPackageRepository;
+import com.cts.service.AuditLogService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +31,8 @@ class PackageItineraryServiceImplTest {
 
     @Mock private PackageItineraryRepository itineraryRepo;
     @Mock private TravelPackageRepository packageRepo;
+    @Mock private AuthenticatedUserProvider authUser;
+    @Mock private AuditLogService auditLogService;
 
     @InjectMocks
     private PackageItineraryServiceImpl service;

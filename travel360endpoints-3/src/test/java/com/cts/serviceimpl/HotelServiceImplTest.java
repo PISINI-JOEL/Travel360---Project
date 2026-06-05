@@ -9,8 +9,10 @@ import com.cts.enums.PartnerType;
 import com.cts.exception.HotelNotFoundException;
 import com.cts.exception.InvalidPartnerException;
 import com.cts.exception.PartnerNotFoundException;
+import com.cts.config.AuthenticatedUserProvider;
 import com.cts.repository.HotelRepository;
 import com.cts.repository.PartnerRepository;
+import com.cts.service.AuditLogService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +41,12 @@ class HotelServiceImplTest {
 
     @Mock
     private PartnerRepository partnerRepository;
+
+    @Mock
+    private AuthenticatedUserProvider authUser;
+
+    @Mock
+    private AuditLogService auditLogService;
 
     @InjectMocks
     private HotelServiceImpl hotelService;

@@ -20,9 +20,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.cts.config.AuthenticatedUserProvider;
 import com.cts.config.JWTUtil;
 import com.cts.dto.*;
 import com.cts.enums.Role;
+import com.cts.service.AuditLogService;
 import com.cts.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -35,6 +37,12 @@ class UserControllerTest {
 
     @MockBean
     private UserService service;
+
+    @MockBean
+    private AuditLogService auditLogService;
+
+    @MockBean
+    private AuthenticatedUserProvider authUser;
 
     @Autowired
     private MockMvc mockMvc;

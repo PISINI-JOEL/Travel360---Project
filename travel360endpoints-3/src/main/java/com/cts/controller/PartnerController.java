@@ -1,8 +1,13 @@
 package com.cts.controller;
 
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.PartnerDTO;
 import com.cts.dto.PartnerResponseDTO;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
 import com.cts.enums.PartnerType;
+import com.cts.service.AuditLogService;
 import com.cts.service.PartnerService;
 
 import jakarta.validation.Valid;
@@ -21,6 +26,8 @@ import java.util.List;
 public class PartnerController {
 
     private final PartnerService partnerService;
+    private final AuthenticatedUserProvider authUser;
+    private final AuditLogService auditLogService;
 
     // ✅ CREATE
     @PostMapping
@@ -28,6 +35,7 @@ public class PartnerController {
     public PartnerResponseDTO createPartner(@RequestBody @Valid PartnerDTO dto) {
 
         log.info("Received request to create partner");
+        auditLogService.logAction(AuditActions.CREATE_PARTNER, AuditEntity.PARTNER, null, authUser.currentOrNull(), LogType.INFO);
 
         PartnerResponseDTO response = partnerService.createPartner(dto);
 
@@ -43,6 +51,7 @@ public class PartnerController {
                                             @RequestBody PartnerDTO dto) {
 
         log.info("Received request to update partner with ID: {}", id);
+        auditLogService.logAction(AuditActions.UPDATE_PARTNER, AuditEntity.PARTNER, id, authUser.currentOrNull(), LogType.INFO);
 
         PartnerResponseDTO response = partnerService.updatePartner(id, dto);
 
@@ -57,6 +66,7 @@ public class PartnerController {
     public String deletePartner(@PathVariable Long id) {
 
         log.info("Received request to delete partner with ID: {}", id);
+        auditLogService.logAction(AuditActions.DELETE_PARTNER, AuditEntity.PARTNER, id, authUser.currentOrNull(), LogType.WARN);
 
         partnerService.deletePartner(id);
 

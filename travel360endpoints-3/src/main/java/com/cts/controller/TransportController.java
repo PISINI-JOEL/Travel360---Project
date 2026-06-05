@@ -7,9 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.TransportDTO;
 import com.cts.dto.TransportResponseDTO;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
 import com.cts.enums.TransportStatus;
+import com.cts.service.AuditLogService;
 import com.cts.service.TransportService;
 
 import jakarta.validation.Valid;
@@ -28,12 +33,15 @@ import org.springframework.validation.annotation.Validated;
 public class TransportController {
 
     private final TransportService service;
+    private final AuthenticatedUserProvider authUser;
+    private final AuditLogService auditLogService;
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
     public ResponseEntity<?> addTransport(@RequestBody @Valid TransportDTO dto) {
         log.info("addTransport() is called");
         log.debug("Request payload: {}", dto);
+        auditLogService.logAction(AuditActions.CREATE_TRANSPORT, AuditEntity.TRANSPORT, null, authUser.currentOrNull(), LogType.INFO);
         return new ResponseEntity<>(service.addTransport(dto), HttpStatus.CREATED);
     }
 
@@ -42,6 +50,7 @@ public class TransportController {
     public ResponseEntity<?> updateTransport(@PathVariable Long id, @RequestBody @Valid TransportDTO dto) {
         log.info("updateTransport() is called for id: {}", id);
         log.debug("Update payload: {}", dto);
+        auditLogService.logAction(AuditActions.UPDATE_TRANSPORT, AuditEntity.TRANSPORT, id, authUser.currentOrNull(), LogType.INFO);
         return new ResponseEntity<>(service.updateTransport(id, dto), HttpStatus.OK);
     }
 

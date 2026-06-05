@@ -7,6 +7,7 @@ import com.cts.enums.*;
 import com.cts.exception.*;
 
 import com.cts.repository.*;
+import com.cts.service.AuditLogService;
 import com.cts.service.NotificationService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +33,7 @@ class PaymentServiceImplTest {
     @Mock private BookingRepository bookingRepo;
     @Mock private NotificationService notificationService;
     @Mock private AuthenticatedUserProvider authUser;
+    @Mock private AuditLogService auditLogService;
 
     @InjectMocks
     private PaymentServiceImpl service;

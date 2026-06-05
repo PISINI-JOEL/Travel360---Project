@@ -1,7 +1,12 @@
 package com.cts.controller;
 
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.PaymentDTO;
 import com.cts.dto.PaymentResponseDTO;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
+import com.cts.service.AuditLogService;
 import com.cts.service.PaymentService;
 
 import jakarta.validation.Valid;
@@ -22,12 +27,15 @@ import java.util.List;
 public class PaymentController {
 
     private final PaymentService service;
+    private final AuthenticatedUserProvider authUser;
+    private final AuditLogService auditLogService;
 
     @PostMapping
     @PreAuthorize("hasAnyRole('CUSTOMER','CORPORATE_TRAVEL_MANAGER')")
     public ResponseEntity<?> makePayment(@RequestBody @Valid PaymentDTO dto) {
 
         log.info("Received payment request for invoiceId: {}", dto.getInvoiceId());
+        auditLogService.logAction(AuditActions.MAKE_PAYMENT, AuditEntity.PAYMENT, null, authUser.currentOrNull(), LogType.INFO);
 
         PaymentResponseDTO payment = service.makePayment(dto);
 

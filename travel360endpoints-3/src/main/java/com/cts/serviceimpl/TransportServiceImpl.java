@@ -7,10 +7,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.TransportDTO;
 import com.cts.dto.TransportResponseDTO;
 import com.cts.entity.Partner;
 import com.cts.entity.Transport;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
 import com.cts.enums.PartnerStatus;
 import com.cts.enums.PartnerType;
 import com.cts.enums.TransportStatus;
@@ -19,6 +23,7 @@ import com.cts.exception.PartnerNotFoundException;
 import com.cts.exception.TransportNotFoundException;
 import com.cts.repository.PartnerRepository;
 import com.cts.repository.TransportRepository;
+import com.cts.service.AuditLogService;
 import com.cts.service.TransportService;
 
 import lombok.AllArgsConstructor;
@@ -32,6 +37,8 @@ public class TransportServiceImpl implements TransportService {
 
     private final TransportRepository transportRepo;
     private final PartnerRepository partnerRepo;
+    private final AuthenticatedUserProvider authUser;
+    private final AuditLogService auditLogService;
 
     @Override
     public TransportResponseDTO addTransport(TransportDTO dto) {
@@ -71,6 +78,7 @@ public class TransportServiceImpl implements TransportService {
                 .build();
 
         transport = transportRepo.save(transport);
+        auditLogService.logAction(AuditActions.CREATE_TRANSPORT, AuditEntity.TRANSPORT, transport.getTransportId(), authUser.currentOrNull(), LogType.INFO);
 
         log.info("Transport created successfully with ID: {}", transport.getTransportId());
 
@@ -121,6 +129,7 @@ public class TransportServiceImpl implements TransportService {
         transport.setPartner(partner);
 
         transport = transportRepo.save(transport);
+        auditLogService.logAction(AuditActions.UPDATE_TRANSPORT, AuditEntity.TRANSPORT, transport.getTransportId(), authUser.currentOrNull(), LogType.INFO);
 
         log.info("Transport updated successfully with ID: {}", id);
 

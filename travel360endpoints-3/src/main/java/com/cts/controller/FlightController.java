@@ -1,7 +1,12 @@
 package com.cts.controller;
 
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.FlightDTO;
 import com.cts.entity.Flight;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
+import com.cts.service.AuditLogService;
 import com.cts.service.FlightService;
 
 import jakarta.validation.Valid;
@@ -26,12 +31,15 @@ import java.util.List;
 public class FlightController {
 
     private final FlightService service;
+    private final AuthenticatedUserProvider authUser;
+    private final AuditLogService auditLogService;
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
     public ResponseEntity<Flight> addFlight(@RequestBody @Valid FlightDTO dto) {
 
         log.info("Received request to add flight: {}", dto);
+        auditLogService.logAction(AuditActions.CREATE_FLIGHT, AuditEntity.FLIGHT, null, authUser.currentOrNull(), LogType.INFO);
 
         Flight flight = service.addFlight(dto);
 
@@ -46,6 +54,7 @@ public class FlightController {
                                                @RequestBody @Valid FlightDTO dto) {
 
         log.info("Received request to update flight with ID: {}", id);
+        auditLogService.logAction(AuditActions.UPDATE_FLIGHT, AuditEntity.FLIGHT, id, authUser.currentOrNull(), LogType.INFO);
 
         Flight updatedFlight = service.updateFlight(id, dto);
 

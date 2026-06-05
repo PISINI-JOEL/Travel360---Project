@@ -6,6 +6,7 @@ import com.cts.entity.User;
 import com.cts.enums.Role;
 import com.cts.exception.UserNotFoundException;
 import com.cts.repository.UserRepository;
+import com.cts.service.AuditLogService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,7 @@ class UserServiceImplTest {
     @Mock private UserRepository repo;
     @Mock private PasswordEncoder encoder;
     @Mock private JWTUtil jwtUtil;
+    @Mock private AuditLogService auditLogService;
 
     @InjectMocks
     private UserServiceImpl service;

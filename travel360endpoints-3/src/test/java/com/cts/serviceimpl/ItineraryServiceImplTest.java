@@ -5,6 +5,7 @@ import com.cts.dto.*;
 import com.cts.entity.*;
 import com.cts.exception.*;
 import com.cts.repository.*;
+import com.cts.service.AuditLogService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,7 @@ class ItineraryServiceImplTest {
     @Mock private BookingRepository bookingRepo;
     @Mock private UserRepository userRepo;
     @Mock private AuthenticatedUserProvider authUser;
+    @Mock private AuditLogService auditLogService;
 
     @InjectMocks
     private ItineraryServiceImpl service;

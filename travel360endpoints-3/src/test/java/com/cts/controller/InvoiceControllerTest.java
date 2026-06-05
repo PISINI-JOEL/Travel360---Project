@@ -16,26 +16,24 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import org.springframework.http.MediaType;
-
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.cts.config.AuthenticatedUserProvider;
 import com.cts.config.JWTUtil;
-import com.cts.dto.PackageItineraryResponceDTO;
-import com.cts.entity.PackageItinerary;
+import com.cts.dto.InvoiceResponseDTO;
 import com.cts.service.AuditLogService;
-import com.cts.service.PackageItineraryService;
+import com.cts.service.InvoiceService;
 
-@WebMvcTest(PackageItineraryController.class)
+@WebMvcTest(InvoiceController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class PackageItineraryControllerTest {
+class InvoiceControllerTest {
 
     @MockitoBean
     private JWTUtil jwtUtil;
 
     @MockBean
-    private PackageItineraryService service;
+    private InvoiceService service;
 
     @MockBean
     private AuditLogService auditLogService;
@@ -48,21 +46,18 @@ class PackageItineraryControllerTest {
 
     // ✅ CREATE
     @Test
-    void testCreate() throws Exception {
+    void testCreateInvoice() throws Exception {
 
-        when(service.save(any())).thenReturn(new PackageItinerary());
+        when(service.createInvoice(any()))
+                .thenReturn(InvoiceResponseDTO.builder().invoiceId(100L).build());
 
         String body = """
         {
-          "packageId":1,
-          "start_date":"2030-01-01",
-          "end_date":"2030-01-03",
-          "status":"ACTIVE",
-          "notes":"test"
+          "bookingId":10
         }
         """;
 
-        mockMvc.perform(post("/package/itineraries")
+        mockMvc.perform(post("/api/v1/invoices")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body))
                 .andExpect(status().isCreated());
@@ -72,10 +67,21 @@ class PackageItineraryControllerTest {
     @Test
     void testGetAll() throws Exception {
 
-        when(service.getAll())
-                .thenReturn(List.of(new PackageItinerary()));
+        when(service.getAllInvoices())
+                .thenReturn(List.of(InvoiceResponseDTO.builder().invoiceId(100L).build()));
 
-        mockMvc.perform(get("/package/itineraries/all"))
+        mockMvc.perform(get("/api/v1/invoices"))
+                .andExpect(status().isOk());
+    }
+
+    // ✅ GET BY BOOKING
+    @Test
+    void testGetByBooking() throws Exception {
+
+        when(service.getInvoicesByBooking(10L))
+                .thenReturn(List.of(InvoiceResponseDTO.builder().invoiceId(100L).build()));
+
+        mockMvc.perform(get("/api/v1/invoices/booking/10"))
                 .andExpect(status().isOk());
     }
 
@@ -83,18 +89,10 @@ class PackageItineraryControllerTest {
     @Test
     void testGetById() throws Exception {
 
-        when(service.getItineraryById(1L))
-                .thenReturn(new PackageItineraryResponceDTO());
+        when(service.getInvoiceById(100L))
+                .thenReturn(InvoiceResponseDTO.builder().invoiceId(100L).build());
 
-        mockMvc.perform(get("/package/itineraries/1"))
-                .andExpect(status().isOk());
-    }
-
-    // ✅ DELETE
-    @Test
-    void testDelete() throws Exception {
-
-        mockMvc.perform(delete("/package/itineraries/1"))
+        mockMvc.perform(get("/api/v1/invoices/100"))
                 .andExpect(status().isOk());
     }
 }

@@ -4,7 +4,9 @@ import com.cts.dto.PartnerDTO;
 import com.cts.entity.*;
 import com.cts.enums.*;
 import com.cts.exception.PartnerNotFoundException;
+import com.cts.config.AuthenticatedUserProvider;
 import com.cts.repository.*;
+import com.cts.service.AuditLogService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +31,8 @@ class PartnerServiceImplTest {
     @Mock private HotelRepository hotelRepo;
     @Mock private TransportRepository transportRepo;
     @Mock private TravelPackageRepository packageRepo;
+    @Mock private AuthenticatedUserProvider authUser;
+    @Mock private AuditLogService auditLogService;
 
     @InjectMocks
     private PartnerServiceImpl service;

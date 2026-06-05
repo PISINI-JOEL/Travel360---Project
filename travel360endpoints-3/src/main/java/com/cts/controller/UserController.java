@@ -1,6 +1,11 @@
 package com.cts.controller;
 
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.*;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
+import com.cts.service.AuditLogService;
 import com.cts.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,12 +29,15 @@ import java.util.List;
 public class UserController {
 
 	private final UserService service;
-	
+	private final AuthenticatedUserProvider authUser;
+	private final AuditLogService auditLogService;
+
 	@Operation(summary = "Register a new user")
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody @Valid UserDTO dto) {
 
 		log.info("Received request to register user with email: {}", dto.getEmail());
+		auditLogService.logAction(AuditActions.REGISTER_USER, AuditEntity.USER, null, authUser.currentOrNull(), LogType.INFO);
 
 		UserResponseDTO registeredUser = service.register(dto);
 
@@ -42,6 +50,7 @@ public class UserController {
 	public ResponseEntity<?> login(@RequestBody @Valid LoginDTO dto) {
 
 		log.info("Login attempt for email: {}", dto.getEmail());
+		auditLogService.logAction(AuditActions.LOGIN_USER, AuditEntity.USER, null, authUser.currentOrNull(), LogType.INFO);
 
 		AuthResponseDTO authResponse = service.login(dto.getEmail(), dto.getPassword());
 

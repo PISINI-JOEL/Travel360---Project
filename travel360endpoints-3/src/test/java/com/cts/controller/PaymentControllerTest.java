@@ -20,9 +20,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.cts.config.AuthenticatedUserProvider;
 import com.cts.config.JWTUtil;
 import com.cts.dto.PaymentResponseDTO;
 import com.cts.enums.PaymentStatus;
+import com.cts.service.AuditLogService;
 import com.cts.service.PaymentService;
 
 @WebMvcTest(PaymentController.class)
@@ -34,6 +36,12 @@ class PaymentControllerTest {
 
     @MockBean
     private PaymentService service;
+
+    @MockBean
+    private AuditLogService auditLogService;
+
+    @MockBean
+    private AuthenticatedUserProvider authUser;
 
     @Autowired
     private MockMvc mockMvc;

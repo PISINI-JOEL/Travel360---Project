@@ -1,8 +1,13 @@
 package com.cts.controller;
 
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.AddBookingDTO;
 import com.cts.dto.CreateItineraryDTO;
 import com.cts.dto.ItineraryResponseDTO;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
+import com.cts.service.AuditLogService;
 import com.cts.service.ItineraryService;
 
 import jakarta.validation.Valid;
@@ -23,12 +28,15 @@ import java.util.List;
 public class ItineraryController {
 
 	private final ItineraryService service;
+	private final AuthenticatedUserProvider authUser;
+	private final AuditLogService auditLogService;
 
 	@PostMapping
 	@PreAuthorize("hasAnyRole('CUSTOMER','TRAVEL_AGENT')")
 	public ResponseEntity<ItineraryResponseDTO> createItinerary(@RequestBody @Valid CreateItineraryDTO dto) {
 
 		log.info("Received request to create itinerary for userId: {}", dto.getUserId());
+		auditLogService.logAction(AuditActions.CREATE_ITINERARY, AuditEntity.ITINERARY, null, authUser.currentOrNull(), LogType.INFO);
 
 		ItineraryResponseDTO response = service.createItinerary(dto);
 
@@ -42,6 +50,7 @@ public class ItineraryController {
 	public ResponseEntity<ItineraryResponseDTO> addBookingToItinerary(@RequestBody @Valid AddBookingDTO dto) {
 
 		log.info("Received request to add bookingId: {} to itineraryId: {}", dto.getBookingId(), dto.getItineraryId());
+		auditLogService.logAction(AuditActions.ADD_BOOKING_TO_ITINERARY, AuditEntity.ITINERARY, dto.getItineraryId(), authUser.currentOrNull(), LogType.INFO);
 
 		ItineraryResponseDTO response = service.addBookingToItinerary(dto);
 
@@ -56,6 +65,7 @@ public class ItineraryController {
 
 		log.info("Received request to remove bookingId: {} from itineraryId: {}", dto.getBookingId(),
 				dto.getItineraryId());
+		auditLogService.logAction(AuditActions.REMOVE_BOOKING_FROM_ITINERARY, AuditEntity.ITINERARY, dto.getItineraryId(), authUser.currentOrNull(), LogType.INFO);
 
 		ItineraryResponseDTO response = service.removeBookingFromItinerary(dto);
 
@@ -96,6 +106,7 @@ public class ItineraryController {
 			@RequestBody @Valid CreateItineraryDTO dto) {
 
 		log.info("Received request to update itineraryId: {}", itineraryId);
+		auditLogService.logAction(AuditActions.UPDATE_ITINERARY, AuditEntity.ITINERARY, itineraryId, authUser.currentOrNull(), LogType.INFO);
 
 		ItineraryResponseDTO response = service.updateItinerary(itineraryId, dto);
 
@@ -109,6 +120,7 @@ public class ItineraryController {
 	public ResponseEntity<Void> deleteItinerary(@PathVariable Long itineraryId, @RequestParam Long userId) {
 
 		log.info("Received request to delete itineraryId: {} for userId: {}", itineraryId, userId);
+		auditLogService.logAction(AuditActions.DELETE_ITINERARY, AuditEntity.ITINERARY, itineraryId, authUser.currentOrNull(), LogType.WARN);
 
 		service.deleteItinerary(itineraryId, userId);
 

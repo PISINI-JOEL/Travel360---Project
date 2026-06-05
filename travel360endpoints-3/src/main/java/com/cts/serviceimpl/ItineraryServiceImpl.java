@@ -1,6 +1,7 @@
 package com.cts.serviceimpl;
 
 import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.AddBookingDTO;
 import com.cts.dto.BookingResponseDTO;
 import com.cts.dto.CreateItineraryDTO;
@@ -8,12 +9,15 @@ import com.cts.dto.ItineraryResponseDTO;
 import com.cts.entity.Booking;
 import com.cts.entity.Itinerary;
 import com.cts.entity.User;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
 import com.cts.exception.InvalidBookingException;
 import com.cts.exception.ResourceNotFoundException;
 import com.cts.exception.UserNotFoundException;
 import com.cts.repository.BookingRepository;
 import com.cts.repository.ItineraryRepository;
 import com.cts.repository.UserRepository;
+import com.cts.service.AuditLogService;
 import com.cts.service.ItineraryService;
 
 import lombok.AllArgsConstructor;
@@ -34,6 +38,7 @@ public class ItineraryServiceImpl implements ItineraryService {
 	private final BookingRepository bookingRepo;
 	private final UserRepository userRepo;
 	private final AuthenticatedUserProvider authUser;
+	private final AuditLogService auditLogService;
 
 	@Override
 	@Transactional
@@ -57,6 +62,7 @@ public class ItineraryServiceImpl implements ItineraryService {
 				.build();
 
 		itinerary = itineraryRepo.save(itinerary);
+		auditLogService.logAction(AuditActions.CREATE_ITINERARY, AuditEntity.ITINERARY, itinerary.getItineraryId(), authUser.currentOrNull(), LogType.INFO);
 
 		log.info("Itinerary created successfully with ID: {}", itinerary.getItineraryId());
 
@@ -100,6 +106,7 @@ public class ItineraryServiceImpl implements ItineraryService {
 		itinerary.getBookings().add(booking);
 
 		bookingRepo.save(booking);
+		auditLogService.logAction(AuditActions.ADD_BOOKING_TO_ITINERARY, AuditEntity.ITINERARY, itinerary.getItineraryId(), authUser.currentOrNull(), LogType.INFO);
 
 		log.info("Booking {} added successfully to itinerary {}", dto.getBookingId(), dto.getItineraryId());
 
@@ -137,6 +144,7 @@ public class ItineraryServiceImpl implements ItineraryService {
 		}
 
 		bookingRepo.save(booking);
+		auditLogService.logAction(AuditActions.REMOVE_BOOKING_FROM_ITINERARY, AuditEntity.ITINERARY, itinerary.getItineraryId(), authUser.currentOrNull(), LogType.INFO);
 
 		log.info("Booking {} removed successfully from itinerary {}", dto.getBookingId(), dto.getItineraryId());
 
@@ -200,6 +208,7 @@ public class ItineraryServiceImpl implements ItineraryService {
 		itinerary.setEndDate(dto.getEndDate());
 
 		itinerary = itineraryRepo.save(itinerary);
+		auditLogService.logAction(AuditActions.UPDATE_ITINERARY, AuditEntity.ITINERARY, itinerary.getItineraryId(), authUser.currentOrNull(), LogType.INFO);
 
 		log.info("Itinerary updated successfully with ID: {}", itineraryId);
 
@@ -226,6 +235,7 @@ public class ItineraryServiceImpl implements ItineraryService {
 		bookingRepo.saveAll(bookings);
 
 		itineraryRepo.delete(itinerary);
+		auditLogService.logAction(AuditActions.DELETE_ITINERARY, AuditEntity.ITINERARY, itineraryId, authUser.currentOrNull(), LogType.WARN);
 
 		log.info("Itinerary deleted successfully with ID: {}", itineraryId);
 	}

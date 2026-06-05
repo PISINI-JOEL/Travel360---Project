@@ -20,9 +20,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.cts.config.AuthenticatedUserProvider;
 import com.cts.config.JWTUtil;
 import com.cts.dto.TransportResponseDTO;
 import com.cts.enums.TransportStatus;
+import com.cts.service.AuditLogService;
 import com.cts.service.TransportService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -35,6 +37,12 @@ public class TransportControllerTest {
 
     @MockBean
     private TransportService service;
+
+    @MockBean
+    private AuditLogService auditLogService;
+
+    @MockBean
+    private AuthenticatedUserProvider authUser;
 
     @Autowired
     private MockMvc mockMvc;
