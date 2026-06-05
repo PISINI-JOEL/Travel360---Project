@@ -25,7 +25,7 @@ public class AuthenticatedUserProvider {
 
     /** The User backing the current JWT, resolved by email from the principal. */
     public User current() {
-    	
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !(auth.getPrincipal() instanceof UserDetails userDetails)) {
             throw new AccessDeniedException("No authenticated user in context");
@@ -35,6 +35,19 @@ public class AuthenticatedUserProvider {
             throw new AccessDeniedException("Authenticated user no longer exists");
         }
         return user;
+    }
+
+    /**
+     * Like {@link #current()} but returns {@code null} instead of throwing when
+     * no authenticated user is available. Safe to use for best-effort audit logging
+     * where a missing principal should not abort the main operation.
+     */
+    public User currentOrNull() {
+        try {
+            return current();
+        } catch (AccessDeniedException e) {
+            return null;
+        }
     }
 
     /**

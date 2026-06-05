@@ -3,13 +3,18 @@ package com.cts.serviceimpl;
 import com.cts.dto.FlightDTO;
 import com.cts.entity.Flight;
 import com.cts.entity.Partner;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
 import com.cts.enums.PartnerStatus;
 import com.cts.enums.PartnerType;
 import com.cts.exception.FlightNotFoundException;
 import com.cts.exception.InvalidPartnerException;
 import com.cts.exception.PartnerNotFoundException;
+import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.repository.FlightRepository;
 import com.cts.repository.PartnerRepository;
+import com.cts.service.AuditLogService;
 import com.cts.service.FlightService;
 
 import lombok.AllArgsConstructor;
@@ -30,6 +35,8 @@ public class FlightServiceImpl implements FlightService {
 
     private final FlightRepository repo;
     private final PartnerRepository partnerRepo;
+    private final AuditLogService auditLogService;
+    private final AuthenticatedUserProvider authUser;
 
     @Override
     public Flight addFlight(FlightDTO dto) {
@@ -69,6 +76,13 @@ public class FlightServiceImpl implements FlightService {
                 .build();
 
         Flight savedFlight = repo.save(flight);
+        auditLogService.logAction(
+                AuditActions.CREATE_FLIGHT,
+                AuditEntity.FLIGHT,
+                savedFlight.getFlightId(),
+                authUser.currentOrNull(),
+                LogType.INFO);
+        	
 
         log.info("Flight created successfully with ID: {}", savedFlight.getFlightId());
 
@@ -120,6 +134,12 @@ public class FlightServiceImpl implements FlightService {
         flight.setPartner(partner);
 
         Flight updatedFlight = repo.save(flight);
+        auditLogService.logAction(
+                AuditActions.UPDATE_FLIGHT,
+                AuditEntity.FLIGHT,
+                updatedFlight.getFlightId(),
+                authUser.currentOrNull(),
+                LogType.INFO);
 
         log.info("Flight updated successfully with ID: {}", id);
 

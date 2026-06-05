@@ -1,17 +1,21 @@
 package com.cts.serviceimpl;
 
 import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.dto.InvoiceDTO;
 import com.cts.dto.InvoiceResponseDTO;
 import com.cts.entity.Booking;
 import com.cts.entity.Invoice;
 import com.cts.entity.User;
+import com.cts.enums.AuditEntity;
+import com.cts.enums.LogType;
 import com.cts.enums.PaymentStatus;
 import com.cts.exception.InvoiceNotFoundException;
 import com.cts.exception.ResourceNotFoundException;
 import com.cts.repository.BookingRepository;
 import com.cts.repository.InvoiceRepository;
 import com.cts.repository.UserRepository;
+import com.cts.service.AuditLogService;
 import com.cts.service.InvoiceService;
 
 import lombok.AllArgsConstructor;
@@ -31,6 +35,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final UserRepository userRepo;
     private final BookingRepository bookingRepo;
     private final AuthenticatedUserProvider authUser;
+    private final AuditLogService auditLogService;
 
     @Override
     public InvoiceResponseDTO createInvoice(InvoiceDTO dto) {
@@ -53,6 +58,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .build();
 
         invoice = invoiceRepo.save(invoice);
+        auditLogService.logAction(AuditActions.CREATE_INVOICE, AuditEntity.INVOICE, invoice.getInvoiceId(), user, LogType.INFO);
 
         log.info("Invoice created successfully with ID: {}", invoice.getInvoiceId());
 

@@ -16,7 +16,9 @@ import com.cts.dto.PassengerCancelResponseDTO;
 import com.cts.dto.PassengerDTO;
 import com.cts.dto.PassengerResponseDTO;
 import com.cts.config.AuthenticatedUserProvider;
+import com.cts.constants.AuditActions;
 import com.cts.entity.*;
+import com.cts.enums.AuditEntity;
 import com.cts.enums.BookingStatus;
 import com.cts.enums.BookingType;
 import com.cts.enums.FlightStatus;
@@ -24,6 +26,7 @@ import com.cts.enums.HotelStatus;
 import com.cts.enums.NotificationCategory;
 import com.cts.enums.PackageStatus;
 import com.cts.enums.PassengerStatus;
+import com.cts.enums.LogType;
 import com.cts.enums.PaymentStatus;
 import com.cts.enums.TransportStatus;
 import com.cts.exception.FlightNotFoundException;
@@ -35,6 +38,7 @@ import com.cts.exception.ResourceNotFoundException;
 import com.cts.exception.TransportNotFoundException;
 import com.cts.exception.UserNotFoundException;
 import com.cts.repository.*;
+import com.cts.service.AuditLogService;
 import com.cts.service.BookingService;
 import com.cts.service.NotificationService;
 
@@ -66,6 +70,7 @@ public class BookingServiceImpl implements BookingService {
 	private final PaymentRepository paymentRepo;
 	private final PassengerRepository passengerRepo;
 	private final AuthenticatedUserProvider authUser;
+	private final AuditLogService auditLogService;
 
 	@Override
 	@Transactional
@@ -117,6 +122,7 @@ public class BookingServiceImpl implements BookingService {
 
 		booking.setPassengers(buildPassengers(dto.getPassengers(), booking));
 		bookingRepo.save(booking);
+		auditLogService.logAction(AuditActions.CREATE_BOOKING, AuditEntity.BOOKING, booking.getBookingId(), user, LogType.INFO);
 
 		log.info("Flight booking created successfully with bookingId: {}", booking.getBookingId());
 
@@ -186,6 +192,7 @@ public class BookingServiceImpl implements BookingService {
 				.bookingDate(dto.getCheckInDate()).createdAt(LocalDateTime.now()).build();
 
 		bookingRepo.save(booking);
+		auditLogService.logAction(AuditActions.CREATE_BOOKING, AuditEntity.BOOKING, booking.getBookingId(), user, LogType.INFO);
 
 		log.info("Hotel booking created successfully with bookingId: {}", booking.getBookingId());
 
@@ -245,6 +252,7 @@ public class BookingServiceImpl implements BookingService {
 				.createdAt(LocalDateTime.now()).build();
 
 		booking = bookingRepo.save(booking);
+		auditLogService.logAction(AuditActions.CREATE_BOOKING, AuditEntity.BOOKING, booking.getBookingId(), user, LogType.INFO);
 
 		log.info("Package booking created successfully with bookingId: {}", booking.getBookingId());
 
@@ -320,6 +328,7 @@ public class BookingServiceImpl implements BookingService {
 
 		booking.setPassengers(buildPassengers(dto.getPassengers(), booking));
 		booking = bookingRepo.save(booking);
+		auditLogService.logAction(AuditActions.CREATE_BOOKING, AuditEntity.BOOKING, booking.getBookingId(), user, LogType.INFO);
 
 		log.info("Transport booking created successfully with bookingId: {}", booking.getBookingId());
 
@@ -406,6 +415,7 @@ public class BookingServiceImpl implements BookingService {
 			log.debug("Booking {} is PENDING, cancelling with no refund", booking.getBookingId());
 			booking.setStatus(BookingStatus.CANCELLED);
 			bookingRepo.save(booking);
+			auditLogService.logAction(AuditActions.CANCEL_BOOKING, AuditEntity.BOOKING, booking.getBookingId(), booking.getUser(), LogType.INFO);
 
 			// No payment was made: void the still-unpaid invoice(s) so they are not
 			// left dangling as an outstanding (PENDING) bill on a cancelled booking.
@@ -443,6 +453,7 @@ public class BookingServiceImpl implements BookingService {
 
 			booking.setStatus(BookingStatus.CANCELLED);
 			bookingRepo.save(booking);
+			auditLogService.logAction(AuditActions.CANCEL_BOOKING, AuditEntity.BOOKING, booking.getBookingId(), booking.getUser(), LogType.INFO);
 
 			Invoice refundInvoice = Invoice.builder().booking(booking).invoiceDate(now).amount(refundAmount)
 					.status(PaymentStatus.REFUNDED).build();
@@ -532,6 +543,7 @@ public class BookingServiceImpl implements BookingService {
 
 			passenger.setStatus(PassengerStatus.CANCELLED);
 			passengerRepo.save(passenger);
+			auditLogService.logAction(AuditActions.CANCEL_PASSENGER, AuditEntity.PASSENGER, passengerId, booking.getUser(), LogType.INFO);
 
 			log.info("Last passenger {} removed; booking {} cancelled entirely", passengerId, bookingId);
 
@@ -575,6 +587,7 @@ public class BookingServiceImpl implements BookingService {
 
 		passenger.setStatus(PassengerStatus.CANCELLED);
 		passengerRepo.save(passenger);
+		auditLogService.logAction(AuditActions.CANCEL_PASSENGER, AuditEntity.PASSENGER, passengerId, booking.getUser(), LogType.INFO);
 
 		if (refundAmount > 0) {
 			Invoice refundInvoice = Invoice.builder().booking(booking).invoiceDate(now).amount(refundAmount)

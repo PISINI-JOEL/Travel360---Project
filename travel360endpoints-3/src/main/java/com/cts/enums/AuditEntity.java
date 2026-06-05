@@ -1,0 +1,19 @@
+package com.cts.enums;
+
+public enum AuditEntity {
+	
+	BOOKING,
+	PASSENGER,
+	USER,
+	FLIGHT,
+	HOTEL,
+	TRANSPORT,
+	TRAVELPACKAGE,
+	NOTIFICATION,
+	INVOICE,
+	PAYMENT,
+	PARTNER,
+	ITINERARY,
+	EXCEPTION
+
+}
