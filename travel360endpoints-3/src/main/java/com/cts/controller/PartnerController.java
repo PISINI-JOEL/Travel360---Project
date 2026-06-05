@@ -5,6 +5,7 @@ import com.cts.dto.PartnerResponseDTO;
 import com.cts.enums.PartnerType;
 import com.cts.service.PartnerService;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,7 +25,7 @@ public class PartnerController {
     // ✅ CREATE
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public PartnerResponseDTO createPartner(@RequestBody PartnerDTO dto) {
+    public PartnerResponseDTO createPartner(@RequestBody @Valid PartnerDTO dto) {
 
         log.info("Received request to create partner");
 
