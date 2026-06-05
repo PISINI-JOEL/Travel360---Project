@@ -8,6 +8,8 @@ import com.cts.enums.LogType;
 import com.cts.service.AuditLogService;
 import com.cts.service.BookingService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/bookings")
 @AllArgsConstructor
+@Tag(name = "Booking Controller", description = "Create flight/hotel/package/transport bookings and cancel bookings or individual passengers")
 @Slf4j
 public class BookingController {
 
@@ -29,6 +32,7 @@ public class BookingController {
     private final AuthenticatedUserProvider authUser;
     private final AuditLogService auditLogService;
 
+    @Operation(summary = "Create a flight booking with passenger list")
     @PostMapping("/flight")
     @PreAuthorize("hasAnyRole('CUSTOMER','CORPORATE_TRAVEL_MANAGER','TRAVEL_AGENT')")
     public ResponseEntity<BookingFlightResponseDTO> createFlightBooking(
@@ -44,6 +48,7 @@ public class BookingController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Create a hotel booking for a date range")
     @PostMapping("/hotel")
     @PreAuthorize("hasAnyRole('CUSTOMER','CORPORATE_TRAVEL_MANAGER','TRAVEL_AGENT')")
     public ResponseEntity<BookingHotelResponseDTO> createHotelBooking(
@@ -59,6 +64,7 @@ public class BookingController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Create a travel package booking")
     @PostMapping("/package")
     @PreAuthorize("hasAnyRole('CUSTOMER','CORPORATE_TRAVEL_MANAGER','TRAVEL_AGENT')")
     public ResponseEntity<BookingPackageResponseDTO> createPackageBooking(
@@ -74,6 +80,7 @@ public class BookingController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Create a transport (bus) booking with passenger list")
     @PostMapping("/transport")
     @PreAuthorize("hasAnyRole('CUSTOMER','CORPORATE_TRAVEL_MANAGER','TRAVEL_AGENT')")
     public ResponseEntity<BookingTransportResponseDTO> createTransportBooking(
@@ -89,6 +96,7 @@ public class BookingController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Get all bookings (admin / travel-agent only)")
     @GetMapping
     @PreAuthorize("hasAnyRole('TRAVEL_AGENT','ADMIN')")
     public ResponseEntity<List<BookingResponseDTO>> getAll() {
@@ -102,6 +110,7 @@ public class BookingController {
         return new ResponseEntity<>(bookings, HttpStatus.OK);
     }
 
+    @Operation(summary = "Get all bookings for a specific user")
     @GetMapping("/user/{userId}")
     @PreAuthorize("hasAnyRole('CUSTOMER','TRAVEL_AGENT','ADMIN')")
     public ResponseEntity<List<BookingResponseDTO>> getByUser(@PathVariable Long userId) {
@@ -115,6 +124,7 @@ public class BookingController {
         return new ResponseEntity<>(bookings, HttpStatus.OK);
     }
 
+    @Operation(summary = "Cancel a booking with tiered refund based on days remaining")
     @PostMapping("/cancel")
     @PreAuthorize("hasAnyRole('CUSTOMER','CORPORATE_TRAVEL_MANAGER','TRAVEL_AGENT')")
     public ResponseEntity<BookingCancelResponseDTO> cancelBooking(
@@ -130,6 +140,7 @@ public class BookingController {
         
     }
 
+    @Operation(summary = "Cancel a single passenger from a flight or transport booking")
     @DeleteMapping("/{bookingId}/passengers/{passengerId}")
     @PreAuthorize("hasAnyRole('CUSTOMER','CORPORATE_TRAVEL_MANAGER','TRAVEL_AGENT')")
     public ResponseEntity<PassengerCancelResponseDTO> cancelPassenger(

@@ -9,6 +9,8 @@ import com.cts.enums.LogType;
 import com.cts.service.AuditLogService;
 import com.cts.service.PaymentService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/payments")
 @AllArgsConstructor
+@Tag(name = "Payment Controller", description = "Process invoice payments and look up payment history")
 @Slf4j
 public class PaymentController {
 
@@ -30,6 +33,7 @@ public class PaymentController {
     private final AuthenticatedUserProvider authUser;
     private final AuditLogService auditLogService;
 
+    @Operation(summary = "Make a payment against a pending invoice")
     @PostMapping
     @PreAuthorize("hasAnyRole('CUSTOMER','CORPORATE_TRAVEL_MANAGER')")
     public ResponseEntity<?> makePayment(@RequestBody @Valid PaymentDTO dto) {
@@ -45,6 +49,7 @@ public class PaymentController {
         return new ResponseEntity<>(payment, HttpStatus.OK);
     }
 
+    @Operation(summary = "Get all payments for a specific invoice")
     @GetMapping("/invoice/{invoiceId}")
     @PreAuthorize("hasAnyRole('CUSTOMER','FINANCE_OFFICER','ADMIN')")
     public ResponseEntity<?> getByInvoice(@PathVariable Long invoiceId) {
@@ -63,6 +68,7 @@ public class PaymentController {
         return new ResponseEntity<>(payments, HttpStatus.OK);
     }
 
+    @Operation(summary = "Get all payments (finance / admin only)")
     @GetMapping
     @PreAuthorize("hasAnyRole('FINANCE_OFFICER','ADMIN')")
     public ResponseEntity<List<PaymentResponseDTO>> getAllPayments() {
@@ -76,6 +82,7 @@ public class PaymentController {
         return new ResponseEntity<>(payments, HttpStatus.OK);
     }
 
+    @Operation(summary = "Get a payment by ID")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('CUSTOMER','FINANCE_OFFICER','ADMIN')")
     public ResponseEntity<?> getById(@PathVariable Long id) {

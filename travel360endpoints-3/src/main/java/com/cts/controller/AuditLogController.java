@@ -16,17 +16,21 @@ import com.cts.enums.AuditEntity;
 import com.cts.enums.LogType;
 import com.cts.service.AuditLogService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/AuditLogs")
 @AllArgsConstructor
+@Tag(name = "Audit Log Controller", description = "Read-only access to system audit logs filtered by entity, user, action, or severity")
 @Slf4j
 public class AuditLogController {
 	
 	private AuditLogService auditservice;
 	
+	@Operation(summary = "Get all audit logs")
 	@GetMapping("/all")
 	public ResponseEntity<?> getAll(){
 		List<AuditLogResponseDTO> list1 = auditservice.getAllLogs();
@@ -34,6 +38,7 @@ public class AuditLogController {
 		
 	}
 	
+	@Operation(summary = "Get audit logs by entity type and entity ID")
 	@GetMapping("/entity/{entityType}/{entityId}")
 	public ResponseEntity<List<AuditLogResponseDTO>> getByEntity(
 	        @PathVariable AuditEntity entityType,
@@ -46,6 +51,7 @@ public class AuditLogController {
 	
 
 	
+	    @Operation(summary = "Get audit logs for a specific user")
 	    @GetMapping("/user/{userId}")
 	    public ResponseEntity<List<AuditLogResponseDTO>> getByUser(@PathVariable Long userId) {
 
@@ -54,6 +60,7 @@ public class AuditLogController {
 	    }
 
 	
+	    @Operation(summary = "Get audit logs filtered by action name (e.g. CREATE_BOOKING)")
 	    @GetMapping("/action/{action}")
 	    public ResponseEntity<List<AuditLogResponseDTO>> getByAction(@PathVariable String action) {
 
@@ -62,6 +69,7 @@ public class AuditLogController {
 	    }
 
 	    
+	    @Operation(summary = "Get audit logs filtered by severity (INFO, WARN, ERROR)")
 	    @GetMapping("/type/{logType}")
 	    public ResponseEntity<List<AuditLogResponseDTO>> getByLogType(@PathVariable LogType logType) {
 

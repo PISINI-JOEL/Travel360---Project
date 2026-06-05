@@ -10,6 +10,8 @@ import com.cts.enums.LogType;
 import com.cts.service.AuditLogService;
 import com.cts.service.ItineraryService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/itinerary")
 @AllArgsConstructor
+@Tag(name = "Itinerary Controller", description = "Build, update, and manage user trip itineraries by grouping bookings")
 @Slf4j
 public class ItineraryController {
 
@@ -31,6 +34,7 @@ public class ItineraryController {
 	private final AuthenticatedUserProvider authUser;
 	private final AuditLogService auditLogService;
 
+	@Operation(summary = "Create a new itinerary for a user")
 	@PostMapping
 	@PreAuthorize("hasAnyRole('CUSTOMER','TRAVEL_AGENT')")
 	public ResponseEntity<ItineraryResponseDTO> createItinerary(@RequestBody @Valid CreateItineraryDTO dto) {
@@ -45,6 +49,7 @@ public class ItineraryController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
+	@Operation(summary = "Attach an existing booking to an itinerary")
 	@PostMapping("/add-booking")
 	@PreAuthorize("hasAnyRole('CUSTOMER','TRAVEL_AGENT')")
 	public ResponseEntity<ItineraryResponseDTO> addBookingToItinerary(@RequestBody @Valid AddBookingDTO dto) {
@@ -59,6 +64,7 @@ public class ItineraryController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	@Operation(summary = "Detach a booking from an itinerary")
 	@PostMapping("/remove-booking")
 	@PreAuthorize("hasAnyRole('CUSTOMER','TRAVEL_AGENT')")
 	public ResponseEntity<ItineraryResponseDTO> removeBookingFromItinerary(@RequestBody @Valid AddBookingDTO dto) {
@@ -74,6 +80,7 @@ public class ItineraryController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	@Operation(summary = "Get all itineraries for a user")
 	@GetMapping("/user/{userId}")
 	@PreAuthorize("hasAnyRole('CUSTOMER','TRAVEL_AGENT','ADMIN')")
 	public ResponseEntity<List<ItineraryResponseDTO>> getUserItineraries(@PathVariable Long userId) {
@@ -86,6 +93,7 @@ public class ItineraryController {
 
 		return new ResponseEntity<>(itineraries, HttpStatus.OK);
 	}
+	@Operation(summary = "Get an itinerary by ID")
 	@GetMapping("/{itineraryId}")
 	@PreAuthorize("hasAnyRole('CUSTOMER','TRAVEL_AGENT','ADMIN')")
 	public ResponseEntity<ItineraryResponseDTO> getItineraryById(@PathVariable Long itineraryId,
@@ -100,6 +108,7 @@ public class ItineraryController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	@Operation(summary = "Update an itinerary by ID")
 	@PutMapping("/{itineraryId}")
 	@PreAuthorize("hasAnyRole('CUSTOMER','TRAVEL_AGENT')")
 	public ResponseEntity<ItineraryResponseDTO> updateItinerary(@PathVariable Long itineraryId,
@@ -115,6 +124,7 @@ public class ItineraryController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
+	@Operation(summary = "Delete an itinerary (detaches its bookings first)")
 	@DeleteMapping("/{itineraryId}")
 	@PreAuthorize("hasAnyRole('CUSTOMER','TRAVEL_AGENT')")
 	public ResponseEntity<Void> deleteItinerary(@PathVariable Long itineraryId, @RequestParam Long userId) {

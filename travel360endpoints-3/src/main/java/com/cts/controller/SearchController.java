@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.cts.enums.TravelPackageCategory;
 import com.cts.service.SearchService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
 import lombok.AllArgsConstructor;
@@ -17,11 +19,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/v1/search")
 @AllArgsConstructor
 @Validated
+@Tag(name = "Search Controller", description = "Unified cross-resource search across flights, hotels, transport, and packages")
 @Slf4j
 public class SearchController {
 
     private final SearchService searchService;
 
+    @Operation(summary = "Unified search across all inventory types with optional filters")
     @GetMapping
     public ResponseEntity<?> search(
             @RequestParam String type,

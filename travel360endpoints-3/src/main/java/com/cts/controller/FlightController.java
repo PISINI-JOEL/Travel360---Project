@@ -9,6 +9,8 @@ import com.cts.enums.LogType;
 import com.cts.service.AuditLogService;
 import com.cts.service.FlightService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
@@ -27,6 +29,7 @@ import java.util.List;
 @RequestMapping("/api/v1/flights")
 @AllArgsConstructor
 @Validated
+@Tag(name = "Flight Controller", description = "Manage flight inventory and search/filter available flights")
 @Slf4j
 public class FlightController {
 
@@ -34,6 +37,7 @@ public class FlightController {
     private final AuthenticatedUserProvider authUser;
     private final AuditLogService auditLogService;
 
+    @Operation(summary = "Add a new flight to the inventory")
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
     public ResponseEntity<Flight> addFlight(@RequestBody @Valid FlightDTO dto) {
@@ -48,6 +52,7 @@ public class FlightController {
         return new ResponseEntity<>(flight, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Update an existing flight by ID")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
     public ResponseEntity<Flight> updateFlight(@PathVariable Long id,
@@ -63,6 +68,7 @@ public class FlightController {
         return new ResponseEntity<>(updatedFlight, HttpStatus.OK);
     }
 
+    @Operation(summary = "Search flights by source and destination")
     @GetMapping("/search")
     public ResponseEntity<List<Flight>> search(
             @RequestParam String source,
@@ -80,6 +86,7 @@ public class FlightController {
         return new ResponseEntity<>(flights, HttpStatus.OK);
     }
 
+    @Operation(summary = "Get all flights (paginated)")
     @GetMapping
     public ResponseEntity<List<Flight>> getAll(
             @RequestParam(defaultValue = "0") @Min(0) int page,
@@ -94,6 +101,7 @@ public class FlightController {
         return new ResponseEntity<>(flights, HttpStatus.OK);
     }
 
+    @Operation(summary = "Filter flights by route and price range")
     @GetMapping("/filter")
     public ResponseEntity<List<Flight>> filterFlights(
             @RequestParam String source,
@@ -113,6 +121,7 @@ public class FlightController {
         return new ResponseEntity<>(flights, HttpStatus.OK);
     }
 
+    @Operation(summary = "Get a flight by ID")
     @GetMapping("/{id}")
     public ResponseEntity<Flight> getById(@PathVariable Long id) {
 

@@ -17,6 +17,8 @@ import com.cts.enums.TransportStatus;
 import com.cts.service.AuditLogService;
 import com.cts.service.TransportService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
@@ -29,6 +31,7 @@ import org.springframework.validation.annotation.Validated;
 @RequestMapping("/api/v1/transports")
 @AllArgsConstructor
 @Validated
+@Tag(name = "Transport Controller", description = "Manage bus transport inventory and search by route or status")
 @Slf4j
 public class TransportController {
 
@@ -36,6 +39,7 @@ public class TransportController {
     private final AuthenticatedUserProvider authUser;
     private final AuditLogService auditLogService;
 
+    @Operation(summary = "Add a new transport vehicle to the inventory")
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
     public ResponseEntity<?> addTransport(@RequestBody @Valid TransportDTO dto) {
@@ -45,6 +49,7 @@ public class TransportController {
         return new ResponseEntity<>(service.addTransport(dto), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Update an existing transport by ID")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
     public ResponseEntity<?> updateTransport(@PathVariable Long id, @RequestBody @Valid TransportDTO dto) {
@@ -54,6 +59,7 @@ public class TransportController {
         return new ResponseEntity<>(service.updateTransport(id, dto), HttpStatus.OK);
     }
 
+    @Operation(summary = "Get all transports (paginated)")
     @GetMapping
     public List<TransportResponseDTO> getAll(
             @RequestParam(defaultValue = "0") @Min(0) int page,
@@ -63,6 +69,7 @@ public class TransportController {
         return service.getAllTransports(page, size);
     }
 
+    @Operation(summary = "Search transports by source and destination")
     @GetMapping("/search")
     public List<TransportResponseDTO> findByRoute(
             @RequestParam String source,
@@ -76,6 +83,7 @@ public class TransportController {
         return service.findByRoute(source, destination, page, size);
     }
 
+    @Operation(summary = "Find transports by status (AVAILABLE, DELAYED, CANCELLED, etc.)")
     @GetMapping("/status/{status}")
     public List<TransportResponseDTO> findByStatus(
             @PathVariable TransportStatus status,

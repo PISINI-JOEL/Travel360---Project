@@ -10,6 +10,8 @@ import com.cts.enums.PartnerType;
 import com.cts.service.AuditLogService;
 import com.cts.service.PartnerService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/partners")
 @AllArgsConstructor
+@Tag(name = "Partner Controller", description = "Onboard, update, and deactivate inventory partners (airlines, hotels, bus operators, package providers)")
 @Slf4j
 public class PartnerController {
 
@@ -30,6 +33,7 @@ public class PartnerController {
     private final AuditLogService auditLogService;
 
     // ✅ CREATE
+    @Operation(summary = "Onboard a new inventory partner")
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public PartnerResponseDTO createPartner(@RequestBody @Valid PartnerDTO dto) {
@@ -45,6 +49,7 @@ public class PartnerController {
     }
 
     // ✅ UPDATE
+    @Operation(summary = "Update a partner by ID; deactivating cascades to their inventory")
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public PartnerResponseDTO updatePartner(@PathVariable Long id,
@@ -61,6 +66,7 @@ public class PartnerController {
     }
 
     // ✅ DELETE
+    @Operation(summary = "Deactivate (soft-delete) a partner and all their listed inventory")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public String deletePartner(@PathVariable Long id) {
@@ -76,6 +82,7 @@ public class PartnerController {
     }
 
     // ✅ GET BY CATEGORY (type)
+    @Operation(summary = "Get partners by category (FLIGHT, HOTEL, BUS, PACKAGE)")
     @GetMapping("/category/{type}")
     @PreAuthorize("hasAnyRole('ADMIN','COMPLIANCE_OFFICER')")
     public List<PartnerResponseDTO> getPartnerByCategory(@PathVariable PartnerType type) {
@@ -90,6 +97,7 @@ public class PartnerController {
     }
 
     // ✅ GET BY ID
+    @Operation(summary = "Get a partner by ID")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','COMPLIANCE_OFFICER')")
     public PartnerResponseDTO getPartnerById(@PathVariable Long id) {

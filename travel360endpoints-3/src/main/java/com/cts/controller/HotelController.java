@@ -16,6 +16,8 @@ import com.cts.enums.LogType;
 import com.cts.service.AuditLogService;
 import com.cts.service.HotelService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
@@ -27,6 +29,7 @@ import org.springframework.validation.annotation.Validated;
 @RequestMapping("/api/v1/hotels")
 @AllArgsConstructor
 @Validated
+@Tag(name = "Hotel Controller", description = "Manage hotel inventory and search hotels by location, rating, or price range")
 @Slf4j
 public class HotelController {
 
@@ -34,6 +37,7 @@ public class HotelController {
     private final AuthenticatedUserProvider authUser;
     private final AuditLogService auditLogService;
 
+    @Operation(summary = "Add a new hotel to the inventory")
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
     public ResponseEntity<Hotel> addHotel(@RequestBody @Valid HotelDTO dto) {
@@ -48,6 +52,7 @@ public class HotelController {
         return new ResponseEntity<>(hotel, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Update an existing hotel by ID")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
     public ResponseEntity<Hotel> updateHotel(@PathVariable Long id,
@@ -63,6 +68,7 @@ public class HotelController {
         return new ResponseEntity<>(updatedHotel, HttpStatus.OK);
     }
 
+    @Operation(summary = "Get hotels by city")
     @GetMapping("/city/{location}")
     public ResponseEntity<List<Hotel>> getHotelsByLocation(
             @PathVariable String location,
@@ -79,6 +85,7 @@ public class HotelController {
         return new ResponseEntity<>(hotels, HttpStatus.OK);
     }
 
+    @Operation(summary = "Filter hotels by city, rating, and price range")
     @GetMapping("/filter")
     public ResponseEntity<?> filterHotels(
             @RequestParam(required = false) String city,

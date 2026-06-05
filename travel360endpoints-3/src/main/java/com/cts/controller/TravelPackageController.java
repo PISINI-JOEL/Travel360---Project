@@ -16,6 +16,8 @@ import com.cts.enums.TravelPackageCategory;
 import com.cts.service.AuditLogService;
 import com.cts.service.TravelPackageService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
@@ -27,6 +29,7 @@ import org.springframework.validation.annotation.Validated;
 @RequestMapping("/api/v1/packages")
 @AllArgsConstructor
 @Validated
+@Tag(name = "Travel Package Controller", description = "Manage curated travel packages and browse by category")
 @Slf4j
 public class TravelPackageController {
 
@@ -34,6 +37,7 @@ public class TravelPackageController {
     private final AuthenticatedUserProvider authUser;
     private final AuditLogService auditLogService;
 
+    @Operation(summary = "Add a new travel package")
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
     public ResponseEntity<TravelPackageResponseDTO> addPackage(
@@ -49,6 +53,7 @@ public class TravelPackageController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Update an existing travel package by ID")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
     public ResponseEntity<TravelPackageResponseDTO> updatePackage(
@@ -65,6 +70,7 @@ public class TravelPackageController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @Operation(summary = "Get all travel packages (paginated)")
     @GetMapping
     public ResponseEntity<?> getAll(
             @RequestParam(defaultValue = "0") @Min(0) int page,
@@ -80,6 +86,7 @@ public class TravelPackageController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
+    @Operation(summary = "Get travel packages by category")
     @GetMapping("/category/{category}")
     public ResponseEntity<?> getByCategory(
             @PathVariable TravelPackageCategory category,
