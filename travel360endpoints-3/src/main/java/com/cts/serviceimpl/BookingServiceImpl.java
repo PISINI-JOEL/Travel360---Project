@@ -16,6 +16,7 @@ import com.cts.dto.PassengerCancelResponseDTO;
 import com.cts.dto.PassengerDTO;
 import com.cts.dto.PassengerResponseDTO;
 import com.cts.config.AuthenticatedUserProvider;
+import com.cts.annotation.Audit;
 import com.cts.constants.AuditActions;
 import com.cts.entity.*;
 import com.cts.enums.AuditEntity;

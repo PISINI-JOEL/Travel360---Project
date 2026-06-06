@@ -15,13 +15,13 @@ import java.util.Arrays;
 @Slf4j
 public class LoggingAspect {
 
-    // ✅ Apply ONLY to controller layer
-    @Pointcut("within(com.cts.controller..*)")
-    public void controllerPointcut() {
+    // ✅ Apply to controller layer AND service implementation layer
+    @Pointcut("within(com.cts.controller..*) || within(com.cts.serviceimpl..*)")
+    public void loggingPointcut() {
     }
 
-    @Around("controllerPointcut()")
-    public Object logAroundController(ProceedingJoinPoint joinPoint) throws Throwable {
+    @Around("loggingPointcut()")
+    public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
 
         String className = joinPoint.getTarget().getClass().getSimpleName();
         String methodName = joinPoint.getSignature().getName();
