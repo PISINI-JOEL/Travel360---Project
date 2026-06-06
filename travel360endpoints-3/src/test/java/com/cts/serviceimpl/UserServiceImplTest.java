@@ -72,7 +72,7 @@ class UserServiceImplTest {
 
         when(repo.findByEmail(any())).thenReturn(user);
         when(encoder.matches(any(), any())).thenReturn(true);
-        when(jwtUtil.generateToken(any(), any())).thenReturn("token");
+        when(jwtUtil.generateToken(any(), any(), any())).thenReturn("token");
 
         assertNotNull(service.login("test@mail.com", "password123"));
     }

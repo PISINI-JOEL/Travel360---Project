@@ -37,6 +37,10 @@ public class JWTUtil {
 				String.class);
 	}
 
+	public Long extractUserId(String token) {
+		return extractAllClaims(token).get("userid", Long.class);
+	}
+
 	private Claims extractAllClaims(String token) {
 		return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
 	}
@@ -45,9 +49,10 @@ public class JWTUtil {
 		return extractExpiration(token).before(new Date());
 	}
 
-	public String generateToken(String email, Role role) {
+	public String generateToken(String email, Role role, Long userId) {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("userrole", role);
+		claims.put("userid", userId);
 		return createToken(claims, email);
 	}
 

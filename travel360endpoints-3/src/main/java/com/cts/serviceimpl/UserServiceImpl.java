@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
 			throw new UserNotFoundException("Invalid login");
 		}
 
-		String token = jwtUtil.generateToken(user.getEmail(),user.getRole());
+		String token = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getUserId());
 		auditLogService.logAction(AuditActions.LOGIN_USER, AuditEntity.USER, user.getUserId(), user, LogType.INFO);
 
 		log.info("User logged in successfully with ID: {}", user.getUserId());

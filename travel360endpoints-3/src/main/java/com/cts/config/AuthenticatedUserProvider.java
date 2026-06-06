@@ -2,7 +2,7 @@ package com.cts.config;
 
 import com.cts.entity.User;
 import com.cts.enums.Role;
-import com.cts.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 
 import lombok.AllArgsConstructor;
 
@@ -14,27 +14,40 @@ import org.springframework.stereotype.Component;
 
 /**
  * Resolves the currently authenticated user from the security context and
- * enforces ownership rules. The JWT principal only carries the email, so the
- * backing {@link User} is loaded by email to obtain the userId and role.
+ * enforces ownership rules. This implementation extracts user details
+ * directly from the JWT claims to avoid redundant database calls.
  */
 @Component
 @AllArgsConstructor
 public class AuthenticatedUserProvider {
 
-    private final UserRepository userRepository;
+    private final JWTUtil jwtUtil;
+    private final HttpServletRequest request;
 
-    /** The User backing the current JWT, resolved by email from the principal. */
+    /**
+     * Resolves the current user by extracting claims from the JWT in the request header.
+     */
     public User current() {
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !(auth.getPrincipal() instanceof UserDetails userDetails)) {
             throw new AccessDeniedException("No authenticated user in context");
         }
-        User user = userRepository.findByEmail(userDetails.getUsername());
-        if (user == null) {
-            throw new AccessDeniedException("Authenticated user no longer exists");
+
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new AccessDeniedException("Token not found in request");
         }
-        return user;
+        String token = authHeader.substring(7);
+
+        try {
+            return User.builder()
+                    .userId(jwtUtil.extractUserId(token))
+                    .email(jwtUtil.extractUsername(token))
+                    .role(Role.valueOf(jwtUtil.extractUserRole(token)))
+                    .build();
+        } catch (Exception e) {
+            throw new AccessDeniedException("Invalid token claims: " + e.getMessage());
+        }
     }
 
     /**
