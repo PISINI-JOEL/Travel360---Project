@@ -24,7 +24,7 @@ import lombok.*;
 	    @Enumerated(EnumType.STRING)
 	    private PartnerType type;
 
-	    
+	    @Enumerated(EnumType.STRING)
 	    private PartnerStatus status;
 	
 }
