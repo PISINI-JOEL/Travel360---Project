@@ -715,4 +715,242 @@ class BookingServiceImplTest {
         assertThrows(InvalidBookingException.class,
                 () -> service.cancelPassenger(1L, 5L, 1L));
     }
+
+    // ---------------- ADDITIONAL COVERAGE ----------------
+
+    // validatePassengerCount: passengers == null branch
+    @Test
+    void createFlightBooking_passengersNull() {
+
+        BookingFlightDTO dto = new BookingFlightDTO();
+        dto.setUserId(1L);
+        dto.setFlightId(10L);
+        dto.setTravelDate(LocalDate.now().plusDays(10));
+        dto.setUnits(1);
+        dto.setPassengers(null);
+
+        when(userRepo.findById(1L)).thenReturn(Optional.of(user));
+        when(flightRepo.findById(10L)).thenReturn(Optional.of(flight));
+        when(bookingRepo.getBookedSeats(10L, dto.getTravelDate())).thenReturn(0);
+
+        assertThrows(InvalidBookingException.class, () -> service.createFlightBooking(dto));
+    }
+
+    // createPackageBooking: package startDate == null -> bookingDate falls back to today
+    @Test
+    void createPackageBooking_nullStartDate() {
+
+        tpackage.setStartDate(null);
+
+        BookingPackageDTO dto = new BookingPackageDTO();
+        dto.setUserId(1L);
+        dto.setPackageId(30L);
+        dto.setUnits(1);
+        dto.setBookingName("John");
+        dto.setGender(Gender.MALE);
+
+        when(userRepo.findById(1L)).thenReturn(Optional.of(user));
+        when(packageRepo.findById(30L)).thenReturn(Optional.of(tpackage));
+        when(bookingRepo.getBookedSlots(30L)).thenReturn(0);
+        when(bookingRepo.save(any())).thenAnswer(inv -> {
+            Booking b = inv.getArgument(0);
+            b.setBookingId(3001L);
+            return b;
+        });
+
+        BookingPackageResponseDTO response = service.createPackageBooking(dto);
+
+        assertNotNull(response);
+        assertEquals(LocalDate.now(), response.getBookingDate());
+    }
+
+    // mapToDTO: all relations populated (flight, hotel, transport, package, itinerary, passengers)
+    @Test
+    void getAllBookings_mapsAllRelations() {
+
+        Passenger p = Passenger.builder().passengerId(9L).passengerName("P")
+                .status(PassengerStatus.ACTIVE).build();
+
+        Booking b = Booking.builder().bookingId(1L).user(user).amount(100.0).units(1)
+                .bookingType(BookingType.FLIGHT).status(BookingStatus.PENDING)
+                .flight(flight).hotel(hotel).transport(transport).travelPackage(tpackage)
+                .itinerary(Itinerary.builder().itineraryId(7L).build())
+                .passengers(List.of(p)).build();
+
+        when(bookingRepo.findAll()).thenReturn(List.of(b));
+
+        List<BookingResponseDTO> list = service.getAllBookings();
+
+        assertEquals(1, list.size());
+        BookingResponseDTO dto = list.get(0);
+        assertEquals(flight.getFlightId(), dto.getFlightId());
+        assertEquals(hotel.getHotelId(), dto.getHotelId());
+        assertEquals(transport.getTransportId(), dto.getTransportId());
+        assertEquals(tpackage.getPackageId(), dto.getPackageId());
+        assertEquals(7L, dto.getItineraryId());
+        assertNotNull(dto.getPassengers());
+        assertEquals(1, dto.getPassengers().size());
+    }
+
+    // deleteBooking: status neither PENDING/CONFIRMED/CANCELLED -> invalid state
+    @Test
+    void deleteBooking_invalidState() {
+
+        Booking b = Booking.builder().bookingId(1L).user(user).status(BookingStatus.FAILED).build();
+
+        BookingCancelDTO dto = new BookingCancelDTO();
+        dto.setBookingId(1L);
+        dto.setUserId(1L);
+
+        when(bookingRepo.findById(1L)).thenReturn(Optional.of(b));
+
+        assertThrows(InvalidBookingException.class, () -> service.deleteBooking(dto));
+    }
+
+    // deleteBooking CONFIRMED: refund 0 (booking date today) -> refundStatus NONE
+    @Test
+    void deleteBooking_confirmedNoRefund() {
+
+        Booking b = Booking.builder().bookingId(1L).user(user).amount(1000.0).units(1)
+                .bookingType(BookingType.FLIGHT).status(BookingStatus.CONFIRMED)
+                .bookingDate(LocalDate.now()).build();
+
+        BookingCancelDTO dto = new BookingCancelDTO();
+        dto.setBookingId(1L);
+        dto.setUserId(1L);
+
+        when(bookingRepo.findById(1L)).thenReturn(Optional.of(b));
+
+        BookingCancelResponseDTO response = service.deleteBooking(dto);
+
+        assertEquals("NONE", response.getRefundStatus());
+        assertEquals(0.0, response.getRefundAmount());
+    }
+
+    // deleteBooking CONFIRMED: 2-3 days before -> 60% refund (else branch)
+    @Test
+    void deleteBooking_confirmedRefund60() {
+
+        Booking b = Booking.builder().bookingId(1L).user(user).amount(1000.0).units(1)
+                .bookingType(BookingType.FLIGHT).status(BookingStatus.CONFIRMED)
+                .bookingDate(LocalDate.now().plusDays(3)).build();
+
+        BookingCancelDTO dto = new BookingCancelDTO();
+        dto.setBookingId(1L);
+        dto.setUserId(1L);
+
+        when(bookingRepo.findById(1L)).thenReturn(Optional.of(b));
+
+        BookingCancelResponseDTO response = service.deleteBooking(dto);
+
+        assertEquals("PARTIAL", response.getRefundStatus());
+        assertEquals(600.0, response.getRefundAmount());
+    }
+
+    // calculateRefundAmount: exactly 1 day before -> throws
+    @Test
+    void deleteBooking_confirmedOneDayBefore_throws() {
+
+        Booking b = Booking.builder().bookingId(1L).user(user).amount(1000.0).units(1)
+                .bookingType(BookingType.FLIGHT).status(BookingStatus.CONFIRMED)
+                .bookingDate(LocalDate.now().plusDays(1)).build();
+
+        BookingCancelDTO dto = new BookingCancelDTO();
+        dto.setBookingId(1L);
+        dto.setUserId(1L);
+
+        when(bookingRepo.findById(1L)).thenReturn(Optional.of(b));
+
+        assertThrows(InvalidBookingException.class, () -> service.deleteBooking(dto));
+    }
+
+    // calculateRefundAmount: null booking date -> throws
+    @Test
+    void deleteBooking_confirmedNullBookingDate_throws() {
+
+        Booking b = Booking.builder().bookingId(1L).user(user).amount(1000.0).units(1)
+                .bookingType(BookingType.FLIGHT).status(BookingStatus.CONFIRMED)
+                .bookingDate(null).build();
+
+        BookingCancelDTO dto = new BookingCancelDTO();
+        dto.setBookingId(1L);
+        dto.setUserId(1L);
+
+        when(bookingRepo.findById(1L)).thenReturn(Optional.of(b));
+
+        assertThrows(InvalidBookingException.class, () -> service.deleteBooking(dto));
+    }
+
+    // cancelPassenger CONFIRMED, full per-seat refund + pending invoice sync + refund invoice/payment
+    @Test
+    void cancelPassenger_confirmedFullRefund() {
+
+        Booking b = Booking.builder().bookingId(1L).user(user).amount(2000.0).units(2)
+                .bookingType(BookingType.FLIGHT).status(BookingStatus.CONFIRMED)
+                .bookingDate(LocalDate.now().plusDays(15)).build();
+
+        Passenger p = Passenger.builder().passengerId(5L).passengerName("John")
+                .status(PassengerStatus.ACTIVE).booking(b).build();
+
+        Invoice pendingInvoice = Invoice.builder().invoiceId(1L).booking(b)
+                .status(PaymentStatus.PENDING).build();
+
+        when(bookingRepo.findById(1L)).thenReturn(Optional.of(b));
+        when(passengerRepo.findById(5L)).thenReturn(Optional.of(p));
+        when(passengerRepo.countByBookingBookingIdAndStatus(1L, PassengerStatus.ACTIVE)).thenReturn(2L);
+        when(invoiceRepo.findByBookingBookingId(1L)).thenReturn(List.of(pendingInvoice));
+
+        PassengerCancelResponseDTO response = service.cancelPassenger(1L, 5L, 1L);
+
+        assertEquals("FULL", response.getRefundStatus());
+        assertEquals(1000.0, response.getRefundAmount());
+        assertEquals(1, response.getRemainingUnits());
+        verify(paymentRepo).save(any());
+    }
+
+    // cancelPassenger CONFIRMED, partial per-seat refund
+    @Test
+    void cancelPassenger_confirmedPartialRefund() {
+
+        Booking b = Booking.builder().bookingId(1L).user(user).amount(2000.0).units(2)
+                .bookingType(BookingType.FLIGHT).status(BookingStatus.CONFIRMED)
+                .bookingDate(LocalDate.now().plusDays(5)).build();
+
+        Passenger p = Passenger.builder().passengerId(5L).passengerName("John")
+                .status(PassengerStatus.ACTIVE).booking(b).build();
+
+        when(bookingRepo.findById(1L)).thenReturn(Optional.of(b));
+        when(passengerRepo.findById(5L)).thenReturn(Optional.of(p));
+        when(passengerRepo.countByBookingBookingIdAndStatus(1L, PassengerStatus.ACTIVE)).thenReturn(2L);
+        when(invoiceRepo.findByBookingBookingId(1L)).thenReturn(new ArrayList<>());
+
+        PassengerCancelResponseDTO response = service.cancelPassenger(1L, 5L, 1L);
+
+        assertEquals("PARTIAL", response.getRefundStatus());
+        assertEquals(800.0, response.getRefundAmount());
+    }
+
+    // cancelPassenger CONFIRMED, no refund (travel date today) -> refundStatus NONE, no refund payment
+    @Test
+    void cancelPassenger_confirmedNoRefund() {
+
+        Booking b = Booking.builder().bookingId(1L).user(user).amount(2000.0).units(2)
+                .bookingType(BookingType.FLIGHT).status(BookingStatus.CONFIRMED)
+                .bookingDate(LocalDate.now()).build();
+
+        Passenger p = Passenger.builder().passengerId(5L).passengerName("John")
+                .status(PassengerStatus.ACTIVE).booking(b).build();
+
+        when(bookingRepo.findById(1L)).thenReturn(Optional.of(b));
+        when(passengerRepo.findById(5L)).thenReturn(Optional.of(p));
+        when(passengerRepo.countByBookingBookingIdAndStatus(1L, PassengerStatus.ACTIVE)).thenReturn(2L);
+        when(invoiceRepo.findByBookingBookingId(1L)).thenReturn(new ArrayList<>());
+
+        PassengerCancelResponseDTO response = service.cancelPassenger(1L, 5L, 1L);
+
+        assertEquals("NONE", response.getRefundStatus());
+        assertEquals(0.0, response.getRefundAmount());
+        assertEquals(1, response.getRemainingUnits());
+        verify(paymentRepo, never()).save(any());
+    }
 }

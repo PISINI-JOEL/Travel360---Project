@@ -1,6 +1,7 @@
 package com.cts.serviceimpl;
 
 import com.cts.dto.HotelDTO;
+import com.cts.dto.HotelResponseDTO;
 import com.cts.entity.Hotel;
 import com.cts.entity.Partner;
 import com.cts.enums.HotelStatus;
@@ -197,7 +198,7 @@ class HotelServiceImplTest {
         when(hotelRepository.filterHotels(any(), any(), any(), any(), any()))
                 .thenReturn(page);
 
-        List<Hotel> result = hotelService.getFilteredHotels(
+        List<HotelResponseDTO> result = hotelService.getFilteredHotels(
                 "Chennai", 4, 1000.0, 5000.0, 0, 5);
 
         assertFalse(result.isEmpty());
@@ -225,10 +226,10 @@ class HotelServiceImplTest {
         when(hotelRepository.filterHotels(any(), any(), any(), any(), any()))
                 .thenReturn(page);
 
-        List<Hotel> result = hotelService.getFilteredHotels(
+        List<HotelResponseDTO> result = hotelService.getFilteredHotels(
                 "Chennai", 4, 1000.0, 2000.0, 0, 5);
 
-        Hotel mapped = result.get(0);
+        HotelResponseDTO mapped = result.get(0);
 
         assertEquals("Test Hotel", mapped.getHotelName());
         assertEquals("Chennai", mapped.getCity());
@@ -248,7 +249,7 @@ class HotelServiceImplTest {
         when(hotelRepository.filterHotels(any(), any(), any(), any(), any()))
                 .thenReturn(emptyPage);
 
-        List<Hotel> result = hotelService.getFilteredHotels(
+        List<HotelResponseDTO> result = hotelService.getFilteredHotels(
                 null, null, null, null, 0, 5);
 
         assertTrue(result.isEmpty());
@@ -264,7 +265,7 @@ class HotelServiceImplTest {
         when(hotelRepository.findByCity(eq("Chennai"), any()))
                 .thenReturn(page);
 
-        List<Hotel> result = hotelService.findByLocation("Chennai", 0, 5);
+        List<HotelResponseDTO> result = hotelService.findByLocation("Chennai", 0, 5);
 
         assertEquals(1, result.size());
     }
@@ -275,7 +276,7 @@ class HotelServiceImplTest {
         when(hotelRepository.findByCity(eq("Chennai"), any()))
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
 
-        List<Hotel> result = hotelService.findByLocation("Chennai", 0, 5);
+        List<HotelResponseDTO> result = hotelService.findByLocation("Chennai", 0, 5);
 
         assertTrue(result.isEmpty());
     }

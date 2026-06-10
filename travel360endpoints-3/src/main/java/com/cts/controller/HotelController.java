@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.cts.config.AuthenticatedUserProvider;
 import com.cts.constants.AuditActions;
 import com.cts.dto.HotelDTO;
+import com.cts.dto.HotelResponseDTO;
 import com.cts.entity.Hotel;
 import com.cts.enums.AuditEntity;
 import com.cts.enums.LogType;
@@ -70,7 +71,7 @@ public class HotelController {
 
     @Operation(summary = "Get hotels by city")
     @GetMapping("/city/{location}")
-    public ResponseEntity<List<Hotel>> getHotelsByLocation(
+    public ResponseEntity<List<HotelResponseDTO>> getHotelsByLocation(
             @PathVariable String location,
             @RequestParam(defaultValue = "0") @Min(0) int page,
             @RequestParam(defaultValue = "5") @Min(1) @Max(100) int size) {
@@ -78,7 +79,7 @@ public class HotelController {
         log.info("Fetching hotels for location '{}' (page={}, size={})",
                 location, page, size);
 
-        List<Hotel> hotels = hotelService.findByLocation(location, page, size);
+        List<HotelResponseDTO> hotels = hotelService.findByLocation(location, page, size);
 
         log.info("Found {} hotels in location '{}'", hotels.size(), location);
 

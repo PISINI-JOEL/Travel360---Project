@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.cts.config.AuthenticatedUserProvider;
 import com.cts.config.JWTUtil;
 import com.cts.dto.TransportResponseDTO;
+import com.cts.entity.Transport;
 import com.cts.enums.TransportStatus;
 import com.cts.service.AuditLogService;
 import com.cts.service.TransportService;
@@ -55,7 +56,7 @@ public class TransportControllerTest {
     void testAddTransport() throws Exception {
 
         when(service.addTransport(any()))
-                .thenReturn(TransportResponseDTO.builder().transportId(1L).build());
+                .thenReturn(Transport.builder().transportId(1L).build());
 
         String body = """
         {
@@ -83,7 +84,7 @@ public class TransportControllerTest {
     void testUpdateTransport() throws Exception {
 
         when(service.updateTransport(eq(1L), any()))
-                .thenReturn(TransportResponseDTO.builder().transportId(1L).build());
+                .thenReturn(Transport.builder().transportId(1L).build());
 
         String body = """
         {

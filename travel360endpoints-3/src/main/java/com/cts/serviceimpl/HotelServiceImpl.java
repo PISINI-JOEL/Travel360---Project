@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.cts.config.AuthenticatedUserProvider;
 import com.cts.constants.AuditActions;
 import com.cts.dto.HotelDTO;
+import com.cts.dto.HotelResponseDTO;
 import com.cts.entity.Hotel;
 import com.cts.entity.Partner;
 import com.cts.enums.AuditEntity;
@@ -138,7 +139,7 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public List<Hotel> getFilteredHotels(
+    public List<HotelResponseDTO> getFilteredHotels(
             String location,
             Integer ratings,
             Double minPrice,
@@ -162,23 +163,12 @@ public class HotelServiceImpl implements HotelService {
         log.info("Filter query returned {} hotels", hotelPage.getTotalElements());
 
         return hotelPage.stream()
-                .map(h -> Hotel.builder()
-                        .hotelName(h.getHotelName())
-                        .status(h.getStatus())
-                        .hotelId(h.getHotelId())
-                        .partner(h.getPartner())
-                        .ratings(h.getRatings())
-                        .price(h.getPrice())
-                        .contactNo(h.getContactNo())
-                        .emailId(h.getEmailId())
-                        .totalRooms(h.getTotalRooms())
-                        .city(h.getCity())
-                        .build())
+                .map(this::mapToDTO)
                 .toList();
     }
 
     @Override
-    public List<Hotel> findByLocation(String location, int page, int size) {
+    public List<HotelResponseDTO> findByLocation(String location, int page, int size) {
 
         log.info("Fetching hotels by location '{}' (page={}, size={})",
                 location, page, size);
@@ -190,6 +180,24 @@ public class HotelServiceImpl implements HotelService {
         log.info("Found {} hotels in location '{}'",
                 hotelPage.getContent().size(), location);
 
-        return hotelPage.getContent();
+        return hotelPage.getContent().stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
+    private HotelResponseDTO mapToDTO(Hotel hotel) {
+
+        return HotelResponseDTO.builder()
+                .hotelId(hotel.getHotelId())
+                .hotelName(hotel.getHotelName())
+                .ratings(hotel.getRatings())
+                .city(hotel.getCity())
+                .address(hotel.getAddress())
+                .price(hotel.getPrice())
+                .contactNo(hotel.getContactNo())
+                .emailId(hotel.getEmailId())
+                .status(hotel.getStatus())
+                .totalRooms(hotel.getTotalRooms())
+                .build();
     }
 }

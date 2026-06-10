@@ -42,13 +42,13 @@ public class SearchServiceImpl implements SearchService {
                 log.debug("Routing search to flight service");
                 validateFlight(source, destination);
                 return flightService.filterFlights(source, destination, min, max, page, size);
-                // ✅ returns List<Flight>
+                // ✅ returns List<FlightResponseDTO>
 
             case "hotel":
                 log.debug("Routing search to hotel service");
                 validateHotel(city);
                 return hotelService.getFilteredHotels(city, ratings, min, max,page,size);
-                // ✅ returns List<Hotel>
+                // ✅ returns List<HotelResponseDTO>
 
             case "package":
                 log.debug("Routing search to package service");

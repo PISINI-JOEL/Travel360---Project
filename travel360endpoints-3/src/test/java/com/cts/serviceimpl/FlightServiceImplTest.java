@@ -14,6 +14,7 @@ import org.mockito.*;
 import org.springframework.data.domain.*;
 
 import com.cts.dto.FlightDTO;
+import com.cts.dto.FlightResponseDTO;
 import com.cts.entity.Flight;
 import com.cts.entity.Partner;
 import com.cts.enums.*;
@@ -175,7 +176,7 @@ class FlightServiceImplTest {
                 eq("Chennai"), eq("Delhi"), any(Pageable.class)))
                 .thenReturn(page);
 
-        List<Flight> result = service.searchFlights("Chennai", "Delhi", 0, 5);
+        List<FlightResponseDTO> result = service.searchFlights("Chennai", "Delhi", 0, 5);
 
         assertEquals(1, result.size());
     }
@@ -187,7 +188,7 @@ class FlightServiceImplTest {
 
         when(repo.findAll(any(Pageable.class))).thenReturn(page);
 
-        List<Flight> result = service.getAllFlights(0, 5);
+        List<FlightResponseDTO> result = service.getAllFlights(0, 5);
 
         assertEquals(1, result.size());
     }
@@ -201,7 +202,7 @@ class FlightServiceImplTest {
                 any(), any(), any(), any(), any(Pageable.class)))
                 .thenReturn(page);
 
-        List<Flight> result =
+        List<FlightResponseDTO> result =
                 service.filterFlights("Chennai", "Delhi", 1000.0, 5000.0, 0, 5);
 
         assertFalse(result.isEmpty());
@@ -216,7 +217,7 @@ class FlightServiceImplTest {
                 any(), any(), any(Pageable.class)))
                 .thenReturn(page);
 
-        List<Flight> result =
+        List<FlightResponseDTO> result =
                 service.filterFlights("Chennai", "Delhi", null, null, 0, 5);
 
         assertFalse(result.isEmpty());
@@ -227,7 +228,7 @@ class FlightServiceImplTest {
     void testGetFlightById() {
         when(repo.findById(10L)).thenReturn(Optional.of(flight));
 
-        Flight result = service.getFlightById(10L);
+        FlightResponseDTO result = service.getFlightById(10L);
 
         assertNotNull(result);
     }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.cts.config.AuthenticatedUserProvider;
 import com.cts.constants.AuditActions;
 import com.cts.dto.*;
+import com.cts.entity.TravelPackage;
 import com.cts.enums.AuditEntity;
 import com.cts.enums.LogType;
 import com.cts.enums.TravelPackageCategory;
@@ -40,13 +41,13 @@ public class TravelPackageController {
     @Operation(summary = "Add a new travel package")
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
-    public ResponseEntity<TravelPackageResponseDTO> addPackage(
+    public ResponseEntity<TravelPackage> addPackage(
             @RequestBody @Valid TravelPackageDTO dto) {
 
         log.info("Received request to add travel package");
         auditLogService.logAction(AuditActions.CREATE_PACKAGE, AuditEntity.TRAVELPACKAGE, null, authUser.currentOrNull(), LogType.INFO);
 
-        TravelPackageResponseDTO response = service.addPackage(dto);
+        TravelPackage response = service.addPackage(dto);
 
         log.info("Travel package created successfully with ID: {}", response.getPackageId());
 
@@ -56,14 +57,14 @@ public class TravelPackageController {
     @Operation(summary = "Update an existing travel package by ID")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
-    public ResponseEntity<TravelPackageResponseDTO> updatePackage(
+    public ResponseEntity<TravelPackage> updatePackage(
             @PathVariable Long id,
             @RequestBody @Valid TravelPackageDTO dto) {
 
         log.info("Received request to update travel package with ID: {}", id);
         auditLogService.logAction(AuditActions.UPDATE_PACKAGE, AuditEntity.TRAVELPACKAGE, id, authUser.currentOrNull(), LogType.INFO);
 
-        TravelPackageResponseDTO response = service.updatePackage(id, dto);
+        TravelPackage response = service.updatePackage(id, dto);
 
         log.info("Travel package updated successfully with ID: {}", id);
 

@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.cts.config.AuthenticatedUserProvider;
 import com.cts.config.JWTUtil;
 import com.cts.dto.TravelPackageResponseDTO;
+import com.cts.entity.TravelPackage;
 import com.cts.enums.TravelPackageCategory;
 import com.cts.service.AuditLogService;
 import com.cts.service.TravelPackageService;
@@ -56,7 +57,7 @@ class TravelPackageControllerTest {
     void testAddPackage() throws Exception {
 
         when(service.addPackage(any()))
-                .thenReturn(new TravelPackageResponseDTO());
+                .thenReturn(new TravelPackage());
 
         String body = """
         {
@@ -86,7 +87,7 @@ class TravelPackageControllerTest {
     void testUpdatePackage() throws Exception {
 
         when(service.updatePackage(eq(1L),any()))
-                .thenReturn(new TravelPackageResponseDTO());
+                .thenReturn(new TravelPackage());
 
         String body = """
         {

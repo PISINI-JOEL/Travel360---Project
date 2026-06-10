@@ -1,6 +1,7 @@
 package com.cts.serviceimpl;
 
 import com.cts.dto.FlightDTO;
+import com.cts.dto.FlightResponseDTO;
 import com.cts.entity.Flight;
 import com.cts.entity.Partner;
 import com.cts.enums.AuditEntity;
@@ -147,7 +148,7 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
-    public List<Flight> searchFlights(String source, String destination, int page, int size) {
+    public List<FlightResponseDTO> searchFlights(String source, String destination, int page, int size) {
 
         log.info("Searching flights from '{}' to '{}' (page={}, size={})",
                 source, destination, page, size);
@@ -159,11 +160,11 @@ public class FlightServiceImpl implements FlightService {
 
         log.info("Search returned {} flights", flightPage.getContent().size());
 
-        return flightPage.getContent();
+        return flightPage.getContent().stream().map(this::mapToDTO).toList();
     }
 
     @Override
-    public List<Flight> getAllFlights(int page, int size) {
+    public List<FlightResponseDTO> getAllFlights(int page, int size) {
 
         log.info("Fetching all flights (page={}, size={})", page, size);
 
@@ -173,11 +174,11 @@ public class FlightServiceImpl implements FlightService {
 
         log.info("Total flights fetched: {}", flightPage.getContent().size());
 
-        return flightPage.getContent();
+        return flightPage.getContent().stream().map(this::mapToDTO).toList();
     }
 
     @Override
-    public List<Flight> filterFlights(String source, String destination,
+    public List<FlightResponseDTO> filterFlights(String source, String destination,
                                       Double min, Double max,
                                       int page, int size) {
 
@@ -201,18 +202,36 @@ public class FlightServiceImpl implements FlightService {
 
         log.info("Filter returned {} flights", flightPage.getContent().size());
 
-        return flightPage.getContent();
+        return flightPage.getContent().stream().map(this::mapToDTO).toList();
     }
 
     @Override
-    public Flight getFlightById(Long id) {
+    public FlightResponseDTO getFlightById(Long id) {
 
         log.info("Fetching flight with ID: {}", id);
 
-        return repo.findById(id)
+        Flight flight = repo.findById(id)
                 .orElseThrow(() -> {
                     log.error("Flight not found with id {}", id);
                     return new FlightNotFoundException("Flight not found");
                 });
+
+        return mapToDTO(flight);
+    }
+
+    private FlightResponseDTO mapToDTO(Flight flight) {
+
+        return FlightResponseDTO.builder()
+                .flightId(flight.getFlightId())
+                .flightNumber(flight.getFlightNumber())
+                .airlineName(flight.getAirlineName())
+                .source(flight.getSource())
+                .destination(flight.getDestination())
+                .arrivalTime(flight.getArrivalTime())
+                .departureTime(flight.getDepartureTime())
+                .totalSeats(flight.getTotalSeats())
+                .price(flight.getPrice())
+                .status(flight.getStatus())
+                .build();
     }
 }

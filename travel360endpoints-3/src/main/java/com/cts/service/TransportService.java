@@ -7,13 +7,14 @@ import org.springframework.data.domain.Page;
 
 import com.cts.dto.TransportDTO;
 import com.cts.dto.TransportResponseDTO;
+import com.cts.entity.Transport;
 import com.cts.enums.TransportStatus;
 
 public interface TransportService {
 
-    TransportResponseDTO addTransport(TransportDTO dto);
+    Transport addTransport(TransportDTO dto);
 
-    TransportResponseDTO updateTransport(Long id, TransportDTO dto);
+    Transport updateTransport(Long id, TransportDTO dto);
 
     List<TransportResponseDTO> getAllTransports(int page,int size);
 

@@ -11,6 +11,7 @@ import com.cts.config.AuthenticatedUserProvider;
 import com.cts.constants.AuditActions;
 import com.cts.dto.TransportDTO;
 import com.cts.dto.TransportResponseDTO;
+import com.cts.entity.Transport;
 import com.cts.enums.AuditEntity;
 import com.cts.enums.LogType;
 import com.cts.enums.TransportStatus;
@@ -42,7 +43,7 @@ public class TransportController {
     @Operation(summary = "Add a new transport vehicle to the inventory")
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
-    public ResponseEntity<?> addTransport(@RequestBody @Valid TransportDTO dto) {
+    public ResponseEntity<Transport> addTransport(@RequestBody @Valid TransportDTO dto) {
         log.info("addTransport() is called");
         log.debug("Request payload: {}", dto);
         auditLogService.logAction(AuditActions.CREATE_TRANSPORT, AuditEntity.TRANSPORT, null, authUser.currentOrNull(), LogType.INFO);
@@ -52,7 +53,7 @@ public class TransportController {
     @Operation(summary = "Update an existing transport by ID")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','TRAVEL_AGENT')")
-    public ResponseEntity<?> updateTransport(@PathVariable Long id, @RequestBody @Valid TransportDTO dto) {
+    public ResponseEntity<Transport> updateTransport(@PathVariable Long id, @RequestBody @Valid TransportDTO dto) {
         log.info("updateTransport() is called for id: {}", id);
         log.debug("Update payload: {}", dto);
         auditLogService.logAction(AuditActions.UPDATE_TRANSPORT, AuditEntity.TRANSPORT, id, authUser.currentOrNull(), LogType.INFO);

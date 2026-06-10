@@ -41,7 +41,7 @@ public class TransportServiceImpl implements TransportService {
     private final AuditLogService auditLogService;
 
     @Override
-    public TransportResponseDTO addTransport(TransportDTO dto) {
+    public Transport addTransport(TransportDTO dto) {
 
         log.info("Adding new transport with partnerId: {}", dto.getPartnerId());
 
@@ -82,12 +82,12 @@ public class TransportServiceImpl implements TransportService {
 
         log.info("Transport created successfully with ID: {}", transport.getTransportId());
 
-        return mapToDTO(transport);
+        return transport;
     }
 
     @Override
     @Transactional
-    public TransportResponseDTO updateTransport(Long id, TransportDTO dto) {
+    public Transport updateTransport(Long id, TransportDTO dto) {
 
         log.info("Updating transport with ID: {}", id);
 
@@ -133,7 +133,7 @@ public class TransportServiceImpl implements TransportService {
 
         log.info("Transport updated successfully with ID: {}", id);
 
-        return mapToDTO(transport);
+        return transport;
     }
 
     @Override

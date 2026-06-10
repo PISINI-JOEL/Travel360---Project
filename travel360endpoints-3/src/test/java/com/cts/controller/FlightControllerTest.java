@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.cts.config.AuthenticatedUserProvider;
 import com.cts.config.JWTUtil;
+import com.cts.dto.FlightResponseDTO;
 import com.cts.entity.Flight;
 import com.cts.service.AuditLogService;
 import com.cts.service.FlightService;
@@ -109,7 +110,7 @@ public class FlightControllerTest {
     @Test
     public void testGetById() throws Exception {
 
-        Flight flight = new Flight();
+        FlightResponseDTO flight = FlightResponseDTO.builder().build();
         when(service.getFlightById(1L)).thenReturn(flight);
 
         mockMvc.perform(get("/api/v1/flights/1"))
@@ -121,7 +122,7 @@ public class FlightControllerTest {
     public void testGetAllFlights() throws Exception {
 
         when(service.getAllFlights(0, 5))
-                .thenReturn(List.of(new Flight()));
+                .thenReturn(List.of(FlightResponseDTO.builder().build()));
 
         mockMvc.perform(get("/api/v1/flights"))
                 .andExpect(status().isOk());
@@ -132,7 +133,7 @@ public class FlightControllerTest {
     public void testSearchFlights() throws Exception {
 
         when(service.searchFlights("Chennai", "Delhi", 0, 5))
-                .thenReturn(List.of(new Flight()));
+                .thenReturn(List.of(FlightResponseDTO.builder().build()));
 
         mockMvc.perform(get("/api/v1/flights/search")
                 .param("source", "Chennai")
@@ -145,7 +146,7 @@ public class FlightControllerTest {
     public void testFilterFlights() throws Exception {
 
         when(service.filterFlights("Chennai", "Delhi", 1000.0, 5000.0, 0, 5))
-                .thenReturn(List.of(new Flight()));
+                .thenReturn(List.of(FlightResponseDTO.builder().build()));
 
         mockMvc.perform(get("/api/v1/flights/filter")
                 .param("source", "Chennai")

@@ -39,7 +39,7 @@ public class TravelPackageServiceImpl implements TravelPackageService {
     private final AuditLogService auditLogService;
 
     @Override
-    public TravelPackageResponseDTO addPackage(TravelPackageDTO dto) {
+    public TravelPackage addPackage(TravelPackageDTO dto) {
 
         log.info("Adding new travel package with partnerId: {}", dto.getPartnerId());
 
@@ -76,17 +76,17 @@ public class TravelPackageServiceImpl implements TravelPackageService {
                 .partner(partner)
                 .build();
 
-        packageRepo.save(tpackage);
+        tpackage = packageRepo.save(tpackage);
         auditLogService.logAction(AuditActions.CREATE_PACKAGE, AuditEntity.TRAVELPACKAGE, tpackage.getPackageId(), authUser.currentOrNull(), LogType.INFO);
 
         log.info("Travel package created successfully with ID: {}", tpackage.getPackageId());
 
-        return mapToDTO(tpackage);
+        return tpackage;
     }
 
     @Override
     @Transactional
-    public TravelPackageResponseDTO updatePackage(Long id, TravelPackageDTO dto) {
+    public TravelPackage updatePackage(Long id, TravelPackageDTO dto) {
 
         log.info("Updating travel package with ID: {}", id);
 
@@ -129,12 +129,12 @@ public class TravelPackageServiceImpl implements TravelPackageService {
         tpackage.setStatus(dto.getStatus());
         tpackage.setPartner(partner);
 
-        packageRepo.save(tpackage);
+        tpackage = packageRepo.save(tpackage);
         auditLogService.logAction(AuditActions.UPDATE_PACKAGE, AuditEntity.TRAVELPACKAGE, tpackage.getPackageId(), authUser.currentOrNull(), LogType.INFO);
 
         log.info("Travel package updated successfully with ID: {}", id);
 
-        return mapToDTO(tpackage);
+        return tpackage;
     }
 
     @Override

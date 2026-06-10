@@ -484,12 +484,6 @@ public class BookingServiceImpl implements BookingService {
 		throw new InvalidBookingException("Invalid booking state");
 	}
 
-	private void createInvoice(Booking booking) {
-		Invoice invoice = Invoice.builder().booking(booking).invoiceDate(LocalDateTime.now())
-				.amount(booking.getAmount()).status(PaymentStatus.PENDING).build();
-		invoiceRepo.save(invoice);
-	}
-
 	@Override
 	@Transactional
 	public PassengerCancelResponseDTO cancelPassenger(Long bookingId, Long passengerId, Long userId) {

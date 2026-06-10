@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.cts.config.AuthenticatedUserProvider;
 import com.cts.config.JWTUtil;
+import com.cts.dto.HotelResponseDTO;
 import com.cts.entity.Hotel;
 import com.cts.service.AuditLogService;
 import com.cts.service.HotelService;
@@ -108,7 +109,7 @@ public class HotelControllerTest {
     public void testGetHotelsByLocation() throws Exception {
 
         when(service.findByLocation("Chennai", 0, 5))
-                .thenReturn(List.of(new Hotel()));
+                .thenReturn(List.of(HotelResponseDTO.builder().build()));
 
         mockMvc.perform(get("/api/v1/hotels/city/Chennai"))
                 .andExpect(status().isOk());
@@ -119,7 +120,7 @@ public class HotelControllerTest {
     public void testFilterHotels() throws Exception {
 
         when(service.getFilteredHotels("Chennai", 4, 1000.0, 5000.0, 0, 5))
-                .thenReturn(List.of(new Hotel()));
+                .thenReturn(List.of(HotelResponseDTO.builder().build()));
 
         mockMvc.perform(get("/api/v1/hotels/filter")
                 .param("city", "Chennai")

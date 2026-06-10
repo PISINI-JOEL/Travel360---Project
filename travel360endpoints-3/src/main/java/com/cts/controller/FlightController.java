@@ -3,6 +3,7 @@ package com.cts.controller;
 import com.cts.config.AuthenticatedUserProvider;
 import com.cts.constants.AuditActions;
 import com.cts.dto.FlightDTO;
+import com.cts.dto.FlightResponseDTO;
 import com.cts.entity.Flight;
 import com.cts.enums.AuditEntity;
 import com.cts.enums.LogType;
@@ -70,7 +71,7 @@ public class FlightController {
 
     @Operation(summary = "Search flights by source and destination")
     @GetMapping("/search")
-    public ResponseEntity<List<Flight>> search(
+    public ResponseEntity<List<FlightResponseDTO>> search(
             @RequestParam String source,
             @RequestParam String destination,
             @RequestParam(defaultValue = "0") @Min(0) int page,
@@ -79,7 +80,7 @@ public class FlightController {
         log.info("Searching flights from '{}' to '{}' (page={}, size={})",
                 source, destination, page, size);
 
-        List<Flight> flights = service.searchFlights(source, destination, page, size);
+        List<FlightResponseDTO> flights = service.searchFlights(source, destination, page, size);
 
         log.info("Found {} flights for search query", flights.size());
 
@@ -88,13 +89,13 @@ public class FlightController {
 
     @Operation(summary = "Get all flights (paginated)")
     @GetMapping
-    public ResponseEntity<List<Flight>> getAll(
+    public ResponseEntity<List<FlightResponseDTO>> getAll(
             @RequestParam(defaultValue = "0") @Min(0) int page,
             @RequestParam(defaultValue = "5") @Min(1) @Max(100) int size) {
 
         log.info("Fetching all flights (page={}, size={})", page, size);
 
-        List<Flight> flights = service.getAllFlights(page, size);
+        List<FlightResponseDTO> flights = service.getAllFlights(page, size);
 
         log.info("Total flights fetched: {}", flights.size());
 
@@ -103,7 +104,7 @@ public class FlightController {
 
     @Operation(summary = "Filter flights by route and price range")
     @GetMapping("/filter")
-    public ResponseEntity<List<Flight>> filterFlights(
+    public ResponseEntity<List<FlightResponseDTO>> filterFlights(
             @RequestParam String source,
             @RequestParam String destination,
             @RequestParam(required = false) Double min,
@@ -114,7 +115,7 @@ public class FlightController {
         log.info("Filtering flights from '{}' to '{}' with price range min={}, max={}, page={}, size={}",
                 source, destination, min, max, page, size);
 
-        List<Flight> flights = service.filterFlights(source, destination, min, max, page, size);
+        List<FlightResponseDTO> flights = service.filterFlights(source, destination, min, max, page, size);
 
         log.info("Filtered results count: {}", flights.size());
 
@@ -123,11 +124,11 @@ public class FlightController {
 
     @Operation(summary = "Get a flight by ID")
     @GetMapping("/{id}")
-    public ResponseEntity<Flight> getById(@PathVariable Long id) {
+    public ResponseEntity<FlightResponseDTO> getById(@PathVariable Long id) {
 
         log.info("Fetching flight with ID: {}", id);
 
-        Flight flight = service.getFlightById(id);
+        FlightResponseDTO flight = service.getFlightById(id);
 
         log.info("Flight fetched successfully: ID={}", id);
 
