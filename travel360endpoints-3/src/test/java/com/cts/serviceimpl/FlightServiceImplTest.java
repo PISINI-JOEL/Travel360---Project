@@ -1,25 +1,37 @@
 package com.cts.serviceimpl;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
-import org.springframework.data.domain.*;
-
+import com.cts.config.AuthenticatedUserProvider;
 import com.cts.dto.FlightDTO;
 import com.cts.dto.FlightResponseDTO;
 import com.cts.entity.Flight;
 import com.cts.entity.Partner;
-import com.cts.enums.*;
-import com.cts.exception.*;
-import com.cts.config.AuthenticatedUserProvider;
+import com.cts.enums.FlightStatus;
+import com.cts.enums.PartnerStatus;
+import com.cts.enums.PartnerType;
+import com.cts.exception.FlightNotFoundException;
+import com.cts.exception.InvalidPartnerException;
+import com.cts.exception.PartnerNotFoundException;
 import com.cts.repository.FlightRepository;
 import com.cts.repository.PartnerRepository;
 import com.cts.service.AuditLogService;

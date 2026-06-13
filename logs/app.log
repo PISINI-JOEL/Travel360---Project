@@ -1,0 +1,1869 @@
+2026-06-13 00:30:29 ERROR [http-nio-9094-exec-7] c.c.e.GlobalExceptionHandler:133 -
+				Unexpected error occurred: JSON parse error: Cannot deserialize value of type `com.cts.enums.Role` from String "CUSTOMEr": not one of the values accepted for Enum class: [TRAVEL_AGENT, FINANCE_OFFICER, CORPORATE_TRAVEL_MANAGER, CUSTOMER, ADMIN, COMPLIANCE_OFFICER]
+org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `com.cts.enums.Role` from String "CUSTOMEr": not one of the values accepted for Enum class: [TRAVEL_AGENT, FINANCE_OFFICER, CORPORATE_TRAVEL_MANAGER, CUSTOMER, ADMIN, COMPLIANCE_OFFICER]
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.readJavaType(AbstractJackson2HttpMessageConverter.java:408)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.read(AbstractJackson2HttpMessageConverter.java:356)
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodArgumentResolver.readWithMessageConverters(AbstractMessageConverterMethodArgumentResolver.java:204)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.readWithMessageConverters(RequestResponseBodyMethodProcessor.java:176)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.resolveArgument(RequestResponseBodyMethodProcessor.java:150)
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:227)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:181)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:991)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:896)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:370)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:125)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at com.cts.config.JWTFilter.doFilterInternal(JWTFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.ServletRequestPathFilter.doFilter(ServletRequestPathFilter.java:52)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebSecurityConfiguration.java:319)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$4(HandlerMappingIntrospector.java:267)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:240)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:88)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1797)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:973)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:491)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `com.cts.enums.Role` from String "CUSTOMEr": not one of the values accepted for Enum class: [TRAVEL_AGENT, FINANCE_OFFICER, CORPORATE_TRAVEL_MANAGER, CUSTOMER, ADMIN, COMPLIANCE_OFFICER]
+ at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 4, column: 11] (through reference chain: com.cts.dto.UserDTO["role"])
+	at com.fasterxml.jackson.databind.exc.InvalidFormatException.from(InvalidFormatException.java:67)
+	at com.fasterxml.jackson.databind.DeserializationContext.weirdStringException(DeserializationContext.java:2006)
+	at com.fasterxml.jackson.databind.DeserializationContext.handleWeirdStringValue(DeserializationContext.java:1292)
+	at com.fasterxml.jackson.databind.deser.std.EnumDeserializer._deserializeAltString(EnumDeserializer.java:459)
+	at com.fasterxml.jackson.databind.deser.std.EnumDeserializer._fromString(EnumDeserializer.java:315)
+	at com.fasterxml.jackson.databind.deser.std.EnumDeserializer.deserialize(EnumDeserializer.java:280)
+	at com.fasterxml.jackson.databind.deser.impl.MethodProperty.deserializeAndSet(MethodProperty.java:129)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserializeFromObject(BeanDeserializer.java:392)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:177)
+	at com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:342)
+	at com.fasterxml.jackson.databind.ObjectReader._bindAndClose(ObjectReader.java:2148)
+	at com.fasterxml.jackson.databind.ObjectReader.readValue(ObjectReader.java:1504)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.readJavaType(AbstractJackson2HttpMessageConverter.java:397)
+	... 107 common frames omitted
+2026-06-13 00:30:29 WARN  [http-nio-9094-exec-7] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver:254 -
+				Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `com.cts.enums.Role` from String "CUSTOMEr": not one of the values accepted for Enum class: [TRAVEL_AGENT, FINANCE_OFFICER, CORPORATE_TRAVEL_MANAGER, CUSTOMER, ADMIN, COMPLIANCE_OFFICER]]
+2026-06-13 00:30:37 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:38 -
+				>> Entering UserController.register() with arguments = [*****]
+2026-06-13 00:30:37 INFO  [http-nio-9094-exec-2] c.c.c.UserController:39 -
+				Received request to register user with email: damon@gmail.com
+2026-06-13 00:30:37 INFO  [task-1] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [REGISTER_USER, USER, null, null, INFO]
+2026-06-13 00:30:37 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:38 -
+				>> Entering UserServiceImpl.register() with arguments = [*****]
+2026-06-13 00:30:37 INFO  [http-nio-9094-exec-2] c.c.s.UserServiceImpl:38 -
+				Registering new user with email: damon@gmail.com
+2026-06-13 00:30:38 INFO  [task-1] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 284 ms)
+2026-06-13 00:30:38 INFO  [http-nio-9094-exec-2] c.c.s.UserServiceImpl:47 -
+				User registered successfully with ID: 1
+2026-06-13 00:30:38 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:50 -
+				<< Exiting UserServiceImpl.register() (Execution Time: 285 ms)
+2026-06-13 00:30:38 INFO  [task-2] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [REGISTER_USER, USER, 1, *****, INFO]
+2026-06-13 00:30:38 INFO  [http-nio-9094-exec-2] c.c.c.UserController:44 -
+				User registered successfully with ID: 1
+2026-06-13 00:30:38 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:50 -
+				<< Exiting UserController.register() (Execution Time: 297 ms)
+2026-06-13 00:30:38 INFO  [task-2] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 14 ms)
+2026-06-13 00:30:51 INFO  [http-nio-9094-exec-10] c.c.a.LoggingAspect:38 -
+				>> Entering UserController.login() with arguments = [*****]
+2026-06-13 00:30:51 INFO  [http-nio-9094-exec-10] c.c.c.UserController:52 -
+				Login attempt for email: damon@gmail.com
+2026-06-13 00:30:51 INFO  [http-nio-9094-exec-10] c.c.a.LoggingAspect:38 -
+				>> Entering UserServiceImpl.login() with arguments = [damon@gmail.com, damon@12]
+2026-06-13 00:30:51 INFO  [task-3] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [LOGIN_USER, USER, null, null, INFO]
+2026-06-13 00:30:51 INFO  [http-nio-9094-exec-10] c.c.s.UserServiceImpl:55 -
+				Login attempt for email: damon@gmail.com
+2026-06-13 00:30:51 INFO  [task-3] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 18 ms)
+2026-06-13 00:30:51 INFO  [http-nio-9094-exec-10] c.c.s.UserServiceImpl:67 -
+				User logged in successfully with ID: 1
+2026-06-13 00:30:51 INFO  [task-4] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [LOGIN_USER, USER, 1, *****, INFO]
+2026-06-13 00:30:51 INFO  [http-nio-9094-exec-10] c.c.a.LoggingAspect:50 -
+				<< Exiting UserServiceImpl.login() (Execution Time: 347 ms)
+2026-06-13 00:30:51 INFO  [http-nio-9094-exec-10] c.c.c.UserController:57 -
+				User logged in successfully with ID: 1
+2026-06-13 00:30:51 INFO  [http-nio-9094-exec-10] c.c.a.LoggingAspect:50 -
+				<< Exiting UserController.login() (Execution Time: 359 ms)
+2026-06-13 00:30:51 INFO  [task-4] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 13 ms)
+2026-06-13 00:32:36 INFO  [http-nio-9094-exec-4] c.c.a.LoggingAspect:38 -
+				>> Entering UserController.register() with arguments = [*****]
+2026-06-13 00:32:36 INFO  [http-nio-9094-exec-4] c.c.c.UserController:39 -
+				Received request to register user with email: joel@gmail.com
+2026-06-13 00:32:36 INFO  [http-nio-9094-exec-4] c.c.a.LoggingAspect:38 -
+				>> Entering UserServiceImpl.register() with arguments = [*****]
+2026-06-13 00:32:36 INFO  [task-5] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [REGISTER_USER, USER, null, null, INFO]
+2026-06-13 00:32:36 INFO  [http-nio-9094-exec-4] c.c.s.UserServiceImpl:38 -
+				Registering new user with email: joel@gmail.com
+2026-06-13 00:32:36 INFO  [task-5] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 11 ms)
+2026-06-13 00:32:36 INFO  [task-6] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [REGISTER_USER, USER, 2, *****, INFO]
+2026-06-13 00:32:36 INFO  [http-nio-9094-exec-4] c.c.s.UserServiceImpl:47 -
+				User registered successfully with ID: 2
+2026-06-13 00:32:36 INFO  [http-nio-9094-exec-4] c.c.a.LoggingAspect:50 -
+				<< Exiting UserServiceImpl.register() (Execution Time: 81 ms)
+2026-06-13 00:32:36 INFO  [http-nio-9094-exec-4] c.c.c.UserController:44 -
+				User registered successfully with ID: 2
+2026-06-13 00:32:36 INFO  [http-nio-9094-exec-4] c.c.a.LoggingAspect:50 -
+				<< Exiting UserController.register() (Execution Time: 85 ms)
+2026-06-13 00:32:36 INFO  [task-6] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 14 ms)
+2026-06-13 00:32:50 INFO  [http-nio-9094-exec-3] c.c.a.LoggingAspect:38 -
+				>> Entering UserController.login() with arguments = [*****]
+2026-06-13 00:32:50 INFO  [http-nio-9094-exec-3] c.c.c.UserController:52 -
+				Login attempt for email: joel@gmail.com
+2026-06-13 00:32:50 INFO  [http-nio-9094-exec-3] c.c.a.LoggingAspect:38 -
+				>> Entering UserServiceImpl.login() with arguments = [joel@gmail.com, joel@123]
+2026-06-13 00:32:50 INFO  [task-7] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [LOGIN_USER, USER, null, null, INFO]
+2026-06-13 00:32:50 INFO  [http-nio-9094-exec-3] c.c.s.UserServiceImpl:55 -
+				Login attempt for email: joel@gmail.com
+2026-06-13 00:32:50 INFO  [task-7] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 23 ms)
+2026-06-13 00:32:50 INFO  [http-nio-9094-exec-3] c.c.s.UserServiceImpl:67 -
+				User logged in successfully with ID: 2
+2026-06-13 00:32:50 INFO  [http-nio-9094-exec-3] c.c.a.LoggingAspect:50 -
+				<< Exiting UserServiceImpl.login() (Execution Time: 89 ms)
+2026-06-13 00:32:50 INFO  [task-8] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [LOGIN_USER, USER, 2, *****, INFO]
+2026-06-13 00:32:50 INFO  [http-nio-9094-exec-3] c.c.c.UserController:57 -
+				User logged in successfully with ID: 2
+2026-06-13 00:32:50 INFO  [http-nio-9094-exec-3] c.c.a.LoggingAspect:50 -
+				<< Exiting UserController.login() (Execution Time: 91 ms)
+2026-06-13 00:32:50 INFO  [task-8] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 10 ms)
+2026-06-13 00:33:15 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:38 -
+				>> Entering PartnerController.createPartner() with arguments = [PartnerDTO(name=INDIGO, type=FLIGHT, status=ACTIVE)]
+2026-06-13 00:33:15 INFO  [http-nio-9094-exec-5] c.c.c.PartnerController:41 -
+				Received request to create partner
+2026-06-13 00:33:15 INFO  [task-9] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_PARTNER, PARTNER, null, *****, INFO]
+2026-06-13 00:33:15 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:38 -
+				>> Entering PartnerServiceImpl.createPartner() with arguments = [PartnerDTO(name=INDIGO, type=FLIGHT, status=ACTIVE)]
+2026-06-13 00:33:15 INFO  [http-nio-9094-exec-5] c.c.s.PartnerServiceImpl:188 -
+				Creating new partner of type: FLIGHT
+2026-06-13 00:33:15 INFO  [task-9] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 8 ms)
+2026-06-13 00:33:15 INFO  [http-nio-9094-exec-5] c.c.s.PartnerServiceImpl:199 -
+				Partner created successfully with ID: 1
+2026-06-13 00:33:15 INFO  [task-10] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_PARTNER, PARTNER, 1, *****, INFO]
+2026-06-13 00:33:15 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:50 -
+				<< Exiting PartnerServiceImpl.createPartner() (Execution Time: 13 ms)
+2026-06-13 00:33:15 INFO  [http-nio-9094-exec-5] c.c.c.PartnerController:46 -
+				Partner created successfully with ID: 1
+2026-06-13 00:33:15 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:50 -
+				<< Exiting PartnerController.createPartner() (Execution Time: 17 ms)
+2026-06-13 00:33:15 INFO  [task-10] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 9 ms)
+2026-06-13 00:33:24 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:38 -
+				>> Entering PartnerController.createPartner() with arguments = [PartnerDTO(name=AIR INDIA, type=FLIGHT, status=ACTIVE)]
+2026-06-13 00:33:24 INFO  [http-nio-9094-exec-9] c.c.c.PartnerController:41 -
+				Received request to create partner
+2026-06-13 00:33:24 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:38 -
+				>> Entering PartnerServiceImpl.createPartner() with arguments = [PartnerDTO(name=AIR INDIA, type=FLIGHT, status=ACTIVE)]
+2026-06-13 00:33:24 INFO  [task-11] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_PARTNER, PARTNER, null, *****, INFO]
+2026-06-13 00:33:24 INFO  [http-nio-9094-exec-9] c.c.s.PartnerServiceImpl:188 -
+				Creating new partner of type: FLIGHT
+2026-06-13 00:33:24 INFO  [task-11] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 27 ms)
+2026-06-13 00:33:24 INFO  [http-nio-9094-exec-9] c.c.s.PartnerServiceImpl:199 -
+				Partner created successfully with ID: 2
+2026-06-13 00:33:24 INFO  [task-12] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_PARTNER, PARTNER, 2, *****, INFO]
+2026-06-13 00:33:24 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:50 -
+				<< Exiting PartnerServiceImpl.createPartner() (Execution Time: 33 ms)
+2026-06-13 00:33:24 INFO  [http-nio-9094-exec-9] c.c.c.PartnerController:46 -
+				Partner created successfully with ID: 2
+2026-06-13 00:33:24 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:50 -
+				<< Exiting PartnerController.createPartner() (Execution Time: 45 ms)
+2026-06-13 00:33:24 INFO  [task-12] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 15 ms)
+2026-06-13 00:33:37 INFO  [http-nio-9094-exec-6] c.c.a.LoggingAspect:38 -
+				>> Entering PartnerController.createPartner() with arguments = [PartnerDTO(name=NOVOTEL, type=HOTEL, status=ACTIVE)]
+2026-06-13 00:33:37 INFO  [http-nio-9094-exec-6] c.c.c.PartnerController:41 -
+				Received request to create partner
+2026-06-13 00:33:37 INFO  [task-13] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_PARTNER, PARTNER, null, *****, INFO]
+2026-06-13 00:33:37 INFO  [http-nio-9094-exec-6] c.c.a.LoggingAspect:38 -
+				>> Entering PartnerServiceImpl.createPartner() with arguments = [PartnerDTO(name=NOVOTEL, type=HOTEL, status=ACTIVE)]
+2026-06-13 00:33:37 INFO  [http-nio-9094-exec-6] c.c.s.PartnerServiceImpl:188 -
+				Creating new partner of type: HOTEL
+2026-06-13 00:33:37 INFO  [task-13] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 12 ms)
+2026-06-13 00:33:37 INFO  [http-nio-9094-exec-6] c.c.s.PartnerServiceImpl:199 -
+				Partner created successfully with ID: 3
+2026-06-13 00:33:37 INFO  [task-14] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_PARTNER, PARTNER, 3, *****, INFO]
+2026-06-13 00:33:37 INFO  [http-nio-9094-exec-6] c.c.a.LoggingAspect:50 -
+				<< Exiting PartnerServiceImpl.createPartner() (Execution Time: 17 ms)
+2026-06-13 00:33:37 INFO  [http-nio-9094-exec-6] c.c.c.PartnerController:46 -
+				Partner created successfully with ID: 3
+2026-06-13 00:33:37 INFO  [http-nio-9094-exec-6] c.c.a.LoggingAspect:50 -
+				<< Exiting PartnerController.createPartner() (Execution Time: 22 ms)
+2026-06-13 00:33:37 INFO  [task-14] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 16 ms)
+2026-06-13 00:34:37 INFO  [http-nio-9094-exec-8] c.c.a.LoggingAspect:38 -
+				>> Entering HotelController.addHotel() with arguments = [HotelDTO(hotelName=Novotel, ratings=5, city=Chennai, address=Thalambaram road, price=1500.0, contactNo=1339918905, emailId=novotel@gmail.com, totalRooms=1073741824, status=AVAILABLE, partnerId=3)]
+2026-06-13 00:34:37 INFO  [http-nio-9094-exec-8] c.c.c.HotelController:46 -
+				Received request to add hotel: HotelDTO(hotelName=Novotel, ratings=5, city=Chennai, address=Thalambaram road, price=1500.0, contactNo=1339918905, emailId=novotel@gmail.com, totalRooms=1073741824, status=AVAILABLE, partnerId=3)
+2026-06-13 00:34:37 INFO  [task-15] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_HOTEL, HOTEL, null, *****, INFO]
+2026-06-13 00:34:37 INFO  [http-nio-9094-exec-8] c.c.a.LoggingAspect:38 -
+				>> Entering HotelServiceImpl.addHotel() with arguments = [HotelDTO(hotelName=Novotel, ratings=5, city=Chennai, address=Thalambaram road, price=1500.0, contactNo=1339918905, emailId=novotel@gmail.com, totalRooms=1073741824, status=AVAILABLE, partnerId=3)]
+2026-06-13 00:34:37 INFO  [http-nio-9094-exec-8] c.c.s.HotelServiceImpl:47 -
+				Adding new hotel with partnerId: 3
+2026-06-13 00:34:37 INFO  [task-15] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 11 ms)
+2026-06-13 00:34:37 INFO  [task-16] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_HOTEL, HOTEL, 1, *****, INFO]
+2026-06-13 00:34:37 INFO  [http-nio-9094-exec-8] c.c.s.HotelServiceImpl:84 -
+				Hotel created successfully with ID: 1
+2026-06-13 00:34:37 INFO  [http-nio-9094-exec-8] c.c.a.LoggingAspect:50 -
+				<< Exiting HotelServiceImpl.addHotel() (Execution Time: 46 ms)
+2026-06-13 00:34:37 INFO  [http-nio-9094-exec-8] c.c.c.HotelController:51 -
+				Hotel created successfully with ID: 1
+2026-06-13 00:34:37 INFO  [http-nio-9094-exec-8] c.c.a.LoggingAspect:50 -
+				<< Exiting HotelController.addHotel() (Execution Time: 65 ms)
+2026-06-13 00:34:37 INFO  [task-16] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 12 ms)
+2026-06-13 00:36:26 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:38 -
+				>> Entering FlightController.addFlight() with arguments = [FlightDTO(flightNumber=IN-125, partnerId=1, source=Delhi, destination=Mumbai, arrivalTime=12:45, departureTime=10:34, totalSeats=180, price=4999.99, status=SCHEDULED)]
+2026-06-13 00:36:26 INFO  [http-nio-9094-exec-2] c.c.c.FlightController:46 -
+				Received request to add flight: FlightDTO(flightNumber=IN-125, partnerId=1, source=Delhi, destination=Mumbai, arrivalTime=12:45, departureTime=10:34, totalSeats=180, price=4999.99, status=SCHEDULED)
+2026-06-13 00:36:26 INFO  [task-17] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_FLIGHT, FLIGHT, null, *****, INFO]
+2026-06-13 00:36:26 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:38 -
+				>> Entering FlightServiceImpl.addFlight() with arguments = [FlightDTO(flightNumber=IN-125, partnerId=1, source=Delhi, destination=Mumbai, arrivalTime=12:45, departureTime=10:34, totalSeats=180, price=4999.99, status=SCHEDULED)]
+2026-06-13 00:36:26 INFO  [http-nio-9094-exec-2] c.c.s.FlightServiceImpl:45 -
+				Adding new flight with partnerId: 1
+2026-06-13 00:36:26 INFO  [task-17] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 17 ms)
+2026-06-13 00:36:26 INFO  [http-nio-9094-exec-2] c.c.s.FlightServiceImpl:88 -
+				Flight created successfully with ID: 1
+2026-06-13 00:36:26 INFO  [task-18] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_FLIGHT, FLIGHT, 1, *****, INFO]
+2026-06-13 00:36:26 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:50 -
+				<< Exiting FlightServiceImpl.addFlight() (Execution Time: 37 ms)
+2026-06-13 00:36:26 INFO  [http-nio-9094-exec-2] c.c.c.FlightController:51 -
+				Flight created successfully with ID: 1
+2026-06-13 00:36:26 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:50 -
+				<< Exiting FlightController.addFlight() (Execution Time: 46 ms)
+2026-06-13 00:36:26 INFO  [task-18] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 20 ms)
+2026-06-13 00:37:08 INFO  [http-nio-9094-exec-10] c.c.a.LoggingAspect:38 -
+				>> Entering FlightController.addFlight() with arguments = [FlightDTO(flightNumber=AI-125, partnerId=2, source=Delhi, destination=Visakhapatnam, arrivalTime=12:45, departureTime=10:34, totalSeats=180, price=5999.99, status=SCHEDULED)]
+2026-06-13 00:37:08 INFO  [http-nio-9094-exec-10] c.c.c.FlightController:46 -
+				Received request to add flight: FlightDTO(flightNumber=AI-125, partnerId=2, source=Delhi, destination=Visakhapatnam, arrivalTime=12:45, departureTime=10:34, totalSeats=180, price=5999.99, status=SCHEDULED)
+2026-06-13 00:37:08 INFO  [http-nio-9094-exec-10] c.c.a.LoggingAspect:38 -
+				>> Entering FlightServiceImpl.addFlight() with arguments = [FlightDTO(flightNumber=AI-125, partnerId=2, source=Delhi, destination=Visakhapatnam, arrivalTime=12:45, departureTime=10:34, totalSeats=180, price=5999.99, status=SCHEDULED)]
+2026-06-13 00:37:08 INFO  [task-19] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_FLIGHT, FLIGHT, null, *****, INFO]
+2026-06-13 00:37:08 INFO  [http-nio-9094-exec-10] c.c.s.FlightServiceImpl:45 -
+				Adding new flight with partnerId: 2
+2026-06-13 00:37:08 INFO  [task-19] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 9 ms)
+2026-06-13 00:37:08 INFO  [http-nio-9094-exec-10] c.c.s.FlightServiceImpl:88 -
+				Flight created successfully with ID: 2
+2026-06-13 00:37:08 INFO  [task-20] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_FLIGHT, FLIGHT, 2, *****, INFO]
+2026-06-13 00:37:08 INFO  [http-nio-9094-exec-10] c.c.a.LoggingAspect:50 -
+				<< Exiting FlightServiceImpl.addFlight() (Execution Time: 32 ms)
+2026-06-13 00:37:08 INFO  [http-nio-9094-exec-10] c.c.c.FlightController:51 -
+				Flight created successfully with ID: 2
+2026-06-13 00:37:08 INFO  [http-nio-9094-exec-10] c.c.a.LoggingAspect:50 -
+				<< Exiting FlightController.addFlight() (Execution Time: 41 ms)
+2026-06-13 00:37:08 INFO  [task-20] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 17 ms)
+2026-06-13 00:37:50 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:38 -
+				>> Entering UserController.login() with arguments = [*****]
+2026-06-13 00:37:50 INFO  [http-nio-9094-exec-2] c.c.c.UserController:52 -
+				Login attempt for email: damon@gmail.com
+2026-06-13 00:37:50 INFO  [task-21] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [LOGIN_USER, USER, null, null, INFO]
+2026-06-13 00:37:50 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:38 -
+				>> Entering UserServiceImpl.login() with arguments = [damon@gmail.com, damon@12]
+2026-06-13 00:37:50 INFO  [http-nio-9094-exec-2] c.c.s.UserServiceImpl:55 -
+				Login attempt for email: damon@gmail.com
+2026-06-13 00:37:50 INFO  [task-21] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 23 ms)
+2026-06-13 00:37:50 INFO  [http-nio-9094-exec-2] c.c.s.UserServiceImpl:67 -
+				User logged in successfully with ID: 1
+2026-06-13 00:37:50 INFO  [task-22] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [LOGIN_USER, USER, 1, *****, INFO]
+2026-06-13 00:37:50 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:50 -
+				<< Exiting UserServiceImpl.login() (Execution Time: 90 ms)
+2026-06-13 00:37:50 INFO  [http-nio-9094-exec-2] c.c.c.UserController:57 -
+				User logged in successfully with ID: 1
+2026-06-13 00:37:50 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:50 -
+				<< Exiting UserController.login() (Execution Time: 92 ms)
+2026-06-13 00:37:50 INFO  [task-22] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 13 ms)
+2026-06-13 00:38:39 INFO  [http-nio-9094-exec-6] c.c.a.LoggingAspect:38 -
+				>> Entering BookingController.createFlightBooking() with arguments = [BookingFlightDTO(userId=1, flightId=1, units=2, bookingName=Rahul Sharma, travelDate=2026-07-15, gender=MALE, passengers=[PassengerDTO(passengerName=Rahul Sharma, dateOfBirth=1995-08-20, gender=MALE, contactNo=9876543210, emailAddress=rahul.sharma@example.com, nationality=Indian, identificationNumber=203951933146), PassengerDTO(passengerName=Priya Sharma, dateOfBirth=1998-04-12, gender=FEMALE, contactNo=9876543211, emailAddress=priya.sharma@example.com, nationality=Indian, identificationNumber=203951933147)])]
+2026-06-13 00:38:39 INFO  [http-nio-9094-exec-6] c.c.c.BookingController:41 -
+				Received request to create FLIGHT booking for userId: 1
+2026-06-13 00:38:39 INFO  [task-23] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_BOOKING, BOOKING, null, *****, INFO]
+2026-06-13 00:38:39 INFO  [http-nio-9094-exec-6] c.c.a.LoggingAspect:38 -
+				>> Entering BookingServiceImpl.createFlightBooking() with arguments = [BookingFlightDTO(userId=1, flightId=1, units=2, bookingName=Rahul Sharma, travelDate=2026-07-15, gender=MALE, passengers=[PassengerDTO(passengerName=Rahul Sharma, dateOfBirth=1995-08-20, gender=MALE, contactNo=9876543210, emailAddress=rahul.sharma@example.com, nationality=Indian, identificationNumber=203951933146), PassengerDTO(passengerName=Priya Sharma, dateOfBirth=1998-04-12, gender=FEMALE, contactNo=9876543211, emailAddress=priya.sharma@example.com, nationality=Indian, identificationNumber=203951933147)])]
+2026-06-13 00:38:39 INFO  [http-nio-9094-exec-6] c.c.s.BookingServiceImpl:80 -
+				Creating flight booking for userId: 1 and flightId: 1
+2026-06-13 00:38:39 INFO  [task-23] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 14 ms)
+2026-06-13 00:38:39 INFO  [http-nio-9094-exec-6] c.c.s.BookingServiceImpl:128 -
+				Flight booking created successfully with bookingId: 1
+2026-06-13 00:38:39 INFO  [task-24] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_BOOKING, BOOKING, 1, *****, INFO]
+2026-06-13 00:38:39 INFO  [http-nio-9094-exec-6] c.c.a.LoggingAspect:38 -
+				>> Entering NotificationServiceImpl.sendNotification() with arguments = [*****, Flight booked successfully. Booking ID: 1, BOOKING]
+2026-06-13 00:38:39 INFO  [http-nio-9094-exec-6] c.c.s.NotificationServiceImpl:30 -
+				Sending notification to userId: 1 with category: BOOKING
+2026-06-13 00:38:39 INFO  [task-24] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 9 ms)
+2026-06-13 00:38:39 INFO  [http-nio-9094-exec-6] c.c.s.NotificationServiceImpl:42 -
+				Notification created successfully with ID: 1
+2026-06-13 00:38:39 INFO  [http-nio-9094-exec-6] c.c.a.LoggingAspect:50 -
+				<< Exiting NotificationServiceImpl.sendNotification() (Execution Time: 6 ms)
+2026-06-13 00:38:39 INFO  [http-nio-9094-exec-6] c.c.a.LoggingAspect:50 -
+				<< Exiting BookingServiceImpl.createFlightBooking() (Execution Time: 155 ms)
+2026-06-13 00:38:39 INFO  [http-nio-9094-exec-6] c.c.c.BookingController:46 -
+				Flight booking created successfully with bookingId: 1
+2026-06-13 00:38:39 INFO  [http-nio-9094-exec-6] c.c.a.LoggingAspect:50 -
+				<< Exiting BookingController.createFlightBooking() (Execution Time: 178 ms)
+2026-06-13 00:39:02 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:38 -
+				>> Entering BookingController.createFlightBooking() with arguments = [BookingFlightDTO(userId=1, flightId=2, units=2, bookingName=Rahul Sharma, travelDate=2026-07-17, gender=MALE, passengers=[PassengerDTO(passengerName=Rahul Sharma, dateOfBirth=1995-08-20, gender=MALE, contactNo=9876543210, emailAddress=rahul.sharma@example.com, nationality=Indian, identificationNumber=203951933146), PassengerDTO(passengerName=Priya Sharma, dateOfBirth=1998-04-12, gender=FEMALE, contactNo=9876543211, emailAddress=priya.sharma@example.com, nationality=Indian, identificationNumber=203951933147)])]
+2026-06-13 00:39:02 INFO  [http-nio-9094-exec-9] c.c.c.BookingController:41 -
+				Received request to create FLIGHT booking for userId: 1
+2026-06-13 00:39:02 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:38 -
+				>> Entering BookingServiceImpl.createFlightBooking() with arguments = [BookingFlightDTO(userId=1, flightId=2, units=2, bookingName=Rahul Sharma, travelDate=2026-07-17, gender=MALE, passengers=[PassengerDTO(passengerName=Rahul Sharma, dateOfBirth=1995-08-20, gender=MALE, contactNo=9876543210, emailAddress=rahul.sharma@example.com, nationality=Indian, identificationNumber=203951933146), PassengerDTO(passengerName=Priya Sharma, dateOfBirth=1998-04-12, gender=FEMALE, contactNo=9876543211, emailAddress=priya.sharma@example.com, nationality=Indian, identificationNumber=203951933147)])]
+2026-06-13 00:39:02 INFO  [http-nio-9094-exec-9] c.c.s.BookingServiceImpl:80 -
+				Creating flight booking for userId: 1 and flightId: 2
+2026-06-13 00:39:02 INFO  [task-25] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_BOOKING, BOOKING, null, *****, INFO]
+2026-06-13 00:39:02 INFO  [task-25] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 23 ms)
+2026-06-13 00:39:02 INFO  [http-nio-9094-exec-9] c.c.s.BookingServiceImpl:128 -
+				Flight booking created successfully with bookingId: 2
+2026-06-13 00:39:02 INFO  [task-26] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_BOOKING, BOOKING, 2, *****, INFO]
+2026-06-13 00:39:02 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:38 -
+				>> Entering NotificationServiceImpl.sendNotification() with arguments = [*****, Flight booked successfully. Booking ID: 2, BOOKING]
+2026-06-13 00:39:02 INFO  [http-nio-9094-exec-9] c.c.s.NotificationServiceImpl:30 -
+				Sending notification to userId: 1 with category: BOOKING
+2026-06-13 00:39:02 INFO  [task-26] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 9 ms)
+2026-06-13 00:39:02 INFO  [http-nio-9094-exec-9] c.c.s.NotificationServiceImpl:42 -
+				Notification created successfully with ID: 2
+2026-06-13 00:39:02 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:50 -
+				<< Exiting NotificationServiceImpl.sendNotification() (Execution Time: 5 ms)
+2026-06-13 00:39:02 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:50 -
+				<< Exiting BookingServiceImpl.createFlightBooking() (Execution Time: 59 ms)
+2026-06-13 00:39:02 INFO  [http-nio-9094-exec-9] c.c.c.BookingController:46 -
+				Flight booking created successfully with bookingId: 2
+2026-06-13 00:39:02 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:50 -
+				<< Exiting BookingController.createFlightBooking() (Execution Time: 77 ms)
+2026-06-13 00:39:44 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:38 -
+				>> Entering BookingController.createHotelBooking() with arguments = [BookingHotelDTO(userId=1, hotelId=1, units=2, bookingName=Rahul Sharma, gender=MALE, checkInDate=2026-07-15, checkOutDate=2026-07-18)]
+2026-06-13 00:39:44 INFO  [http-nio-9094-exec-5] c.c.c.BookingController:57 -
+				Received request to create HOTEL booking for userId: 1
+2026-06-13 00:39:44 INFO  [task-27] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_BOOKING, BOOKING, null, *****, INFO]
+2026-06-13 00:39:44 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:38 -
+				>> Entering BookingServiceImpl.createHotelBooking() with arguments = [BookingHotelDTO(userId=1, hotelId=1, units=2, bookingName=Rahul Sharma, gender=MALE, checkInDate=2026-07-15, checkOutDate=2026-07-18)]
+2026-06-13 00:39:44 INFO  [http-nio-9094-exec-5] c.c.s.BookingServiceImpl:151 -
+				Creating hotel booking for userId: 1 and hotelId: 1
+2026-06-13 00:39:44 INFO  [task-27] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 11 ms)
+2026-06-13 00:39:44 INFO  [http-nio-9094-exec-5] c.c.s.BookingServiceImpl:198 -
+				Hotel booking created successfully with bookingId: 3
+2026-06-13 00:39:44 INFO  [task-28] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_BOOKING, BOOKING, 3, *****, INFO]
+2026-06-13 00:39:44 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:38 -
+				>> Entering NotificationServiceImpl.sendNotification() with arguments = [*****, Hotel booked successfully. Booking ID: 3, BOOKING]
+2026-06-13 00:39:44 INFO  [http-nio-9094-exec-5] c.c.s.NotificationServiceImpl:30 -
+				Sending notification to userId: 1 with category: BOOKING
+2026-06-13 00:39:44 INFO  [task-28] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 9 ms)
+2026-06-13 00:39:44 INFO  [http-nio-9094-exec-5] c.c.s.NotificationServiceImpl:42 -
+				Notification created successfully with ID: 3
+2026-06-13 00:39:44 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:50 -
+				<< Exiting NotificationServiceImpl.sendNotification() (Execution Time: 5 ms)
+2026-06-13 00:39:44 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:50 -
+				<< Exiting BookingServiceImpl.createHotelBooking() (Execution Time: 39 ms)
+2026-06-13 00:39:44 INFO  [http-nio-9094-exec-5] c.c.c.BookingController:62 -
+				Hotel booking created successfully with bookingId: 3
+2026-06-13 00:39:44 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:50 -
+				<< Exiting BookingController.createHotelBooking() (Execution Time: 53 ms)
+2026-06-13 00:40:12 WARN  [http-nio-9094-exec-8] c.c.e.GlobalExceptionHandler:126 -
+				Access denied: Access Denied
+2026-06-13 00:40:12 WARN  [http-nio-9094-exec-8] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver:254 -
+				Resolved [org.springframework.security.authorization.AuthorizationDeniedException: Access Denied]
+2026-06-13 00:40:41 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:38 -
+				>> Entering UserController.login() with arguments = [*****]
+2026-06-13 00:40:41 INFO  [http-nio-9094-exec-5] c.c.c.UserController:52 -
+				Login attempt for email: joel@gmail.com
+2026-06-13 00:40:41 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:38 -
+				>> Entering UserServiceImpl.login() with arguments = [joel@gmail.com, joel@123]
+2026-06-13 00:40:41 INFO  [http-nio-9094-exec-5] c.c.s.UserServiceImpl:55 -
+				Login attempt for email: joel@gmail.com
+2026-06-13 00:40:41 INFO  [task-29] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [LOGIN_USER, USER, null, null, INFO]
+2026-06-13 00:40:41 INFO  [task-29] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 17 ms)
+2026-06-13 00:40:41 INFO  [http-nio-9094-exec-5] c.c.s.UserServiceImpl:67 -
+				User logged in successfully with ID: 2
+2026-06-13 00:40:41 INFO  [task-30] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [LOGIN_USER, USER, 2, *****, INFO]
+2026-06-13 00:40:41 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:50 -
+				<< Exiting UserServiceImpl.login() (Execution Time: 89 ms)
+2026-06-13 00:40:41 INFO  [http-nio-9094-exec-5] c.c.c.UserController:57 -
+				User logged in successfully with ID: 2
+2026-06-13 00:40:41 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:50 -
+				<< Exiting UserController.login() (Execution Time: 90 ms)
+2026-06-13 00:40:41 INFO  [task-30] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 9 ms)
+2026-06-13 00:41:03 INFO  [http-nio-9094-exec-8] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportController.generateReport() with arguments = [8, 2026]
+2026-06-13 00:41:03 INFO  [http-nio-9094-exec-8] c.c.c.KpiReportController:34 -
+				Request to generate monthly KPI report for 8/2026
+2026-06-13 00:41:03 INFO  [http-nio-9094-exec-8] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportServiceImpl.generateMonthlyReport() with arguments = [8, 2026]
+2026-06-13 00:41:03 INFO  [http-nio-9094-exec-8] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-08-01T00:00 to 2026-08-31T23:59:59.999999999 with label Monthly - 2026-08
+2026-06-13 00:41:03 INFO  [http-nio-9094-exec-8] c.c.a.LoggingAspect:50 -
+				<< Exiting KpiReportServiceImpl.generateMonthlyReport() (Execution Time: 54 ms)
+2026-06-13 00:41:03 INFO  [http-nio-9094-exec-8] c.c.a.LoggingAspect:50 -
+				<< Exiting KpiReportController.generateReport() (Execution Time: 63 ms)
+2026-06-13 00:41:32 INFO  [http-nio-9094-exec-3] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportController.generateReport() with arguments = [6, 2026]
+2026-06-13 00:41:32 INFO  [http-nio-9094-exec-3] c.c.c.KpiReportController:34 -
+				Request to generate monthly KPI report for 6/2026
+2026-06-13 00:41:32 INFO  [http-nio-9094-exec-3] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportServiceImpl.generateMonthlyReport() with arguments = [6, 2026]
+2026-06-13 00:41:32 INFO  [http-nio-9094-exec-3] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-06-01T00:00 to 2026-06-30T23:59:59.999999999 with label Monthly - 2026-06
+2026-06-13 00:41:32 INFO  [http-nio-9094-exec-3] c.c.a.LoggingAspect:50 -
+				<< Exiting KpiReportServiceImpl.generateMonthlyReport() (Execution Time: 51 ms)
+2026-06-13 00:41:32 INFO  [http-nio-9094-exec-3] c.c.a.LoggingAspect:50 -
+				<< Exiting KpiReportController.generateReport() (Execution Time: 59 ms)
+2026-06-13 00:42:38 ERROR [http-nio-9094-exec-6] c.c.e.GlobalExceptionHandler:133 -
+				Unexpected error occurred: Method parameter 'startDate': Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDateTime'; Failed to convert from type [java.lang.String] to type [@org.springframework.web.bind.annotation.RequestParam java.time.LocalDateTime] for value [2026-05-01]
+org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Method parameter 'startDate': Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDateTime'; Failed to convert from type [java.lang.String] to type [@org.springframework.web.bind.annotation.RequestParam java.time.LocalDateTime] for value [2026-05-01]
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.convertIfNecessary(AbstractNamedValueMethodArgumentResolver.java:301)
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.resolveArgument(AbstractNamedValueMethodArgumentResolver.java:136)
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:227)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:181)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:991)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:896)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:370)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:125)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at com.cts.config.JWTFilter.doFilterInternal(JWTFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.ServletRequestPathFilter.doFilter(ServletRequestPathFilter.java:52)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebSecurityConfiguration.java:319)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$4(HandlerMappingIntrospector.java:267)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:240)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:88)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1797)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:973)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:491)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: org.springframework.core.convert.ConversionFailedException: Failed to convert from type [java.lang.String] to type [@org.springframework.web.bind.annotation.RequestParam java.time.LocalDateTime] for value [2026-05-01]
+	at org.springframework.core.convert.support.ConversionUtils.invokeConverter(ConversionUtils.java:47)
+	at org.springframework.core.convert.support.GenericConversionService.convert(GenericConversionService.java:182)
+	at org.springframework.beans.TypeConverterDelegate.convertIfNecessary(TypeConverterDelegate.java:131)
+	at org.springframework.beans.TypeConverterSupport.convertIfNecessary(TypeConverterSupport.java:80)
+	at org.springframework.beans.TypeConverterSupport.convertIfNecessary(TypeConverterSupport.java:53)
+	at org.springframework.validation.DataBinder.convertIfNecessary(DataBinder.java:867)
+	at org.springframework.web.method.annotation.AbstractNamedValueMethodArgumentResolver.convertIfNecessary(AbstractNamedValueMethodArgumentResolver.java:293)
+	... 104 common frames omitted
+Caused by: java.lang.IllegalArgumentException: Parse attempt failed for value [2026-05-01]
+	at org.springframework.format.support.FormattingConversionService$ParserConverter.convert(FormattingConversionService.java:223)
+	at org.springframework.core.convert.support.ConversionUtils.invokeConverter(ConversionUtils.java:41)
+	... 110 common frames omitted
+Caused by: java.time.format.DateTimeParseException: Text '2026-05-01' could not be parsed at index 2
+	at java.base/java.time.format.DateTimeFormatter.parseResolved0(DateTimeFormatter.java:2052)
+	at java.base/java.time.format.DateTimeFormatter.parse(DateTimeFormatter.java:1954)
+	at java.base/java.time.LocalDateTime.parse(LocalDateTime.java:494)
+	at org.springframework.format.datetime.standard.TemporalAccessorParser.doParse(TemporalAccessorParser.java:139)
+	at org.springframework.format.datetime.standard.TemporalAccessorParser.parse(TemporalAccessorParser.java:92)
+	at org.springframework.format.datetime.standard.TemporalAccessorParser.parse(TemporalAccessorParser.java:56)
+	at org.springframework.format.support.FormattingConversionService$ParserConverter.convert(FormattingConversionService.java:217)
+	... 111 common frames omitted
+2026-06-13 00:42:38 WARN  [http-nio-9094-exec-6] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver:254 -
+				Resolved [org.springframework.web.method.annotation.MethodArgumentTypeMismatchException: Method parameter 'startDate': Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDateTime'; Failed to convert from type [java.lang.String] to type [@org.springframework.web.bind.annotation.RequestParam java.time.LocalDateTime] for value [2026-05-01]]
+2026-06-13 00:42:58 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportController.generateCustomReport() with arguments = [2026-05-01T00:00, 2026-07-31T23:59:59]
+2026-06-13 00:42:58 INFO  [http-nio-9094-exec-9] c.c.c.KpiReportController:46 -
+				Request to generate custom KPI report from 2026-05-01T00:00 to 2026-07-31T23:59:59
+2026-06-13 00:42:58 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportServiceImpl.generateCustomReport() with arguments = [2026-05-01T00:00, 2026-07-31T23:59:59]
+2026-06-13 00:42:58 INFO  [http-nio-9094-exec-9] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-05-01T00:00 to 2026-07-31T23:59:59 with label Custom Range
+2026-06-13 00:42:58 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:50 -
+				<< Exiting KpiReportServiceImpl.generateCustomReport() (Execution Time: 48 ms)
+2026-06-13 00:42:58 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:50 -
+				<< Exiting KpiReportController.generateCustomReport() (Execution Time: 57 ms)
+2026-06-13 00:43:11 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportController.getAllReports() with arguments = []
+2026-06-13 00:43:11 INFO  [http-nio-9094-exec-5] c.c.c.KpiReportController:63 -
+				Fetching all KPI reports
+2026-06-13 00:43:11 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportServiceImpl.getAllReports() with arguments = []
+2026-06-13 00:43:11 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:50 -
+				<< Exiting KpiReportServiceImpl.getAllReports() (Execution Time: 23 ms)
+2026-06-13 00:43:11 INFO  [http-nio-9094-exec-5] c.c.a.LoggingAspect:50 -
+				<< Exiting KpiReportController.getAllReports() (Execution Time: 26 ms)
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportController.getYearlyReport() with arguments = [2026]
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.c.KpiReportController:55 -
+				Fetching yearly breakdown for 2026
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportServiceImpl.generateYearlyReport() with arguments = [2026]
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.s.KpiReportServiceImpl:48 -
+				Generating yearly breakdown for 2026
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-01-01T00:00 to 2026-01-31T23:59:59.999999999 with label Monthly - 2026-01
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-02-01T00:00 to 2026-02-28T23:59:59.999999999 with label Monthly - 2026-02
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-03-01T00:00 to 2026-03-31T23:59:59.999999999 with label Monthly - 2026-03
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-04-01T00:00 to 2026-04-30T23:59:59.999999999 with label Monthly - 2026-04
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-05-01T00:00 to 2026-05-31T23:59:59.999999999 with label Monthly - 2026-05
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-06-01T00:00 to 2026-06-30T23:59:59.999999999 with label Monthly - 2026-06
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-07-01T00:00 to 2026-07-31T23:59:59.999999999 with label Monthly - 2026-07
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-08-01T00:00 to 2026-08-31T23:59:59.999999999 with label Monthly - 2026-08
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-09-01T00:00 to 2026-09-30T23:59:59.999999999 with label Monthly - 2026-09
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-10-01T00:00 to 2026-10-31T23:59:59.999999999 with label Monthly - 2026-10
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-11-01T00:00 to 2026-11-30T23:59:59.999999999 with label Monthly - 2026-11
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-12-01T00:00 to 2026-12-31T23:59:59.999999999 with label Monthly - 2026-12
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.a.LoggingAspect:50 -
+				<< Exiting KpiReportServiceImpl.generateYearlyReport() (Execution Time: 313 ms)
+2026-06-13 00:43:27 INFO  [http-nio-9094-exec-10] c.c.a.LoggingAspect:50 -
+				<< Exiting KpiReportController.getYearlyReport() (Execution Time: 322 ms)
+2026-06-13 00:51:20 INFO  [File Watcher] o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener:211 -
+				Restarting due to 2 class path changes (0 additions, 0 deletions, 2 modifications)
+2026-06-13 00:51:20 INFO  [Thread-5] o.s.b.w.e.t.GracefulShutdown:54 -
+				Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-13 00:51:20 INFO  [tomcat-shutdown] o.a.c.h.Http11NioProtocol:168 -
+				Pausing ProtocolHandler ["http-nio-9094"]
+2026-06-13 00:51:20 INFO  [tomcat-shutdown] o.s.b.w.e.t.GracefulShutdown:76 -
+				Graceful shutdown complete
+2026-06-13 00:51:20 INFO  [Thread-5] o.a.c.h.Http11NioProtocol:168 -
+				Stopping ProtocolHandler ["http-nio-9094"]
+2026-06-13 00:51:20 INFO  [Thread-5] o.s.o.j.LocalContainerEntityManagerFactoryBean:660 -
+				Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-13 00:51:20 INFO  [Thread-5] c.z.h.HikariDataSource:349 -
+				HikariPool-1 - Shutdown initiated...
+2026-06-13 00:51:20 INFO  [Thread-5] c.z.h.HikariDataSource:351 -
+				HikariPool-1 - Shutdown completed.
+2026-06-13 00:51:21 INFO  [restartedMain] c.c.Travel360endpoints3Application:53 -
+				Starting Travel360endpoints3Application using Java 17.0.13 with PID 24260 (C:\Users\DELL\Downloads\Travel360---Project\travel360endpoints-3\target\classes started by DELL in C:\Users\DELL\Downloads\Travel360---Project)
+2026-06-13 00:51:21 INFO  [restartedMain] c.c.Travel360endpoints3Application:652 -
+				No active profile set, falling back to 1 default profile: "default"
+2026-06-13 00:51:22 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate:145 -
+				Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-13 00:51:22 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate:213 -
+				Finished Spring Data repository scanning in 178 ms. Found 15 JPA repository interfaces.
+2026-06-13 00:51:23 INFO  [restartedMain] o.s.b.w.e.t.TomcatWebServer:111 -
+				Tomcat initialized with port 9094 (http)
+2026-06-13 00:51:23 INFO  [restartedMain] o.a.c.h.Http11NioProtocol:168 -
+				Initializing ProtocolHandler ["http-nio-9094"]
+2026-06-13 00:51:23 INFO  [restartedMain] o.a.c.c.StandardService:168 -
+				Starting service [Tomcat]
+2026-06-13 00:51:23 INFO  [restartedMain] o.a.c.c.StandardEngine:168 -
+				Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-06-13 00:51:23 INFO  [restartedMain] o.a.c.c.C.[.[.[/]:168 -
+				Initializing Spring embedded WebApplicationContext
+2026-06-13 00:51:23 INFO  [restartedMain] o.s.b.w.s.c.ServletWebServerApplicationContext:301 -
+				Root WebApplicationContext: initialization completed in 2030 ms
+2026-06-13 00:51:24 INFO  [restartedMain] o.h.j.i.u.LogHelper:31 -
+				HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-13 00:51:24 INFO  [restartedMain] o.h.c.i.RegionFactoryInitiator:50 -
+				HHH000026: Second-level cache disabled
+2026-06-13 00:51:24 INFO  [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo:87 -
+				No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-13 00:51:25 INFO  [restartedMain] c.z.h.HikariDataSource:109 -
+				HikariPool-2 - Starting...
+2026-06-13 00:51:25 INFO  [restartedMain] c.z.h.p.HikariPool:580 -
+				HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@17b38769
+2026-06-13 00:51:25 INFO  [restartedMain] c.z.h.HikariDataSource:122 -
+				HikariPool-2 - Start completed.
+2026-06-13 00:51:25 INFO  [restartedMain] o.h.o.c.pooling:163 -
+				HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 8.0.41
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-13 00:51:26 INFO  [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator:59 -
+				HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-13 00:51:26 INFO  [restartedMain] o.s.o.j.LocalContainerEntityManagerFactoryBean:447 -
+				Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-13 00:51:28 WARN  [restartedMain] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration:258 -
+				spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-13 00:51:28 WARN  [restartedMain] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration:90 -
+				
+
+Using generated security password: 63b0a6ce-b174-4da9-95d0-9d786e848cf3
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-06-13 00:51:28 INFO  [restartedMain] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer:110 -
+				Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-06-13 00:51:29 INFO  [restartedMain] o.s.b.d.a.OptionalLiveReloadServer:59 -
+				LiveReload server is running on port 35729
+2026-06-13 00:51:29 INFO  [restartedMain] o.a.c.h.Http11NioProtocol:168 -
+				Starting ProtocolHandler ["http-nio-9094"]
+2026-06-13 00:51:29 INFO  [restartedMain] o.s.b.w.e.t.TomcatWebServer:243 -
+				Tomcat started on port 9094 (http) with context path '/'
+2026-06-13 00:51:29 INFO  [restartedMain] c.c.Travel360endpoints3Application:59 -
+				Started Travel360endpoints3Application in 8.545 seconds (process running for 3504.921)
+2026-06-13 00:51:29 INFO  [restartedMain] o.s.b.d.a.ConditionEvaluationDeltaLoggingListener:63 -
+				Condition evaluation unchanged
+2026-06-13 00:51:54 INFO  [File Watcher] o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener:211 -
+				Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2026-06-13 00:51:54 INFO  [Thread-7] o.s.b.w.e.t.GracefulShutdown:54 -
+				Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-13 00:51:54 INFO  [tomcat-shutdown] o.a.c.h.Http11NioProtocol:168 -
+				Pausing ProtocolHandler ["http-nio-9094"]
+2026-06-13 00:51:54 INFO  [tomcat-shutdown] o.s.b.w.e.t.GracefulShutdown:76 -
+				Graceful shutdown complete
+2026-06-13 00:51:54 INFO  [Thread-7] o.a.c.h.Http11NioProtocol:168 -
+				Stopping ProtocolHandler ["http-nio-9094"]
+2026-06-13 00:51:54 INFO  [Thread-7] o.s.o.j.LocalContainerEntityManagerFactoryBean:660 -
+				Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-13 00:51:54 INFO  [Thread-7] c.z.h.HikariDataSource:349 -
+				HikariPool-2 - Shutdown initiated...
+2026-06-13 00:51:54 INFO  [Thread-7] c.z.h.HikariDataSource:351 -
+				HikariPool-2 - Shutdown completed.
+2026-06-13 00:51:54 INFO  [restartedMain] c.c.Travel360endpoints3Application:53 -
+				Starting Travel360endpoints3Application using Java 17.0.13 with PID 24260 (C:\Users\DELL\Downloads\Travel360---Project\travel360endpoints-3\target\classes started by DELL in C:\Users\DELL\Downloads\Travel360---Project)
+2026-06-13 00:51:54 INFO  [restartedMain] c.c.Travel360endpoints3Application:652 -
+				No active profile set, falling back to 1 default profile: "default"
+2026-06-13 00:51:55 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate:145 -
+				Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-13 00:51:55 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate:213 -
+				Finished Spring Data repository scanning in 85 ms. Found 15 JPA repository interfaces.
+2026-06-13 00:51:55 INFO  [restartedMain] o.s.b.w.e.t.TomcatWebServer:111 -
+				Tomcat initialized with port 9094 (http)
+2026-06-13 00:51:55 INFO  [restartedMain] o.a.c.h.Http11NioProtocol:168 -
+				Initializing ProtocolHandler ["http-nio-9094"]
+2026-06-13 00:51:55 INFO  [restartedMain] o.a.c.c.StandardService:168 -
+				Starting service [Tomcat]
+2026-06-13 00:51:55 INFO  [restartedMain] o.a.c.c.StandardEngine:168 -
+				Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-06-13 00:51:55 INFO  [restartedMain] o.a.c.c.C.[.[.[/]:168 -
+				Initializing Spring embedded WebApplicationContext
+2026-06-13 00:51:55 INFO  [restartedMain] o.s.b.w.s.c.ServletWebServerApplicationContext:301 -
+				Root WebApplicationContext: initialization completed in 730 ms
+2026-06-13 00:51:55 INFO  [restartedMain] o.h.j.i.u.LogHelper:31 -
+				HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-13 00:51:55 INFO  [restartedMain] o.h.c.i.RegionFactoryInitiator:50 -
+				HHH000026: Second-level cache disabled
+2026-06-13 00:51:55 INFO  [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo:87 -
+				No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-13 00:51:55 INFO  [restartedMain] c.z.h.HikariDataSource:109 -
+				HikariPool-3 - Starting...
+2026-06-13 00:51:55 INFO  [restartedMain] c.z.h.p.HikariPool:580 -
+				HikariPool-3 - Added connection com.mysql.cj.jdbc.ConnectionImpl@68dc53f6
+2026-06-13 00:51:55 INFO  [restartedMain] c.z.h.HikariDataSource:122 -
+				HikariPool-3 - Start completed.
+2026-06-13 00:51:55 INFO  [restartedMain] o.h.o.c.pooling:163 -
+				HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 8.0.41
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-13 00:51:56 INFO  [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator:59 -
+				HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-13 00:51:56 INFO  [restartedMain] o.s.o.j.LocalContainerEntityManagerFactoryBean:447 -
+				Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-13 00:51:57 WARN  [restartedMain] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration:258 -
+				spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-13 00:51:57 WARN  [restartedMain] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration:90 -
+				
+
+Using generated security password: 58ab2f3d-61e3-4410-b8d8-d35bc3c96483
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-06-13 00:51:57 INFO  [restartedMain] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer:110 -
+				Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-06-13 00:51:58 INFO  [restartedMain] o.s.b.d.a.OptionalLiveReloadServer:59 -
+				LiveReload server is running on port 35729
+2026-06-13 00:51:58 INFO  [restartedMain] o.a.c.h.Http11NioProtocol:168 -
+				Starting ProtocolHandler ["http-nio-9094"]
+2026-06-13 00:51:58 INFO  [restartedMain] o.s.b.w.e.t.TomcatWebServer:243 -
+				Tomcat started on port 9094 (http) with context path '/'
+2026-06-13 00:51:58 INFO  [restartedMain] c.c.Travel360endpoints3Application:59 -
+				Started Travel360endpoints3Application in 3.372 seconds (process running for 3533.308)
+2026-06-13 00:51:58 INFO  [restartedMain] o.s.b.d.a.ConditionEvaluationDeltaLoggingListener:63 -
+				Condition evaluation unchanged
+2026-06-13 00:53:42 INFO  [http-nio-9094-exec-2] o.a.c.c.C.[.[.[/]:168 -
+				Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-13 00:53:42 INFO  [http-nio-9094-exec-2] o.s.w.s.DispatcherServlet:532 -
+				Initializing Servlet 'dispatcherServlet'
+2026-06-13 00:53:42 INFO  [http-nio-9094-exec-2] o.s.w.s.DispatcherServlet:554 -
+				Completed initialization in 1 ms
+2026-06-13 00:53:42 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportController.getYearlyReport() with arguments = [2026]
+2026-06-13 00:53:42 INFO  [http-nio-9094-exec-2] c.c.c.KpiReportController:55 -
+				Fetching yearly breakdown for 2026
+2026-06-13 00:53:42 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportServiceImpl.generateYearlyReport() with arguments = [2026]
+2026-06-13 00:53:42 INFO  [http-nio-9094-exec-2] c.c.s.KpiReportServiceImpl:48 -
+				Generating yearly breakdown for 2026
+2026-06-13 00:53:42 INFO  [http-nio-9094-exec-2] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-01-01T00:00 to 2026-01-31T23:59:59.999999999 with label Monthly - 2026-01
+2026-06-13 00:53:42 INFO  [http-nio-9094-exec-2] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-02-01T00:00 to 2026-02-28T23:59:59.999999999 with label Monthly - 2026-02
+2026-06-13 00:53:42 INFO  [http-nio-9094-exec-2] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-03-01T00:00 to 2026-03-31T23:59:59.999999999 with label Monthly - 2026-03
+2026-06-13 00:53:42 INFO  [http-nio-9094-exec-2] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-04-01T00:00 to 2026-04-30T23:59:59.999999999 with label Monthly - 2026-04
+2026-06-13 00:53:42 INFO  [http-nio-9094-exec-2] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-05-01T00:00 to 2026-05-31T23:59:59.999999999 with label Monthly - 2026-05
+2026-06-13 00:53:42 INFO  [http-nio-9094-exec-2] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-06-01T00:00 to 2026-06-30T23:59:59.999999999 with label Monthly - 2026-06
+2026-06-13 00:53:42 ERROR [http-nio-9094-exec-2] c.c.a.LoggingAspect:58 -
+				Exception in KpiReportServiceImpl.generateYearlyReport() : Query did not return a unique result: 2 results were returned
+2026-06-13 00:53:42 ERROR [http-nio-9094-exec-2] c.c.a.LoggingAspect:58 -
+				Exception in KpiReportController.getYearlyReport() : Query did not return a unique result: 2 results were returned
+2026-06-13 00:53:42 ERROR [http-nio-9094-exec-2] c.c.e.GlobalExceptionHandler:133 -
+				Unexpected error occurred: Query did not return a unique result: 2 results were returned
+org.springframework.dao.IncorrectResultSizeDataAccessException: Query did not return a unique result: 2 results were returned
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:305)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:256)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:244)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:560)
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61)
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:343)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:160)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:136)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy6/jdk.proxy6.$Proxy242.findByStartDateAndEndDate(Unknown Source)
+	at com.cts.serviceimpl.KpiReportServiceImpl.calculateAndSaveKpiReport(KpiReportServiceImpl.java:88)
+	at com.cts.serviceimpl.KpiReportServiceImpl.generateMonthlyReport(KpiReportServiceImpl.java:36)
+	at com.cts.serviceimpl.KpiReportServiceImpl.generateYearlyReport(KpiReportServiceImpl.java:51)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:89)
+	at com.cts.aspect.LoggingAspect.logAround(LoggingAspect.java:46)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:649)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:631)
+	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:71)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at com.cts.serviceimpl.KpiReportServiceImpl$$SpringCGLIB$$0.generateYearlyReport(<generated>)
+	at com.cts.controller.KpiReportController.getYearlyReport(KpiReportController.java:56)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:89)
+	at com.cts.aspect.LoggingAspect.logAround(LoggingAspect.java:46)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:649)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:631)
+	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:71)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor.proceed(AuthorizationManagerBeforeMethodInterceptor.java:268)
+	at org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor.attemptAuthorization(AuthorizationManagerBeforeMethodInterceptor.java:263)
+	at org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor.invoke(AuthorizationManagerBeforeMethodInterceptor.java:196)
+	at org.springframework.security.config.annotation.method.configuration.DeferringMethodInterceptor.invoke(DeferringMethodInterceptor.java:44)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at com.cts.controller.KpiReportController$$SpringCGLIB$$0.getYearlyReport(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:258)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:191)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:991)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:896)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:370)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:125)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at com.cts.config.JWTFilter.doFilterInternal(JWTFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.ServletRequestPathFilter.doFilter(ServletRequestPathFilter.java:52)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebSecurityConfiguration.java:319)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$4(HandlerMappingIntrospector.java:267)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:240)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:88)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1797)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:973)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:491)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: org.hibernate.NonUniqueResultException: Query did not return a unique result: 2 results were returned
+	at org.hibernate.query.spi.AbstractSelectionQuery.uniqueElement(AbstractSelectionQuery.java:298)
+	at org.hibernate.query.spi.AbstractSelectionQuery.getSingleResult(AbstractSelectionQuery.java:281)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$SingleEntityExecution.doExecute(JpaQueryExecution.java:226)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:95)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:160)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:148)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:170)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:149)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:69)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	... 165 common frames omitted
+2026-06-13 00:53:42 WARN  [http-nio-9094-exec-2] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver:254 -
+				Resolved [org.springframework.dao.IncorrectResultSizeDataAccessException: Query did not return a unique result: 2 results were returned]
+2026-06-13 00:53:50 INFO  [http-nio-9094-exec-10] o.s.a.AbstractOpenApiResource:409 -
+				Init duration for springdoc-openapi is: 839 ms
+2026-06-13 00:54:17 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:38 -
+				>> Entering UserController.login() with arguments = [*****]
+2026-06-13 00:54:17 INFO  [http-nio-9094-exec-2] c.c.c.UserController:52 -
+				Login attempt for email: joel@gmail.com
+2026-06-13 00:54:17 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:38 -
+				>> Entering UserServiceImpl.login() with arguments = [joel@gmail.com, joel@123]
+2026-06-13 00:54:17 INFO  [task-1] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [LOGIN_USER, USER, null, null, INFO]
+2026-06-13 00:54:17 INFO  [http-nio-9094-exec-2] c.c.s.UserServiceImpl:55 -
+				Login attempt for email: joel@gmail.com
+2026-06-13 00:54:17 INFO  [task-1] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 17 ms)
+2026-06-13 00:54:17 INFO  [http-nio-9094-exec-2] c.c.s.UserServiceImpl:67 -
+				User logged in successfully with ID: 2
+2026-06-13 00:54:17 INFO  [task-2] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [LOGIN_USER, USER, 2, *****, INFO]
+2026-06-13 00:54:17 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:50 -
+				<< Exiting UserServiceImpl.login() (Execution Time: 78 ms)
+2026-06-13 00:54:17 INFO  [http-nio-9094-exec-2] c.c.c.UserController:57 -
+				User logged in successfully with ID: 2
+2026-06-13 00:54:17 INFO  [http-nio-9094-exec-2] c.c.a.LoggingAspect:50 -
+				<< Exiting UserController.login() (Execution Time: 79 ms)
+2026-06-13 00:54:17 INFO  [task-2] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 7 ms)
+2026-06-13 00:54:48 INFO  [http-nio-9094-exec-3] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportController.getYearlyReport() with arguments = [2026]
+2026-06-13 00:54:48 INFO  [http-nio-9094-exec-3] c.c.c.KpiReportController:55 -
+				Fetching yearly breakdown for 2026
+2026-06-13 00:54:48 INFO  [http-nio-9094-exec-3] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportServiceImpl.generateYearlyReport() with arguments = [2026]
+2026-06-13 00:54:48 INFO  [http-nio-9094-exec-3] c.c.s.KpiReportServiceImpl:48 -
+				Generating yearly breakdown for 2026
+2026-06-13 00:54:48 INFO  [http-nio-9094-exec-3] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-01-01T00:00 to 2026-01-31T23:59:59.999999999 with label Monthly - 2026-01
+2026-06-13 00:54:49 INFO  [http-nio-9094-exec-3] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-02-01T00:00 to 2026-02-28T23:59:59.999999999 with label Monthly - 2026-02
+2026-06-13 00:54:49 INFO  [http-nio-9094-exec-3] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-03-01T00:00 to 2026-03-31T23:59:59.999999999 with label Monthly - 2026-03
+2026-06-13 00:54:49 INFO  [http-nio-9094-exec-3] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-04-01T00:00 to 2026-04-30T23:59:59.999999999 with label Monthly - 2026-04
+2026-06-13 00:54:49 INFO  [http-nio-9094-exec-3] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-05-01T00:00 to 2026-05-31T23:59:59.999999999 with label Monthly - 2026-05
+2026-06-13 00:54:49 INFO  [http-nio-9094-exec-3] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-06-01T00:00 to 2026-06-30T23:59:59.999999999 with label Monthly - 2026-06
+2026-06-13 00:54:49 ERROR [http-nio-9094-exec-3] c.c.a.LoggingAspect:58 -
+				Exception in KpiReportServiceImpl.generateYearlyReport() : Query did not return a unique result: 2 results were returned
+2026-06-13 00:54:49 ERROR [http-nio-9094-exec-3] c.c.a.LoggingAspect:58 -
+				Exception in KpiReportController.getYearlyReport() : Query did not return a unique result: 2 results were returned
+2026-06-13 00:54:49 ERROR [http-nio-9094-exec-3] c.c.e.GlobalExceptionHandler:133 -
+				Unexpected error occurred: Query did not return a unique result: 2 results were returned
+org.springframework.dao.IncorrectResultSizeDataAccessException: Query did not return a unique result: 2 results were returned
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:305)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:256)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:244)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:560)
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61)
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:343)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:160)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:136)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy6/jdk.proxy6.$Proxy242.findByStartDateAndEndDate(Unknown Source)
+	at com.cts.serviceimpl.KpiReportServiceImpl.calculateAndSaveKpiReport(KpiReportServiceImpl.java:88)
+	at com.cts.serviceimpl.KpiReportServiceImpl.generateMonthlyReport(KpiReportServiceImpl.java:36)
+	at com.cts.serviceimpl.KpiReportServiceImpl.generateYearlyReport(KpiReportServiceImpl.java:51)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:89)
+	at com.cts.aspect.LoggingAspect.logAround(LoggingAspect.java:46)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:649)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:631)
+	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:71)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at com.cts.serviceimpl.KpiReportServiceImpl$$SpringCGLIB$$0.generateYearlyReport(<generated>)
+	at com.cts.controller.KpiReportController.getYearlyReport(KpiReportController.java:56)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:360)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:89)
+	at com.cts.aspect.LoggingAspect.logAround(LoggingAspect.java:46)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:649)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:631)
+	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:71)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor.proceed(AuthorizationManagerBeforeMethodInterceptor.java:268)
+	at org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor.attemptAuthorization(AuthorizationManagerBeforeMethodInterceptor.java:263)
+	at org.springframework.security.authorization.method.AuthorizationManagerBeforeMethodInterceptor.invoke(AuthorizationManagerBeforeMethodInterceptor.java:196)
+	at org.springframework.security.config.annotation.method.configuration.DeferringMethodInterceptor.invoke(DeferringMethodInterceptor.java:44)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728)
+	at com.cts.controller.KpiReportController$$SpringCGLIB$$0.getYearlyReport(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:258)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:191)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:991)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:896)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:370)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:101)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:125)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at com.cts.config.JWTFilter.doFilterInternal(JWTFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:379)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.ServletRequestPathFilter.doFilter(ServletRequestPathFilter.java:52)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebSecurityConfiguration.java:319)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$4(HandlerMappingIntrospector.java:267)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:240)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:362)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:278)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:88)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1797)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:973)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:491)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: org.hibernate.NonUniqueResultException: Query did not return a unique result: 2 results were returned
+	at org.hibernate.query.spi.AbstractSelectionQuery.uniqueElement(AbstractSelectionQuery.java:298)
+	at org.hibernate.query.spi.AbstractSelectionQuery.getSingleResult(AbstractSelectionQuery.java:281)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$SingleEntityExecution.doExecute(JpaQueryExecution.java:226)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:95)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:160)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:148)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:170)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:149)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:69)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	... 165 common frames omitted
+2026-06-13 00:54:49 WARN  [http-nio-9094-exec-3] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver:254 -
+				Resolved [org.springframework.dao.IncorrectResultSizeDataAccessException: Query did not return a unique result: 2 results were returned]
+2026-06-13 00:55:57 INFO  [File Watcher] o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener:211 -
+				Restarting due to 2 class path changes (0 additions, 0 deletions, 2 modifications)
+2026-06-13 00:55:57 INFO  [Thread-11] o.s.b.w.e.t.GracefulShutdown:54 -
+				Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-13 00:55:57 INFO  [tomcat-shutdown] o.a.c.h.Http11NioProtocol:168 -
+				Pausing ProtocolHandler ["http-nio-9094"]
+2026-06-13 00:55:57 INFO  [tomcat-shutdown] o.s.b.w.e.t.GracefulShutdown:76 -
+				Graceful shutdown complete
+2026-06-13 00:55:57 INFO  [Thread-11] o.a.c.h.Http11NioProtocol:168 -
+				Stopping ProtocolHandler ["http-nio-9094"]
+2026-06-13 00:55:57 INFO  [Thread-11] o.s.o.j.LocalContainerEntityManagerFactoryBean:660 -
+				Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-13 00:55:57 INFO  [Thread-11] c.z.h.HikariDataSource:349 -
+				HikariPool-3 - Shutdown initiated...
+2026-06-13 00:55:57 INFO  [Thread-11] c.z.h.HikariDataSource:351 -
+				HikariPool-3 - Shutdown completed.
+2026-06-13 00:55:57 INFO  [restartedMain] c.c.Travel360endpoints3Application:53 -
+				Starting Travel360endpoints3Application using Java 17.0.13 with PID 24260 (C:\Users\DELL\Downloads\Travel360---Project\travel360endpoints-3\target\classes started by DELL in C:\Users\DELL\Downloads\Travel360---Project)
+2026-06-13 00:55:57 INFO  [restartedMain] c.c.Travel360endpoints3Application:652 -
+				No active profile set, falling back to 1 default profile: "default"
+2026-06-13 00:55:57 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate:145 -
+				Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-13 00:55:57 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate:213 -
+				Finished Spring Data repository scanning in 85 ms. Found 15 JPA repository interfaces.
+2026-06-13 00:55:57 INFO  [restartedMain] o.s.b.w.e.t.TomcatWebServer:111 -
+				Tomcat initialized with port 9094 (http)
+2026-06-13 00:55:57 INFO  [restartedMain] o.a.c.h.Http11NioProtocol:168 -
+				Initializing ProtocolHandler ["http-nio-9094"]
+2026-06-13 00:55:57 INFO  [restartedMain] o.a.c.c.StandardService:168 -
+				Starting service [Tomcat]
+2026-06-13 00:55:57 INFO  [restartedMain] o.a.c.c.StandardEngine:168 -
+				Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-06-13 00:55:57 INFO  [restartedMain] o.a.c.c.C.[.[.[/]:168 -
+				Initializing Spring embedded WebApplicationContext
+2026-06-13 00:55:57 INFO  [restartedMain] o.s.b.w.s.c.ServletWebServerApplicationContext:301 -
+				Root WebApplicationContext: initialization completed in 653 ms
+2026-06-13 00:55:57 INFO  [restartedMain] o.h.j.i.u.LogHelper:31 -
+				HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-13 00:55:57 INFO  [restartedMain] o.h.c.i.RegionFactoryInitiator:50 -
+				HHH000026: Second-level cache disabled
+2026-06-13 00:55:57 INFO  [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo:87 -
+				No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-13 00:55:57 INFO  [restartedMain] c.z.h.HikariDataSource:109 -
+				HikariPool-4 - Starting...
+2026-06-13 00:55:57 INFO  [restartedMain] c.z.h.p.HikariPool:580 -
+				HikariPool-4 - Added connection com.mysql.cj.jdbc.ConnectionImpl@26bdf357
+2026-06-13 00:55:57 INFO  [restartedMain] c.z.h.HikariDataSource:122 -
+				HikariPool-4 - Start completed.
+2026-06-13 00:55:57 INFO  [restartedMain] o.h.o.c.pooling:163 -
+				HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-4)']
+	Database driver: undefined/unknown
+	Database version: 8.0.41
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-13 00:55:58 INFO  [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator:59 -
+				HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-13 00:55:58 INFO  [restartedMain] o.s.o.j.LocalContainerEntityManagerFactoryBean:447 -
+				Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-13 00:55:59 WARN  [restartedMain] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration:258 -
+				spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-13 00:55:59 WARN  [restartedMain] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration:90 -
+				
+
+Using generated security password: 516ee3fb-9b0a-4ffe-8286-0bc5b32cfcce
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-06-13 00:55:59 INFO  [restartedMain] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer:110 -
+				Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-06-13 00:55:59 INFO  [restartedMain] o.s.b.d.a.OptionalLiveReloadServer:59 -
+				LiveReload server is running on port 35729
+2026-06-13 00:55:59 INFO  [restartedMain] o.a.c.h.Http11NioProtocol:168 -
+				Starting ProtocolHandler ["http-nio-9094"]
+2026-06-13 00:55:59 INFO  [restartedMain] o.s.b.w.e.t.TomcatWebServer:243 -
+				Tomcat started on port 9094 (http) with context path '/'
+2026-06-13 00:55:59 INFO  [restartedMain] c.c.Travel360endpoints3Application:59 -
+				Started Travel360endpoints3Application in 2.314 seconds (process running for 3774.626)
+2026-06-13 00:55:59 INFO  [restartedMain] o.s.b.d.a.ConditionEvaluationDeltaLoggingListener:63 -
+				Condition evaluation unchanged
+2026-06-13 00:56:22 INFO  [File Watcher] o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener:211 -
+				Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2026-06-13 00:56:22 INFO  [Thread-15] o.s.b.w.e.t.GracefulShutdown:54 -
+				Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-13 00:56:22 INFO  [tomcat-shutdown] o.a.c.h.Http11NioProtocol:168 -
+				Pausing ProtocolHandler ["http-nio-9094"]
+2026-06-13 00:56:22 INFO  [tomcat-shutdown] o.s.b.w.e.t.GracefulShutdown:76 -
+				Graceful shutdown complete
+2026-06-13 00:56:22 INFO  [Thread-15] o.a.c.h.Http11NioProtocol:168 -
+				Stopping ProtocolHandler ["http-nio-9094"]
+2026-06-13 00:56:22 INFO  [Thread-15] o.s.o.j.LocalContainerEntityManagerFactoryBean:660 -
+				Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-13 00:56:22 INFO  [Thread-15] c.z.h.HikariDataSource:349 -
+				HikariPool-4 - Shutdown initiated...
+2026-06-13 00:56:22 INFO  [Thread-15] c.z.h.HikariDataSource:351 -
+				HikariPool-4 - Shutdown completed.
+2026-06-13 00:56:22 INFO  [restartedMain] c.c.Travel360endpoints3Application:53 -
+				Starting Travel360endpoints3Application using Java 17.0.13 with PID 24260 (C:\Users\DELL\Downloads\Travel360---Project\travel360endpoints-3\target\classes started by DELL in C:\Users\DELL\Downloads\Travel360---Project)
+2026-06-13 00:56:22 INFO  [restartedMain] c.c.Travel360endpoints3Application:652 -
+				No active profile set, falling back to 1 default profile: "default"
+2026-06-13 00:56:22 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate:145 -
+				Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-13 00:56:22 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate:213 -
+				Finished Spring Data repository scanning in 55 ms. Found 15 JPA repository interfaces.
+2026-06-13 00:56:22 INFO  [restartedMain] o.s.b.w.e.t.TomcatWebServer:111 -
+				Tomcat initialized with port 9094 (http)
+2026-06-13 00:56:22 INFO  [restartedMain] o.a.c.h.Http11NioProtocol:168 -
+				Initializing ProtocolHandler ["http-nio-9094"]
+2026-06-13 00:56:22 INFO  [restartedMain] o.a.c.c.StandardService:168 -
+				Starting service [Tomcat]
+2026-06-13 00:56:22 INFO  [restartedMain] o.a.c.c.StandardEngine:168 -
+				Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-06-13 00:56:22 INFO  [restartedMain] o.a.c.c.C.[.[.[/]:168 -
+				Initializing Spring embedded WebApplicationContext
+2026-06-13 00:56:22 INFO  [restartedMain] o.s.b.w.s.c.ServletWebServerApplicationContext:301 -
+				Root WebApplicationContext: initialization completed in 496 ms
+2026-06-13 00:56:22 INFO  [restartedMain] o.h.j.i.u.LogHelper:31 -
+				HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-13 00:56:22 INFO  [restartedMain] o.h.c.i.RegionFactoryInitiator:50 -
+				HHH000026: Second-level cache disabled
+2026-06-13 00:56:22 INFO  [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo:87 -
+				No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-13 00:56:22 INFO  [restartedMain] c.z.h.HikariDataSource:109 -
+				HikariPool-5 - Starting...
+2026-06-13 00:56:22 INFO  [restartedMain] c.z.h.p.HikariPool:580 -
+				HikariPool-5 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4458e33
+2026-06-13 00:56:22 INFO  [restartedMain] c.z.h.HikariDataSource:122 -
+				HikariPool-5 - Start completed.
+2026-06-13 00:56:22 INFO  [restartedMain] o.h.o.c.pooling:163 -
+				HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-5)']
+	Database driver: undefined/unknown
+	Database version: 8.0.41
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-13 00:56:23 INFO  [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator:59 -
+				HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-13 00:56:23 INFO  [restartedMain] o.s.o.j.LocalContainerEntityManagerFactoryBean:447 -
+				Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-13 00:56:23 WARN  [restartedMain] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration:258 -
+				spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-13 00:56:23 WARN  [restartedMain] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration:90 -
+				
+
+Using generated security password: e118d006-e69f-4fdf-8e36-c2eb4f6ea698
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-06-13 00:56:23 INFO  [restartedMain] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer:110 -
+				Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-06-13 00:56:24 INFO  [restartedMain] o.s.b.d.a.OptionalLiveReloadServer:59 -
+				LiveReload server is running on port 35729
+2026-06-13 00:56:24 INFO  [restartedMain] o.a.c.h.Http11NioProtocol:168 -
+				Starting ProtocolHandler ["http-nio-9094"]
+2026-06-13 00:56:24 INFO  [restartedMain] o.s.b.w.e.t.TomcatWebServer:243 -
+				Tomcat started on port 9094 (http) with context path '/'
+2026-06-13 00:56:24 INFO  [restartedMain] c.c.Travel360endpoints3Application:59 -
+				Started Travel360endpoints3Application in 2.064 seconds (process running for 3799.42)
+2026-06-13 00:56:24 INFO  [restartedMain] o.s.b.d.a.ConditionEvaluationDeltaLoggingListener:63 -
+				Condition evaluation unchanged
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] o.a.c.c.C.[.[.[/]:168 -
+				Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] o.s.w.s.DispatcherServlet:532 -
+				Initializing Servlet 'dispatcherServlet'
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] o.s.w.s.DispatcherServlet:554 -
+				Completed initialization in 1 ms
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportController.getYearlyReport() with arguments = [2026]
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.c.KpiReportController:55 -
+				Fetching yearly breakdown for 2026
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportServiceImpl.generateYearlyReport() with arguments = [2026]
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.s.KpiReportServiceImpl:48 -
+				Generating yearly breakdown for 2026
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-01-01T00:00 to 2026-01-31T23:59:59.999999999 with label Monthly - 2026-01
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-02-01T00:00 to 2026-02-28T23:59:59.999999999 with label Monthly - 2026-02
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-03-01T00:00 to 2026-03-31T23:59:59.999999999 with label Monthly - 2026-03
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-04-01T00:00 to 2026-04-30T23:59:59.999999999 with label Monthly - 2026-04
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-05-01T00:00 to 2026-05-31T23:59:59.999999999 with label Monthly - 2026-05
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-06-01T00:00 to 2026-06-30T23:59:59.999999999 with label Monthly - 2026-06
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-07-01T00:00 to 2026-07-31T23:59:59.999999999 with label Monthly - 2026-07
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-08-01T00:00 to 2026-08-31T23:59:59.999999999 with label Monthly - 2026-08
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-09-01T00:00 to 2026-09-30T23:59:59.999999999 with label Monthly - 2026-09
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-10-01T00:00 to 2026-10-31T23:59:59.999999999 with label Monthly - 2026-10
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-11-01T00:00 to 2026-11-30T23:59:59.999999999 with label Monthly - 2026-11
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-12-01T00:00 to 2026-12-31T23:59:59.999999999 with label Monthly - 2026-12
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.a.LoggingAspect:50 -
+				<< Exiting KpiReportServiceImpl.generateYearlyReport() (Execution Time: 304 ms)
+2026-06-13 00:58:54 INFO  [http-nio-9094-exec-1] c.c.a.LoggingAspect:50 -
+				<< Exiting KpiReportController.getYearlyReport() (Execution Time: 313 ms)
+2026-06-13 00:59:39 WARN  [http-nio-9094-exec-2] c.c.e.GlobalExceptionHandler:126 -
+				Access denied: Access Denied
+2026-06-13 00:59:39 WARN  [http-nio-9094-exec-2] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver:254 -
+				Resolved [org.springframework.security.authorization.AuthorizationDeniedException: Access Denied]
+2026-06-13 01:00:28 INFO  [http-nio-9094-exec-3] c.c.a.LoggingAspect:38 -
+				>> Entering UserController.login() with arguments = [*****]
+2026-06-13 01:00:28 INFO  [http-nio-9094-exec-3] c.c.c.UserController:52 -
+				Login attempt for email: damon@gmail.com
+2026-06-13 01:00:28 INFO  [task-1] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [LOGIN_USER, USER, null, null, INFO]
+2026-06-13 01:00:28 INFO  [http-nio-9094-exec-3] c.c.a.LoggingAspect:38 -
+				>> Entering UserServiceImpl.login() with arguments = [damon@gmail.com, damon@12]
+2026-06-13 01:00:28 INFO  [http-nio-9094-exec-3] c.c.s.UserServiceImpl:55 -
+				Login attempt for email: damon@gmail.com
+2026-06-13 01:00:28 INFO  [task-1] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 13 ms)
+2026-06-13 01:00:28 INFO  [http-nio-9094-exec-3] c.c.s.UserServiceImpl:67 -
+				User logged in successfully with ID: 1
+2026-06-13 01:00:28 INFO  [task-2] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [LOGIN_USER, USER, 1, *****, INFO]
+2026-06-13 01:00:28 INFO  [http-nio-9094-exec-3] c.c.a.LoggingAspect:50 -
+				<< Exiting UserServiceImpl.login() (Execution Time: 90 ms)
+2026-06-13 01:00:28 INFO  [http-nio-9094-exec-3] c.c.c.UserController:57 -
+				User logged in successfully with ID: 1
+2026-06-13 01:00:28 INFO  [http-nio-9094-exec-3] c.c.a.LoggingAspect:50 -
+				<< Exiting UserController.login() (Execution Time: 93 ms)
+2026-06-13 01:00:28 INFO  [task-2] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 7 ms)
+2026-06-13 01:00:57 INFO  [http-nio-9094-exec-4] c.c.a.LoggingAspect:38 -
+				>> Entering BookingController.createHotelBooking() with arguments = [BookingHotelDTO(userId=1, hotelId=1, units=4, bookingName=Priya Sharma, gender=FEMALE, checkInDate=2026-08-10, checkOutDate=2026-08-15)]
+2026-06-13 01:00:57 INFO  [http-nio-9094-exec-4] c.c.c.BookingController:57 -
+				Received request to create HOTEL booking for userId: 1
+2026-06-13 01:00:57 INFO  [task-3] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_BOOKING, BOOKING, null, *****, INFO]
+2026-06-13 01:00:57 INFO  [http-nio-9094-exec-4] c.c.a.LoggingAspect:38 -
+				>> Entering BookingServiceImpl.createHotelBooking() with arguments = [BookingHotelDTO(userId=1, hotelId=1, units=4, bookingName=Priya Sharma, gender=FEMALE, checkInDate=2026-08-10, checkOutDate=2026-08-15)]
+2026-06-13 01:00:57 INFO  [http-nio-9094-exec-4] c.c.s.BookingServiceImpl:151 -
+				Creating hotel booking for userId: 1 and hotelId: 1
+2026-06-13 01:00:57 INFO  [task-3] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 27 ms)
+2026-06-13 01:00:57 INFO  [http-nio-9094-exec-4] c.c.s.BookingServiceImpl:198 -
+				Hotel booking created successfully with bookingId: 4
+2026-06-13 01:00:57 INFO  [task-4] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [CREATE_BOOKING, BOOKING, 4, *****, INFO]
+2026-06-13 01:00:57 INFO  [http-nio-9094-exec-4] c.c.a.LoggingAspect:38 -
+				>> Entering NotificationServiceImpl.sendNotification() with arguments = [*****, Hotel booked successfully. Booking ID: 4, BOOKING]
+2026-06-13 01:00:57 INFO  [http-nio-9094-exec-4] c.c.s.NotificationServiceImpl:30 -
+				Sending notification to userId: 1 with category: BOOKING
+2026-06-13 01:00:57 INFO  [task-4] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 8 ms)
+2026-06-13 01:00:57 INFO  [http-nio-9094-exec-4] c.c.s.NotificationServiceImpl:42 -
+				Notification created successfully with ID: 4
+2026-06-13 01:00:57 INFO  [http-nio-9094-exec-4] c.c.a.LoggingAspect:50 -
+				<< Exiting NotificationServiceImpl.sendNotification() (Execution Time: 4 ms)
+2026-06-13 01:00:57 INFO  [http-nio-9094-exec-4] c.c.a.LoggingAspect:50 -
+				<< Exiting BookingServiceImpl.createHotelBooking() (Execution Time: 51 ms)
+2026-06-13 01:00:57 INFO  [http-nio-9094-exec-4] c.c.c.BookingController:62 -
+				Hotel booking created successfully with bookingId: 4
+2026-06-13 01:00:57 INFO  [http-nio-9094-exec-4] c.c.a.LoggingAspect:50 -
+				<< Exiting BookingController.createHotelBooking() (Execution Time: 67 ms)
+2026-06-13 01:01:10 WARN  [http-nio-9094-exec-5] c.c.e.GlobalExceptionHandler:126 -
+				Access denied: Access Denied
+2026-06-13 01:01:10 WARN  [http-nio-9094-exec-5] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver:254 -
+				Resolved [org.springframework.security.authorization.AuthorizationDeniedException: Access Denied]
+2026-06-13 01:01:33 WARN  [http-nio-9094-exec-6] c.c.c.JWTFilter:43 -
+				Failed to parse JWT: JWT expired 184893117 milliseconds ago at 2026-06-10T16:10:00.000Z. Current time: 2026-06-12T19:31:33.117Z. Allowed clock skew: 0 milliseconds.
+2026-06-13 01:01:45 WARN  [http-nio-9094-exec-7] c.c.c.JWTFilter:43 -
+				Failed to parse JWT: JWT expired 184905442 milliseconds ago at 2026-06-10T16:10:00.000Z. Current time: 2026-06-12T19:31:45.442Z. Allowed clock skew: 0 milliseconds.
+2026-06-13 01:02:08 WARN  [http-nio-9094-exec-8] c.c.c.JWTFilter:43 -
+				Failed to parse JWT: JWT expired 184928367 milliseconds ago at 2026-06-10T16:10:00.000Z. Current time: 2026-06-12T19:32:08.367Z. Allowed clock skew: 0 milliseconds.
+2026-06-13 01:02:08 INFO  [http-nio-9094-exec-8] c.c.a.LoggingAspect:38 -
+				>> Entering UserController.login() with arguments = [*****]
+2026-06-13 01:02:08 INFO  [http-nio-9094-exec-8] c.c.c.UserController:52 -
+				Login attempt for email: joel@gmail.com
+2026-06-13 01:02:08 INFO  [http-nio-9094-exec-8] c.c.a.LoggingAspect:38 -
+				>> Entering UserServiceImpl.login() with arguments = [joel@gmail.com, joel@123]
+2026-06-13 01:02:08 INFO  [task-5] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [LOGIN_USER, USER, null, null, INFO]
+2026-06-13 01:02:08 INFO  [http-nio-9094-exec-8] c.c.s.UserServiceImpl:55 -
+				Login attempt for email: joel@gmail.com
+2026-06-13 01:02:08 INFO  [task-5] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 9 ms)
+2026-06-13 01:02:08 INFO  [http-nio-9094-exec-8] c.c.s.UserServiceImpl:67 -
+				User logged in successfully with ID: 2
+2026-06-13 01:02:08 INFO  [task-6] c.c.a.LoggingAspect:38 -
+				>> Entering AuditLogServiceImpl.logAction() with arguments = [LOGIN_USER, USER, 2, *****, INFO]
+2026-06-13 01:02:08 INFO  [http-nio-9094-exec-8] c.c.a.LoggingAspect:50 -
+				<< Exiting UserServiceImpl.login() (Execution Time: 75 ms)
+2026-06-13 01:02:08 INFO  [http-nio-9094-exec-8] c.c.c.UserController:57 -
+				User logged in successfully with ID: 2
+2026-06-13 01:02:08 INFO  [http-nio-9094-exec-8] c.c.a.LoggingAspect:50 -
+				<< Exiting UserController.login() (Execution Time: 77 ms)
+2026-06-13 01:02:08 INFO  [task-6] c.c.a.LoggingAspect:50 -
+				<< Exiting AuditLogServiceImpl.logAction() (Execution Time: 8 ms)
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportController.getYearlyReport() with arguments = [2026]
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.c.KpiReportController:55 -
+				Fetching yearly breakdown for 2026
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:38 -
+				>> Entering KpiReportServiceImpl.generateYearlyReport() with arguments = [2026]
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.s.KpiReportServiceImpl:48 -
+				Generating yearly breakdown for 2026
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-01-01T00:00 to 2026-01-31T23:59:59.999999999 with label Monthly - 2026-01
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-02-01T00:00 to 2026-02-28T23:59:59.999999999 with label Monthly - 2026-02
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-03-01T00:00 to 2026-03-31T23:59:59.999999999 with label Monthly - 2026-03
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-04-01T00:00 to 2026-04-30T23:59:59.999999999 with label Monthly - 2026-04
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-05-01T00:00 to 2026-05-31T23:59:59.999999999 with label Monthly - 2026-05
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-06-01T00:00 to 2026-06-30T23:59:59.999999999 with label Monthly - 2026-06
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-07-01T00:00 to 2026-07-31T23:59:59.999999999 with label Monthly - 2026-07
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-08-01T00:00 to 2026-08-31T23:59:59.999999999 with label Monthly - 2026-08
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-09-01T00:00 to 2026-09-30T23:59:59.999999999 with label Monthly - 2026-09
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-10-01T00:00 to 2026-10-31T23:59:59.999999999 with label Monthly - 2026-10
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-11-01T00:00 to 2026-11-30T23:59:59.999999999 with label Monthly - 2026-11
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.s.KpiReportServiceImpl:71 -
+				Calculating KPI for period 2026-12-01T00:00 to 2026-12-31T23:59:59.999999999 with label Monthly - 2026-12
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:50 -
+				<< Exiting KpiReportServiceImpl.generateYearlyReport() (Execution Time: 288 ms)
+2026-06-13 01:02:36 INFO  [http-nio-9094-exec-9] c.c.a.LoggingAspect:50 -
+				<< Exiting KpiReportController.getYearlyReport() (Execution Time: 298 ms)
+2026-06-13 01:12:12 INFO  [File Watcher] o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener:211 -
+				Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2026-06-13 01:12:12 INFO  [Thread-19] o.s.b.w.e.t.GracefulShutdown:54 -
+				Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-13 01:12:12 INFO  [tomcat-shutdown] o.a.c.h.Http11NioProtocol:168 -
+				Pausing ProtocolHandler ["http-nio-9094"]
+2026-06-13 01:12:12 INFO  [tomcat-shutdown] o.s.b.w.e.t.GracefulShutdown:76 -
+				Graceful shutdown complete
+2026-06-13 01:12:12 INFO  [Thread-19] o.a.c.h.Http11NioProtocol:168 -
+				Stopping ProtocolHandler ["http-nio-9094"]
+2026-06-13 01:12:12 INFO  [Thread-19] o.s.o.j.LocalContainerEntityManagerFactoryBean:660 -
+				Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-13 01:12:12 INFO  [Thread-19] c.z.h.HikariDataSource:349 -
+				HikariPool-5 - Shutdown initiated...
+2026-06-13 01:12:12 INFO  [Thread-19] c.z.h.HikariDataSource:351 -
+				HikariPool-5 - Shutdown completed.
+2026-06-13 01:12:13 INFO  [restartedMain] c.c.Travel360endpoints3Application:53 -
+				Starting Travel360endpoints3Application using Java 17.0.13 with PID 24260 (C:\Users\DELL\Downloads\Travel360---Project\travel360endpoints-3\target\classes started by DELL in C:\Users\DELL\Downloads\Travel360---Project)
+2026-06-13 01:12:13 INFO  [restartedMain] c.c.Travel360endpoints3Application:652 -
+				No active profile set, falling back to 1 default profile: "default"
+2026-06-13 01:12:13 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate:145 -
+				Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-13 01:12:13 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate:213 -
+				Finished Spring Data repository scanning in 62 ms. Found 15 JPA repository interfaces.
+2026-06-13 01:12:13 INFO  [restartedMain] o.s.b.w.e.t.TomcatWebServer:111 -
+				Tomcat initialized with port 9094 (http)
+2026-06-13 01:12:13 INFO  [restartedMain] o.a.c.h.Http11NioProtocol:168 -
+				Initializing ProtocolHandler ["http-nio-9094"]
+2026-06-13 01:12:13 INFO  [restartedMain] o.a.c.c.StandardService:168 -
+				Starting service [Tomcat]
+2026-06-13 01:12:13 INFO  [restartedMain] o.a.c.c.StandardEngine:168 -
+				Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-06-13 01:12:13 INFO  [restartedMain] o.a.c.c.C.[.[.[/]:168 -
+				Initializing Spring embedded WebApplicationContext
+2026-06-13 01:12:13 INFO  [restartedMain] o.s.b.w.s.c.ServletWebServerApplicationContext:301 -
+				Root WebApplicationContext: initialization completed in 574 ms
+2026-06-13 01:12:13 INFO  [restartedMain] o.h.j.i.u.LogHelper:31 -
+				HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-13 01:12:13 INFO  [restartedMain] o.h.c.i.RegionFactoryInitiator:50 -
+				HHH000026: Second-level cache disabled
+2026-06-13 01:12:13 INFO  [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo:87 -
+				No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-13 01:12:13 INFO  [restartedMain] c.z.h.HikariDataSource:109 -
+				HikariPool-6 - Starting...
+2026-06-13 01:12:13 INFO  [restartedMain] c.z.h.p.HikariPool:580 -
+				HikariPool-6 - Added connection com.mysql.cj.jdbc.ConnectionImpl@45121d66
+2026-06-13 01:12:13 INFO  [restartedMain] c.z.h.HikariDataSource:122 -
+				HikariPool-6 - Start completed.
+2026-06-13 01:12:13 INFO  [restartedMain] o.h.o.c.pooling:163 -
+				HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-6)']
+	Database driver: undefined/unknown
+	Database version: 8.0.41
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-13 01:12:13 INFO  [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator:59 -
+				HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-13 01:12:14 INFO  [restartedMain] o.s.o.j.LocalContainerEntityManagerFactoryBean:447 -
+				Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-13 01:12:14 WARN  [restartedMain] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration:258 -
+				spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-13 01:12:14 WARN  [restartedMain] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration:90 -
+				
+
+Using generated security password: d29ef852-f8da-4188-b6b0-a4f1b27ba44b
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-06-13 01:12:14 INFO  [restartedMain] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer:110 -
+				Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-06-13 01:12:15 INFO  [restartedMain] o.s.b.d.a.OptionalLiveReloadServer:59 -
+				LiveReload server is running on port 35729
+2026-06-13 01:12:15 INFO  [restartedMain] o.a.c.h.Http11NioProtocol:168 -
+				Starting ProtocolHandler ["http-nio-9094"]
+2026-06-13 01:12:15 INFO  [restartedMain] o.s.b.w.e.t.TomcatWebServer:243 -
+				Tomcat started on port 9094 (http) with context path '/'
+2026-06-13 01:12:15 INFO  [restartedMain] c.c.Travel360endpoints3Application:59 -
+				Started Travel360endpoints3Application in 2.313 seconds (process running for 4750.451)
+2026-06-13 01:12:15 INFO  [restartedMain] o.s.b.d.a.ConditionEvaluationDeltaLoggingListener:63 -
+				Condition evaluation unchanged
+2026-06-13 15:18:16 INFO  [background-preinit] o.h.v.i.u.Version:21 -
+				HV000001: Hibernate Validator 8.0.3.Final
+2026-06-13 15:18:17 INFO  [restartedMain] c.c.Travel360endpoints3Application:53 -
+				Starting Travel360endpoints3Application using Java 17.0.13 with PID 2460 (C:\Users\DELL\Downloads\Travel360---Project\travel360endpoints-3\target\classes started by DELL in C:\Users\DELL\Downloads\Travel360---Project)
+2026-06-13 15:18:17 INFO  [restartedMain] c.c.Travel360endpoints3Application:652 -
+				No active profile set, falling back to 1 default profile: "default"
+2026-06-13 15:18:17 INFO  [restartedMain] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor:68 -
+				Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-06-13 15:18:17 INFO  [restartedMain] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor:68 -
+				For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-06-13 15:18:18 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate:145 -
+				Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-13 15:18:19 INFO  [restartedMain] o.s.d.r.c.RepositoryConfigurationDelegate:213 -
+				Finished Spring Data repository scanning in 174 ms. Found 15 JPA repository interfaces.
+2026-06-13 15:18:20 INFO  [restartedMain] o.s.b.w.e.t.TomcatWebServer:111 -
+				Tomcat initialized with port 9094 (http)
+2026-06-13 15:18:20 INFO  [restartedMain] o.a.c.h.Http11NioProtocol:168 -
+				Initializing ProtocolHandler ["http-nio-9094"]
+2026-06-13 15:18:20 INFO  [restartedMain] o.a.c.c.StandardService:168 -
+				Starting service [Tomcat]
+2026-06-13 15:18:20 INFO  [restartedMain] o.a.c.c.StandardEngine:168 -
+				Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-06-13 15:18:20 INFO  [restartedMain] o.a.c.c.C.[.[.[/]:168 -
+				Initializing Spring embedded WebApplicationContext
+2026-06-13 15:18:20 INFO  [restartedMain] o.s.b.w.s.c.ServletWebServerApplicationContext:301 -
+				Root WebApplicationContext: initialization completed in 3684 ms
+2026-06-13 15:18:21 INFO  [restartedMain] o.h.j.i.u.LogHelper:31 -
+				HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-13 15:18:21 INFO  [restartedMain] o.h.Version:44 -
+				HHH000412: Hibernate ORM core version 6.6.49.Final
+2026-06-13 15:18:21 INFO  [restartedMain] o.h.c.i.RegionFactoryInitiator:50 -
+				HHH000026: Second-level cache disabled
+2026-06-13 15:18:21 INFO  [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo:87 -
+				No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-13 15:18:21 INFO  [restartedMain] c.z.h.HikariDataSource:109 -
+				HikariPool-1 - Starting...
+2026-06-13 15:18:22 INFO  [restartedMain] c.z.h.p.HikariPool:580 -
+				HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3143fd2
+2026-06-13 15:18:22 INFO  [restartedMain] c.z.h.HikariDataSource:122 -
+				HikariPool-1 - Start completed.
+2026-06-13 15:18:22 INFO  [restartedMain] o.h.o.c.pooling:163 -
+				HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.41
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-13 15:18:24 INFO  [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator:59 -
+				HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-13 15:18:24 INFO  [restartedMain] o.s.o.j.LocalContainerEntityManagerFactoryBean:447 -
+				Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-13 15:18:25 INFO  [restartedMain] o.s.d.j.r.q.QueryEnhancerFactory:49 -
+				Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-13 15:18:27 WARN  [restartedMain] o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration:258 -
+				spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-13 15:18:27 WARN  [restartedMain] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration:90 -
+				
+
+Using generated security password: aee34d9f-edea-478d-9d8f-b931cc902ee6
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-06-13 15:18:27 INFO  [restartedMain] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer:110 -
+				Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-06-13 15:18:28 INFO  [restartedMain] o.s.b.d.a.OptionalLiveReloadServer:59 -
+				LiveReload server is running on port 35729
+2026-06-13 15:18:28 INFO  [restartedMain] o.a.c.h.Http11NioProtocol:168 -
+				Starting ProtocolHandler ["http-nio-9094"]
+2026-06-13 15:18:28 INFO  [restartedMain] o.s.b.w.e.t.TomcatWebServer:243 -
+				Tomcat started on port 9094 (http) with context path '/'
+2026-06-13 15:18:28 INFO  [restartedMain] c.c.Travel360endpoints3Application:59 -
+				Started Travel360endpoints3Application in 12.186 seconds (process running for 12.771)
+2026-06-13 15:18:53 INFO  [http-nio-9094-exec-2] o.a.c.c.C.[.[.[/]:168 -
+				Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-13 15:18:53 INFO  [http-nio-9094-exec-2] o.s.w.s.DispatcherServlet:532 -
+				Initializing Servlet 'dispatcherServlet'
+2026-06-13 15:18:53 INFO  [http-nio-9094-exec-2] o.s.w.s.DispatcherServlet:554 -
+				Completed initialization in 0 ms
+2026-06-13 15:18:56 INFO  [http-nio-9094-exec-9] o.s.a.AbstractOpenApiResource:409 -
+				Init duration for springdoc-openapi is: 2146 ms
+2026-06-13 20:09:30 WARN  [HikariPool-1:housekeeper] c.z.h.p.HikariPool:825 -
+				HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h43m16s533ms429µs).
